@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -35,11 +35,4 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
-}
-
-model ConnectedCalendar {
-  id  Int @unique @id @default(autoincrement())
-  caldavAddress String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
 }
