@@ -1,7 +1,7 @@
 import db from "db"
-import { SessionContext } from "blitz"
+import { Ctx } from "blitz"
 
-export default async function getCalendars(_ = null, ctx: { session?: SessionContext } = {}) {
+export default async function getCalendars(_ = null, ctx: Ctx) {
   if (!ctx.session?.userId) return null
 
   const calendars = await db.connectedCalendar.findMany({

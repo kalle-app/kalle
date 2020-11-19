@@ -1,8 +1,8 @@
 import React from "react"
-import { Link } from "blitz"
+import { Link, useMutation } from "blitz"
 import { LabeledTextField } from "app/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/components/Form"
-import login from "app/auth/mutations/login"
+import loginMutation from "app/auth/mutations/login"
 import { LoginInput, LoginInputType } from "app/auth/validations"
 
 type LoginFormProps = {
@@ -10,6 +10,7 @@ type LoginFormProps = {
 }
 
 export const LoginForm = (props: LoginFormProps) => {
+  const [login] = useMutation(loginMutation)
   return (
     <div>
       <h1>Login</h1>
