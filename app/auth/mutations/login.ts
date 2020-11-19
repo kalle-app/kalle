@@ -1,8 +1,8 @@
-import { SessionContext } from "blitz"
 import { authenticateUser } from "app/auth/auth-utils"
 import { LoginInput, LoginInputType } from "../validations"
+import { Ctx } from "blitz"
 
-export default async function login(input: LoginInputType, ctx: { session?: SessionContext } = {}) {
+export default async function login(input: LoginInputType, ctx: Ctx) {
   // This throws an error if input is invalid
   const { email, password } = LoginInput.parse(input)
 

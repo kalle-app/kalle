@@ -1,14 +1,16 @@
 import React from "react"
 import { LabeledTextField } from "app/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/components/Form"
-import signup from "app/auth/mutations/signup"
+import signupMutation from "app/auth/mutations/signup"
 import { SignupInput, SignupInputType } from "app/auth/validations"
+import { useMutation } from "blitz"
 
 type SignupFormProps = {
   onSuccess?: () => void
 }
 
 export const SignupForm = (props: SignupFormProps) => {
+  const [signup] = useMutation(signupMutation)
   return (
     <div>
       <h1>Create an Account</h1>

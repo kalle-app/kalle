@@ -1,5 +1,5 @@
-import { SessionContext } from "blitz"
+import { Ctx } from "blitz"
 
-export default async function logout(_ = null, ctx: { session?: SessionContext } = {}) {
+export default async function logout(_ = null, ctx: Ctx) {
   return await ctx.session!.revoke()
 }
