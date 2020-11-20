@@ -38,8 +38,11 @@ model Session {
 }
 
 model ConnectedCalendar {
-  id  Int @unique @id @default(autoincrement())
+  id  Int @id @default(autoincrement())
+  name String
   caldavAddress String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
+  status String
+  type String
 }
