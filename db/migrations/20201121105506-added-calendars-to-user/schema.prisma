@@ -21,6 +21,7 @@ model User {
   hashedPassword String?
   role           String    @default("user")
   sessions       Session[]
+  connectedCalendars ConnectedCalendar[]
 }
 
 model Session {
@@ -38,8 +39,11 @@ model Session {
 }
 
 model ConnectedCalendar {
-  id  Int @unique @id @default(autoincrement())
+  id  Int @id @default(autoincrement())
+  name String
   caldavAddress String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
+  status String
+  type String
 }
