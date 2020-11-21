@@ -61,7 +61,7 @@ const UserData = () => {
       </div>
 
       <div className="text-right sm:px-6 my-3">
-        <Button title="Save" action={() => {}} />
+        <Button action={() => {}}>Save</Button>
       </div>
     </div>
   )
