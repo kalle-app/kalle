@@ -42,7 +42,7 @@ const AddCalendarModal = (props: AddCalendarProps) => {
           <div className="px-4 py-5 bg-white sm:p-6">
             <AddConnectedCalendar handleChange={handleCalenderInfoChanged} />
           </div>
-          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <Button
               title="Add Calendar"
               action={async () => {

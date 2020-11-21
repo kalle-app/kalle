@@ -43,7 +43,7 @@ const ConnectedCalendarsList = (props: ConnectedCalendarsListProps) => {
         </tbody>
       </table>
 
-      <div className="bg-gray-50 text-right sm:px-6 my-3">
+      <div className="text-right sm:px-6 my-3">
         <Button title="Add Calendar" action={props.toggleModal} />
       </div>
     </div>
