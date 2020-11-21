@@ -1,12 +1,13 @@
-import { useQuery } from "blitz"
+import { ConnectedCalendar } from "@prisma/client"
 import Button from "./button"
 import ConnectedCalendardsEntry from "./connectedCalendarsEntry"
-import getConnectedCalendars from "../queries/getConnectedCalendars"
-import { ConnectedCalendar } from "@prisma/client"
 
-const ConnectedCalendarsList = () => {
-  const [calendarEntries] = useQuery(getConnectedCalendars, null)
+type ConnectedCalendarsListProps = {
+  calendars: ConnectedCalendar[]
+  toggleModal
+}
 
+const ConnectedCalendarsList = (props: ConnectedCalendarsListProps) => {
   return (
     <div>
       <table className="min-w-full divide-y divide-gray-200">
@@ -36,14 +37,14 @@ const ConnectedCalendarsList = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {calendarEntries?.map((calendarEntry, index) => {
+          {props.calendars?.map((calendarEntry, index) => {
             return <ConnectedCalendardsEntry key={index} calendar={calendarEntry} />
           })}
         </tbody>
       </table>
 
       <div className="bg-gray-50 text-right sm:px-6 my-3">
-        <Button title="Add Calendar" />
+        <Button title="Add Calendar" action={props.toggleModal} />
       </div>
     </div>
   )

@@ -33,6 +33,7 @@
   "dependencies": {
     "@prisma/cli": "2.11.0",
     "@prisma/client": "2.11.0",
+    "@tailwindcss/forms": "0.2.1",
     "blitz": "0.25.0",
     "final-form": "4.20.1",
     "react": "0.0.0-experimental-7f28234f8",
