@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react"
 import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense, useState } from "react"
 import Advanced from "../components/creationSteps/advanced"
