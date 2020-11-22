@@ -3,7 +3,6 @@ import React, { Suspense, useState } from "react"
 import Advanced from "../components/creationSteps/advanced"
 import Availability from "../components/creationSteps/availability"
 import General from "../components/creationSteps/general"
-import getMergedCalendar from "../queries/getMergedCalendar"
 
 enum Steps {
   General,
@@ -20,7 +19,6 @@ const initialMeeting = {
 }
 
 const InviteCreationContent = () => {
-  const [calendar] = useQuery(getMergedCalendar, null)
   const [step, setStep] = useState(Steps.General)
   const stepOrder = [Steps.General, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
@@ -51,14 +49,14 @@ const InviteCreationContent = () => {
   }
 
   const next = () => {
-    if (step != stepOrder[stepOrder.length - 1]) {
+    if (step !== stepOrder[stepOrder.length - 1]) {
       const cur = stepOrder.indexOf(step)
       setStep(stepOrder[cur + 1])
     }
   }
 
   const stepBack = (lastStep: Steps) => {
-    if (step != stepOrder[0]) {
+    if (step !== stepOrder[0]) {
       const cur = stepOrder.indexOf(step)
       setStep(stepOrder[cur - 1])
     }

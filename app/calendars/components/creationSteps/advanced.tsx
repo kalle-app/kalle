@@ -1,7 +1,7 @@
 import React from "react"
 import Button from "app/users/components/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 
 type AdvancedProps = {
   stepBack: any

@@ -1,4 +1,3 @@
-import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getMergedCalendar(_ = null, ctx: Ctx) {

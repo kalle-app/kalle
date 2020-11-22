@@ -55,7 +55,7 @@ const Home: BlitzPage = () => {
       <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
 
       <Link href="/auth/login">
-        <a>Login</a>
+        <UserInfo />
       </Link>
     </div>
   )
