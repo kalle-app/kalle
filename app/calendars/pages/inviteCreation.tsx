@@ -11,19 +11,42 @@ enum Steps {
   Advanced,
 }
 
+const initialMeeting = {
+  name: "",
+  link: "",
+  description: "",
+  timezone: 0,
+  timeslots: [],
+}
+
 const InviteCreationContent = () => {
   const [calendar] = useQuery(getMergedCalendar, null)
   const [step, setStep] = useState(Steps.General)
   const stepOrder = [Steps.General, Steps.Availability, Steps.Advanced]
+  const [meeting, setMeeting] = useState(initialMeeting)
+
+  const meetingEdited = (key, value) => {
+    if (key === "timeslots") {
+      setMeeting({
+        ...meeting,
+        timeslots: meeting.timeslots.concat(value),
+      })
+    } else {
+      setMeeting({
+        ...meeting,
+        [key]: value,
+      })
+    }
+  }
 
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General toNext={next} />
+        return <General toNext={next} onEdit={meetingEdited} />
       case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} />
+        return <Availability toNext={next} stepBack={stepBack} onEdit={meetingEdited} />
       case Steps.Advanced:
-        return <Advanced stepBack={stepBack} />
+        return <Advanced stepBack={stepBack} onEdit={meetingEdited} />
     }
   }
 

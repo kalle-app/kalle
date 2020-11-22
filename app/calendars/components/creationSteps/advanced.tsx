@@ -5,6 +5,7 @@ import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-s
 
 type AdvancedProps = {
   stepBack: any
+  onEdit: any
 }
 
 const Advanced = (props: AdvancedProps) => {

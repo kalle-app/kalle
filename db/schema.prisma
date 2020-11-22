@@ -47,3 +47,22 @@ model ConnectedCalendar {
   status String
   type String
 }
+
+model Meeting {
+  id  Int @id @default(autoincrement())
+  name String
+  link String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  description String
+  timezone Int
+  timeslots TimeSlot[]
+}
+
+model TimeSlot {
+  id  Int @id @default(autoincrement())
+  startTime DateTime
+  endTime DateTime
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int
+}

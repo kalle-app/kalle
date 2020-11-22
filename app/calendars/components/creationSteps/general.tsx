@@ -4,9 +4,14 @@ import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 
 type GeneralProps = {
   toNext: any
+  onEdit: any
 }
 
 const General = (props: GeneralProps) => {
+  const textChanged = (e: any) => {
+    props.onEdit(e.currentTarget.name, e.currentTarget.value)
+  }
+
   return (
     <div>
       <div className="px-4 py-5 sm:px-6">
@@ -27,17 +32,20 @@ const General = (props: GeneralProps) => {
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  onBlur={textChanged}
                   className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
 
               <div className="col-start-1 col-span-4">
-                <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-                  Invite Url
+                <label htmlFor="link" className="block text-sm font-medium text-gray-700">
+                  Invite Link
                 </label>
                 <input
                   type="text"
-                  id="url"
+                  id="link"
+                  name="link"
                   className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -49,6 +57,7 @@ const General = (props: GeneralProps) => {
                 <div className="mt-1">
                   <textarea
                     id="description"
+                    name="description"
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="Meeting description..."
                   ></textarea>
