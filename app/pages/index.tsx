@@ -2,11 +2,7 @@ import { Link, BlitzPage, useMutation } from "blitz"
 import Layout from "app/layouts/Layout"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
+import Header from "app/components/navbar"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -51,6 +47,7 @@ const UserInfo = () => {
 const Home: BlitzPage = () => {
   return (
     <div className="container">
+      <Header></Header>
       <h1>Kalle.app</h1>
       <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
 
