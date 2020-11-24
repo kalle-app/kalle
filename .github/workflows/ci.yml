@@ -1,0 +1,26 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: node:14
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm test -- --coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./.coverage/lcov.info
+      - run: npm run build
