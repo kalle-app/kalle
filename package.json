@@ -9,7 +9,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific -v $(pwd)/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
-    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test"
+    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test",
+    "test:baikal:start:windows": "docker run -d --name baikal-test -p 5232:80 -v /${PWD}/test/baikal/Specific:/var/www/baikal/Specific -v /${PWD}/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
+    "test:baikal:stop:windows": "docker stop baikal-test && docker rm baikal-test"
   },
   "browserslist": [
     "defaults"
