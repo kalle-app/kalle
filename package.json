@@ -7,7 +7,9 @@
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific -v $(pwd)/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
+    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test"
   },
   "browserslist": [
     "defaults"
@@ -42,9 +44,11 @@
     "react-final-form": "6.5.2",
     "secure-password": "4.0.0",
     "tailwindcss": "2",
+    "urllib": "2.36.1",
     "zod": "1.11.10"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-typescript": "7.12.1",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.0",
     "@testing-library/react-hooks": "3.4.2",
