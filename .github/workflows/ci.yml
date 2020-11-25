@@ -19,8 +19,8 @@ jobs:
         ports:
           - 5232:80
         volumes:
-          - /home/runner/work/kalle/test/baikal/config:/var/www/baikal/config
-          - /home/runner/work/kalle/test/baikal/Specific:/var/www/baikal/Specific
+          - /home/runner/work/kalle/kalle/test/baikal/config:/var/www/baikal/config
+          - /home/runner/work/kalle/kalle/test/baikal/Specific:/var/www/baikal/Specific
 
     steps:
       - uses: actions/checkout@v2
