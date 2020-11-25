@@ -6,6 +6,9 @@ module.exports = {
       sans: ["arial", "ui-sans-serif", "system-ui", "sans-serif"],
       serif: ["palatino", "ui-serif", "Georgia", "serif"],
     },
+    minWidth: {
+      24: "6rem",
+    },
   },
   variants: {},
   plugins: [require("@tailwindcss/forms")],

@@ -2,7 +2,8 @@ import { Link, BlitzPage, useMutation } from "blitz"
 import Layout from "app/layouts/Layout"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import Header from "app/components/navbar"
+import NavBar from "app/components/navbar"
+import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/buttons"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
@@ -47,13 +48,14 @@ const UserInfo = () => {
 const Home: BlitzPage = () => {
   return (
     <div className="container">
-      <Header></Header>
+      <NavBar />
       <h1>Kalle.app</h1>
       <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
-
-      <Link href="/auth/login">
-        <a>Login</a>
-      </Link>
+      <PrimaryButton label="Log in" href="/auth/login" />
+      <p>Not registered yet?</p>
+      <SecondaryButton label="Sign up" href="/signup" />
+      <p>Or just bubble a bit...</p>
+      <TertiaryButton label="Bubble!" />
     </div>
   )
 }
