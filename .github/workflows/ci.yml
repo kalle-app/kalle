@@ -12,10 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:14
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "14"
       - run: npm ci
       - run: npm run test:baikal:start
       - run: npm test -- --coverage
