@@ -19,6 +19,8 @@ jobs:
         with:
           node-version: "14"
       - run: npm ci
+      - name: Debug with tmate
+        uses: mxschmitt/action-tmate@v3.1
       - run: npm run test:baikal:start
       - run: npm test -- --coverage
       - run: npm run test:baikal:stop
