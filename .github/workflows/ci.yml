@@ -17,7 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci
+      - run: npm run test:baikal:start
       - run: npm test -- --coverage
+      - run: npm run test:baikal:stop
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
