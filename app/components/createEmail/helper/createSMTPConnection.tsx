@@ -1,12 +1,12 @@
 let nodemailer = require("nodemailer")
 
-export function connectToSMTP() {
-  const transporter = createConnection()
+export function createSMTPConnection() {
+  const transporter = createTransporter()
   verifyConnection(transporter)
   return transporter
 }
 
-function createConnection() {
+function createTransporter() {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT!, 10),

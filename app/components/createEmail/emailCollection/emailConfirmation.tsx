@@ -1,5 +1,5 @@
 import EmailFactory from "../EmailFactory"
-import { buildCalendarEvent } from "../helper/createCalendarEvent"
+import { createCalendarEvent } from "../helper/createCalendarEvent"
 
 export class EmailConfirmation extends EmailFactory {
   appointment: any
@@ -17,7 +17,7 @@ export class EmailConfirmation extends EmailFactory {
           attachments: [
             {
               filename: "appointment.ics",
-              content: buildCalendarEvent(this.appointment),
+              content: createCalendarEvent(this.appointment),
             },
           ],
         },

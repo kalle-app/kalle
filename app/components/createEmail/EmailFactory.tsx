@@ -1,4 +1,4 @@
-import { connectToSMTP } from "./helper/smtpConnection"
+import { createSMTPConnection } from "./helper/createSMTPConnection"
 const Email = require("email-templates")
 
 export default class EmailFactory {
@@ -11,13 +11,13 @@ export default class EmailFactory {
   }
 
   sendEmail() {
-    this.transporter = connectToSMTP()
+    this.transporter = createSMTPConnection()
     this.email = new Email({
       message: {
         from: process.env.EMAIL_FROM,
       },
       transport: this.transporter,
-      send: true,
+      send: false,
       views: {
         options: {
           extension: "hbs",

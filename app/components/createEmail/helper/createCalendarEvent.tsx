@@ -1,6 +1,6 @@
 const ics = require("ics")
 
-export function buildCalendarEvent(appointment) {
+export function createCalendarEvent(appointment) {
   const object = {
     start: [
       appointment.start.year,
