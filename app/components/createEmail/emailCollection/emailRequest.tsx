@@ -8,6 +8,10 @@ export class EmailRequest extends EmailFactory {
     //TODO
   }
 
+  sendEmail() {
+    super.sendEmail()
+  }
+
   buildEmail(): any {
     //TODO: implement an invitation template
   }

@@ -1,13 +1,15 @@
 import { EmailConfirmation } from "../emailCollection/emailConfirmation"
-import EmailFactory from "../EmailFactory"
+
 export default async function sendMail(properties: any) {
   let email
   if (properties.type === "confirmation") {
     email = new EmailConfirmation(properties.appointment)
   } else if (properties.type === "request") {
     //TODO
+    return null
   } else {
-    email = new EmailFactory()
+    return null
   }
+
   return email.sendEmail()
 }

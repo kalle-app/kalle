@@ -1,11 +1,11 @@
 import { createSMTPConnection } from "./helper/createSMTPConnection"
-import * as Email from "email-templates";
+import * as Email from "email-templates"
 
-export default class EmailFactory {
+export default abstract class EmailFactory {
   private transporter: any
   protected email: typeof Email
 
-  constructor() {
+  protected constructor() {
     this.transporter = null
     this.email = null
   }
@@ -27,7 +27,5 @@ export default class EmailFactory {
     this.buildEmail()
   }
 
-  buildEmail() {
-    throw new Error("Abstract Method!")
-  }
+  abstract buildEmail(): void
 }

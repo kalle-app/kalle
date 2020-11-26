@@ -8,7 +8,11 @@ export class EmailConfirmation extends EmailFactory {
     this.appointment = appointment
   }
 
-  buildEmail(): any {
+  sendEmail() {
+    super.sendEmail()
+  }
+
+  buildEmail(): void {
     this.email
       .send({
         template: "confirmation",

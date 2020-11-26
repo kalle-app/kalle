@@ -1,7 +1,8 @@
 import * as ics from "ics"
+import { EventAttributes } from "ics"
 
 export function createCalendarEvent(appointment) {
-  const object = {
+  const object: EventAttributes = {
     start: [
       appointment.start.year,
       appointment.start.month,
@@ -14,7 +15,6 @@ export function createCalendarEvent(appointment) {
     method: appointment.method,
     description: appointment.description,
     location: appointment.location,
-    busyStatus: "BUSY",
     organizer: { name: appointment.organiser.name, email: appointment.organiser.email },
     attendees: [
       {
