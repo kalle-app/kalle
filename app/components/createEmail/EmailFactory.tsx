@@ -1,5 +1,5 @@
 import { createSMTPConnection } from "./helper/createSMTPConnection"
-const Email = require("email-templates")
+import * as Email from "email-templates";
 
 export default class EmailFactory {
   private transporter: any

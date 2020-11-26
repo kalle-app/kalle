@@ -1,4 +1,4 @@
-let nodemailer = require("nodemailer")
+import nodemailer from "nodemailer"
 
 export function createSMTPConnection() {
   const transporter = createTransporter()

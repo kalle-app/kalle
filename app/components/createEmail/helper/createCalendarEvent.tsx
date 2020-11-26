@@ -1,4 +1,4 @@
-const ics = require("ics")
+import * as ics from "ics"
 
 export function createCalendarEvent(appointment) {
   const object = {
