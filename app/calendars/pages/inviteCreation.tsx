@@ -1,11 +1,13 @@
 import { BlitzPage } from "blitz"
 import React, { Suspense, useState } from "react"
 import Advanced from "../components/creationSteps/advanced"
-import Availability from "../components/creationSteps/availability"
+import Schedule from "../components/creationSteps/schedule"
 import General from "../components/creationSteps/general"
+import Availability from "../components/creationSteps/availability"
 
 enum Steps {
   General,
+  Schedule,
   Availability,
   Advanced,
 }
@@ -17,12 +19,21 @@ const initialMeeting = {
   timezone: 0,
   startDate: "",
   endDate: "",
+  schedule: {
+    monday: [],
+    tuesday: [],
+    wendsday: [],
+    thursday: [],
+    friday: [],
+    saturday: [],
+    sunday: [],
+  },
   timeslots: [],
 }
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  const stepOrder = [Steps.General, Steps.Availability, Steps.Advanced]
+  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
 
   const meetingEdited = (key, value) => {
@@ -43,6 +54,10 @@ const InviteCreationContent = () => {
     switch (step) {
       case Steps.General:
         return <General toNext={next} onEdit={meetingEdited} />
+      case Steps.Schedule:
+        return (
+          <Schedule toNext={next} meeting={meeting} stepBack={stepBack} onEdit={meetingEdited} />
+        )
       case Steps.Availability:
         return (
           <Availability
