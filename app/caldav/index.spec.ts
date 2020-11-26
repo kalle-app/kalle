@@ -2,7 +2,7 @@ import { freeBusy } from "./"
 import fetch from "node-fetch"
 
 const baikalJohnDoe = {
-  url: "http://localhost:5232/dav.php/calendars/john.doe/default/",
+  url: "http://localhost:5232/dav.php/calendars/john.doe/test",
   auth: {
     username: "john.doe",
     password: "root",
@@ -26,7 +26,9 @@ describe("baikal test instance", () => {
 describe("freeBusy", () => {
   it("returns a freeBusy schedule", async () => {
     const result = await freeBusy(baikalJohnDoe)
-    expect(result).toEqual(`
-    `)
+    const expected = [{"end": new Date(2020, 10, 25, 14, 0, 0, 0), "start": new Date(2020, 10, 25, 12, 0, 0, 0), "type": "BUSY"}, 
+                      {"end": new Date(2020, 10, 25, 23, 0, 0, 0), "start": new Date(2020, 10, 25, 20, 0, 0, 0), "type": "BUSY"}, 
+                      {"end": new Date(2020, 10, 26, 12, 0, 0, 0), "start": new Date(2020, 10, 26, 10, 0, 0, 0), "type": "BUSY"}]
+    expect(result).toEqual(expected)
   })
 })

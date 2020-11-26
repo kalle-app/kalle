@@ -41,6 +41,7 @@
     "blitz": "0.25.0",
     "final-form": "4.20.1",
     "node-fetch": "2.6.1",
+    "node-ical": "0.12.3",
     "react": "0.0.0-experimental-7f28234f8",
     "react-dom": "0.0.0-experimental-7f28234f8",
     "react-error-boundary": "2.3.2",

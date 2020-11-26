@@ -1,4 +1,5 @@
 import * as urllib from "urllib"
+import * as ical from "node-ical"
 
 interface CalendarConnectionDetails {
   url: string
@@ -26,18 +27,19 @@ async function makeRequestTo(
   })
 }
 
+// currently not working on default calender
 export async function freeBusy(calendar: CalendarConnectionDetails) {
   const response = await makeRequestTo(calendar, {
     headers: {
       Depth: 1,
     },
     method: "REPORT",
-    data: `
-    <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
-        <c:time-range start="20201023T000000Z" end="20201223T000000Z"/>
-    </c:free-busy-query>
-    `,
+    data: `<?xml version="1.0"?>
+           <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
+           <c:time-range start="20201123T000000Z" end="20201127T000000Z" />
+           </c:free-busy-query>`,
   })
-
-  return response.data.toString()
+  const result = ical.sync.parseICS(response.data.toString())
+  const id = Object.keys(result)[0]
+  return result[id]["freebusy"]
 }
