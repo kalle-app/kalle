@@ -1,15 +1,21 @@
 import React from "react"
 import Button from "app/users/components/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+import { Meeting } from "app/calendars/types"
 
 type AvailabilityProps = {
   toNext: any
   stepBack: any
   onEdit: any
+  meeting: Meeting
 }
 
 const Availability = (props: AvailabilityProps) => {
+  const days = ["Monday", "Tuesday", "Wendsday", "Thursday", "Friday", "Saturday", "Sunday"]
+
   return (
     <div>
       <div className="px-4 py-5 sm:px-6">
@@ -201,15 +207,66 @@ const Availability = (props: AvailabilityProps) => {
             </div>
 
             <div className="col-span-2 mt-5">
-              <legend className="text-base font-medium text-gray-900">Select Timeslots</legend>
-              <div></div>
+              <legend className="text-base font-medium text-gray-900">
+                Select the Dates between which the Meeting could take place
+              </legend>
+              <div className="grid grid-cols-8 gap-6 bg">
+                <div className="col-span-2">
+                  <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">
+                    From
+                  </label>
+                  <DatePicker
+                    id="start_date"
+                    name="startDate"
+                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">
+                    To
+                  </label>
+                  <DatePicker
+                    id="end_date"
+                    name="endDate"
+                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
             </div>
 
-            <p>
-              {" "}
-              Timeslots (skip to kw) | only weekly view | select calendars to import and block by
-              default | default select all/none | next week
-            </p>
+            <div className="col-span-2 mt-5">
+              <legend className="text-base font-medium text-gray-900">Set schedule</legend>
+              <p className="text-sm text-gray-500">Select when you are usually available</p>
+              <div className="grid grid-cols-12 mt-3">
+                {days.map((day) => {
+                  return (
+                    <div className="col-span-12 grid grid-cols-12">
+                      <div className="col-span-2">{day}</div>
+                      <div className="col-span-8 grid grid-cols-9">
+                        <input
+                          type="text"
+                          name="monday_start"
+                          className="mt-1 mr-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        />
+                        <p className="text-center">-</p>
+                        <input
+                          type="text"
+                          name="monday_end"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <Button action={() => {}}>
+                          <FontAwesomeIcon icon={faPlus} />
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <p> Timeslots (skip to kw) | only weekly view |</p>
           </div>
           <div className="col-span-1">
             <Button action={() => props.toNext()}>

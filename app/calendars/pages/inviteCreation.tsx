@@ -1,4 +1,4 @@
-import { BlitzPage, useQuery } from "blitz"
+import { BlitzPage } from "blitz"
 import React, { Suspense, useState } from "react"
 import Advanced from "../components/creationSteps/advanced"
 import Availability from "../components/creationSteps/availability"
@@ -15,6 +15,8 @@ const initialMeeting = {
   link: "",
   description: "",
   timezone: 0,
+  startDate: "",
+  endDate: "",
   timeslots: [],
 }
 
@@ -42,7 +44,14 @@ const InviteCreationContent = () => {
       case Steps.General:
         return <General toNext={next} onEdit={meetingEdited} />
       case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} onEdit={meetingEdited} />
+        return (
+          <Availability
+            toNext={next}
+            meeting={meeting}
+            stepBack={stepBack}
+            onEdit={meetingEdited}
+          />
+        )
       case Steps.Advanced:
         return <Advanced stepBack={stepBack} onEdit={meetingEdited} />
     }
