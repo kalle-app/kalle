@@ -10,6 +10,17 @@ interface CalendarConnectionDetails {
   }
 }
 
+interface TimeSlot {
+  start: Date
+  end: Date
+}
+
+interface Event {
+  title: string
+  start: Date
+  end: Date
+}
+
 async function makeRequestTo(
   calendar: CalendarConnectionDetails,
   {
@@ -27,8 +38,50 @@ async function makeRequestTo(
   })
 }
 
+function formatDateString(date: Date) {
+  return date.toISOString().split('-').join("").split(':').join("").split('.')[0]+"Z"
+}
+
+export async function getEvents(calendar: CalendarConnectionDetails, start: Date, end: Date) {
+  const formattedStart = formatDateString(start)
+  const formattedEnd = formatDateString(end)
+  const response = await makeRequestTo(calendar, {
+    headers: {
+      Depth: 1,
+    },
+    method: "REPORT",
+    data: `<?xml version="1.0"?>
+           <c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">
+           <d:prop>
+           <d:getetag />
+           <c:calendar-data />
+           </d:prop>
+           <c:filter>
+           <c:comp-filter name="VCALENDAR">
+   	       <c:comp-filter name="VEVENT">
+     		   <c:time-range start="${formattedStart}" end="${formattedEnd}">
+		       </c:time-range>
+	         </c:comp-filter>
+ 	         </c:comp-filter>
+           </c:filter>
+           </c:calendar-query>`,
+  })
+  const parsed = ical.sync.parseICS(response.data.toString())
+  const ids = Object.keys(parsed)
+  const events : Event[] = []
+  for (let id of ids) {
+    if (parsed[id]["type"] === 'VEVENT') {
+      events.push({title: parsed[id]["summary"] as any, start: parsed[id]["start"] as any, end: parsed[id]["end"] as any})
+    }
+  }
+  events.sort((a, b) => (a.start > b.start) ? 1 : -1)
+  return events
+}
+
 // currently not working on default calender
-export async function freeBusy(calendar: CalendarConnectionDetails) {
+export async function getTakenTimeSlots(calendar: CalendarConnectionDetails, start: Date, end: Date) {
+  const formattedStart = formatDateString(start)
+  const formattedEnd = formatDateString(end)
   const response = await makeRequestTo(calendar, {
     headers: {
       Depth: 1,
@@ -36,10 +89,16 @@ export async function freeBusy(calendar: CalendarConnectionDetails) {
     method: "REPORT",
     data: `<?xml version="1.0"?>
            <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
-           <c:time-range start="20201123T000000Z" end="20201127T000000Z" />
+           <c:time-range start="${formattedStart}" end="${formattedEnd}" />
            </c:free-busy-query>`,
   })
-  const result = ical.sync.parseICS(response.data.toString())
-  const id = Object.keys(result)[0]
-  return result[id]["freebusy"]
+  const parsed = ical.sync.parseICS(response.data.toString())
+  const id = Object.keys(parsed)[0]
+  const timeslots : TimeSlot[] = []
+  if (parsed[id].hasOwnProperty('freebusy')) {
+    for (let slot of parsed[id]["freebusy"]) {
+      timeslots.push({start: slot["start"], end: slot["end"]})
+    }
+  }
+  return timeslots
 }

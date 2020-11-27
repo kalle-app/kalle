@@ -1,4 +1,4 @@
-import { freeBusy } from "./"
+import { getTakenTimeSlots, getEvents } from "./"
 import fetch from "node-fetch"
 
 const baikalJohnDoe = {
@@ -24,11 +24,31 @@ describe("baikal test instance", () => {
 })
 
 describe("freeBusy", () => {
-  it("returns a freeBusy schedule", async () => {
-    const result = await freeBusy(baikalJohnDoe)
-    const expected = [{"end": new Date(2020, 10, 25, 14, 0, 0, 0), "start": new Date(2020, 10, 25, 12, 0, 0, 0), "type": "BUSY"}, 
-                      {"end": new Date(2020, 10, 25, 23, 0, 0, 0), "start": new Date(2020, 10, 25, 20, 0, 0, 0), "type": "BUSY"}, 
-                      {"end": new Date(2020, 10, 26, 12, 0, 0, 0), "start": new Date(2020, 10, 26, 10, 0, 0, 0), "type": "BUSY"}]
+  it("without events", async () => {
+    const result = await getTakenTimeSlots(baikalJohnDoe, new Date("2020-11-16T00:00:00.000Z"), new Date("2020-11-21T00:00:00.000Z"))
+    const expected = []
+    expect(result).toEqual(expected)
+  })
+  it("with events", async () => {
+    const result = await getTakenTimeSlots(baikalJohnDoe, new Date("2020-11-23T00:00:00.000Z"), new Date("2020-11-28T00:00:00.000Z"))
+    const expected = [{"start": new Date("2020-11-25T11:00:00.000Z"), "end": new Date("2020-11-25T13:00:00.000Z")}, 
+                      {"start": new Date("2020-11-25T19:00:00.000Z"), "end": new Date("2020-11-25T22:00:00.000Z")}, 
+                      {"start": new Date("2020-11-26T09:00:00.000Z"), "end": new Date("2020-11-26T11:00:00.000Z")}]
+    expect(result).toEqual(expected)
+  })
+})
+
+describe("events", () => {
+  it("without events", async () => {
+    const result = await getEvents(baikalJohnDoe, new Date("2020-11-16T00:00:00.000Z"), new Date("2020-11-21T00:00:00.000Z"))
+    const expected = []
+    expect(result).toEqual(expected)
+  })
+  it("with events", async () => {
+    const result = await getEvents(baikalJohnDoe, new Date("2020-11-23T00:00:00.000Z"), new Date("2020-11-28T00:00:00.000Z"))
+    const expected = [{"title": "Lunch", "start": new Date("2020-11-25T11:00:00.000Z"), "end": new Date("2020-11-25T13:00:00.000Z")}, 
+                      {"title": "Geburtstag", "start": new Date("2020-11-25T19:00:00.000Z"), "end": new Date("2020-11-25T22:00:00.000Z")}, 
+                      {"title": "Meeting", "start": new Date("2020-11-26T09:00:00.000Z"), "end": new Date("2020-11-26T11:00:00.000Z")}]
     expect(result).toEqual(expected)
   })
 })
