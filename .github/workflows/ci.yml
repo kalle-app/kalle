@@ -21,6 +21,8 @@ jobs:
       - name: Fix file permissions for Baikal data
         run: sudo chmod -R 666 test/baikal/
       - run: npm ci
+      - name: Debug with tmate
+        uses: mxschmitt/action-tmate@v3.1
       - run: npm run test:baikal:start
       - run: npm test -- --coverage
       - run: npm run test:baikal:stop
