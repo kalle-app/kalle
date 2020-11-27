@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: "14"
       - name: Fix file permissions for Baikal data
-        run: sudo chmod -R 666 test/baikal/
+        run: sudo chmod -R 777 test/baikal/
       - run: npm ci
       - run: npm run test:baikal:start
       - run: npm test -- --coverage
