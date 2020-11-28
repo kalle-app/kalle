@@ -5,12 +5,12 @@ import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Meeting } from "app/calendars/types"
+import Calendar from "../calendar"
 
 type AvailabilityProps = {
   toNext: any
   stepBack: any
   onEdit: any
-  meeting: Meeting
 }
 
 const Availability = (props: AvailabilityProps) => {

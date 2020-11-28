@@ -10,7 +10,6 @@ type ScheduleProps = {
   toNext: any
   stepBack: any
   onEdit: any
-  meeting: Meeting
 }
 
 const Schedule = (props: ScheduleProps) => {

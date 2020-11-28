@@ -1,9 +1,9 @@
 import { BlitzPage } from "blitz"
 import React, { Suspense, useState } from "react"
 import Advanced from "../components/creationSteps/advanced"
-import Schedule from "../components/creationSteps/schedule"
-import General from "../components/creationSteps/general"
 import Availability from "../components/creationSteps/availability"
+import General from "../components/creationSteps/general"
+import Schedule from "../components/creationSteps/schedule"
 
 enum Steps {
   General,
@@ -19,15 +19,6 @@ const initialMeeting = {
   timezone: 0,
   startDate: "",
   endDate: "",
-  schedule: {
-    monday: [],
-    tuesday: [],
-    wendsday: [],
-    thursday: [],
-    friday: [],
-    saturday: [],
-    sunday: [],
-  },
   timeslots: [],
 }
 
@@ -36,7 +27,7 @@ const InviteCreationContent = () => {
   const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
 
-  const meetingEdited = (key, value) => {
+  const onMeetingEdited = (key, value) => {
     if (key === "timeslots") {
       setMeeting({
         ...meeting,
@@ -53,22 +44,13 @@ const InviteCreationContent = () => {
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General toNext={next} onEdit={meetingEdited} />
+        return <General toNext={next} onEdit={onMeetingEdited} />
       case Steps.Schedule:
-        return (
-          <Schedule toNext={next} meeting={meeting} stepBack={stepBack} onEdit={meetingEdited} />
-        )
+        return <Schedule toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
       case Steps.Availability:
-        return (
-          <Availability
-            toNext={next}
-            meeting={meeting}
-            stepBack={stepBack}
-            onEdit={meetingEdited}
-          />
-        )
+        return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
       case Steps.Advanced:
-        return <Advanced stepBack={stepBack} onEdit={meetingEdited} />
+        return <Advanced stepBack={stepBack} onEdit={onMeetingEdited} />
     }
   }
 
@@ -85,7 +67,6 @@ const InviteCreationContent = () => {
       setStep(stepOrder[cur - 1])
     }
   }
-
   return <div className="bg-white shadow overflow-hidden sm:rounded-lg">{renderSwitch()}</div>
 }
 
