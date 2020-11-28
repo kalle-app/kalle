@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/calendars/types"
+import { Meeting } from "app/appointments/types"
 
 type ScheduleProps = {
   toNext: any
@@ -14,6 +14,10 @@ type ScheduleProps = {
 
 const Schedule = (props: ScheduleProps) => {
   const days = ["Monday", "Tuesday", "Wendsday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+  const textChanged = (e: any) => {
+    props.onEdit(e.currentTarget.name, e.currentTarget.value)
+  }
 
   return (
     <div>
@@ -96,7 +100,8 @@ const Schedule = (props: ScheduleProps) => {
                   <input
                     type="number"
                     id="duration_custom"
-                    name="duration_custom"
+                    name="duration"
+                    onBlur={textChanged}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>

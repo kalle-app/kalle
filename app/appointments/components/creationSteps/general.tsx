@@ -46,6 +46,7 @@ const General = (props: GeneralProps) => {
                   type="text"
                   id="link"
                   name="link"
+                  onBlur={textChanged}
                   className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
@@ -58,6 +59,7 @@ const General = (props: GeneralProps) => {
                   <textarea
                     id="description"
                     name="description"
+                    onBlur={textChanged}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"
                     placeholder="Meeting description..."
                   ></textarea>

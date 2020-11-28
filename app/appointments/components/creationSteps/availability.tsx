@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/calendars/types"
+import { Meeting } from "app/appointments/types"
 import Calendar from "../calendar"
 
 type AvailabilityProps = {

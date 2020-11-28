@@ -1,9 +1,9 @@
 import { BlitzPage } from "blitz"
 import React, { Suspense, useState } from "react"
-import Advanced from "../components/creationSteps/advanced"
-import Availability from "../components/creationSteps/availability"
-import General from "../components/creationSteps/general"
-import Schedule from "../components/creationSteps/schedule"
+import Advanced from "../../components/creationSteps/advanced"
+import Availability from "../../components/creationSteps/availability"
+import General from "../../components/creationSteps/general"
+import Schedule from "../../components/creationSteps/schedule"
 
 enum Steps {
   General,
@@ -20,6 +20,15 @@ const initialMeeting = {
   startDate: "",
   endDate: "",
   timeslots: [],
+  schedule: {
+    monday: [],
+    tuesday: [],
+    wendsday: [],
+    thursday: [],
+    friday: [],
+    saturday: [],
+    sunday: [],
+  },
 }
 
 const InviteCreationContent = () => {
@@ -70,7 +79,7 @@ const InviteCreationContent = () => {
   return <div className="bg-white shadow overflow-hidden sm:rounded-lg">{renderSwitch()}</div>
 }
 
-const InviteCreation: BlitzPage = () => {
+const Create: BlitzPage = () => {
   return (
     <div className="bg-gray-100 flex h-screen">
       <div className="container flex flex-col justify-center mx-auto">
@@ -82,4 +91,4 @@ const InviteCreation: BlitzPage = () => {
   )
 }
 
-export default InviteCreation
+export default Create
