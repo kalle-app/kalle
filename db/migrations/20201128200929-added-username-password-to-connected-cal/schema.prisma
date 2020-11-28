@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -42,7 +42,7 @@ model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
   caldavAddress String
-  username String
+  userName String
   password String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int

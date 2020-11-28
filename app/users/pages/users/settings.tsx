@@ -1,6 +1,6 @@
 import ConnectedCalendarsList from "app/users/components/connectedCalendarsList"
 import Divider from "app/users/components/divider"
-import AddCalendarModal from "app/users/components/addCalendarModal"
+import AddConnectedCalendarModal from "app/users/components/addConnectedCalendarModal"
 import Section from "app/users/components/section"
 import UserData from "app/users/components/userData"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
@@ -37,7 +37,7 @@ const Settings = () => {
           </Suspense>
         </Section>
       </div>
-      <AddCalendarModal hidden={modalHidden} updateCalendarList={handleCalendarAdded} />
+      <AddConnectedCalendarModal hidden={modalHidden} updateCalendarList={handleCalendarAdded} />
     </div>
   )
 }

@@ -3,11 +3,14 @@ import addConnectedCalendar from "../mutations/addConnectedCalendar"
 import AddConnectedCalendar from "./addConnectedCalendar"
 import { useState } from "react"
 import { useMutation } from "blitz"
+import authenticateCalDav from "../utils/authenticateConnectedCalendar"
 
 const initialCalendar = {
   name: "",
   type: "CalDav",
   url: "",
+  username: "",
+  password: "",
 }
 
 type AddCalendarProps = {
@@ -15,7 +18,7 @@ type AddCalendarProps = {
   hidden: boolean
 }
 
-const AddCalendarModal = (props: AddCalendarProps) => {
+const AddConnectedCalendarModal = (props: AddCalendarProps) => {
   const [calendar, setCalendar] = useState(initialCalendar)
   const [createCalendarMutation] = useMutation(addConnectedCalendar)
 
@@ -46,6 +49,25 @@ const AddCalendarModal = (props: AddCalendarProps) => {
             <Button
               title="Add Calendar"
               action={async () => {
+                let credentialsCorrect = false
+                switch (calendar.type) {
+                  case "CalDav":
+                    credentialsCorrect = authenticateCalDav(
+                      calendar.username,
+                      calendar.password,
+                      calendar.url
+                    )
+                    break
+                  default:
+                    alert("Calendartype not supported")
+                    return
+                }
+
+                if (!credentialsCorrect) {
+                  alert("Invalid Credentials")
+                  return
+                }
+
                 try {
                   await createCalendarMutation(calendar)
                   props.updateCalendarList()
@@ -67,4 +89,4 @@ const AddCalendarModal = (props: AddCalendarProps) => {
   )
 }
 
-export default AddCalendarModal
+export default AddConnectedCalendarModal
