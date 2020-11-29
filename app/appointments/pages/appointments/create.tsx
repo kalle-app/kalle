@@ -4,6 +4,7 @@ import Advanced from "../../components/creationSteps/advanced"
 import Availability from "../../components/creationSteps/availability"
 import General from "../../components/creationSteps/general"
 import Schedule from "../../components/creationSteps/schedule"
+import { Meeting } from "app/appointments/types"
 
 enum Steps {
   General,
@@ -12,13 +13,14 @@ enum Steps {
   Advanced,
 }
 
-const initialMeeting = {
+const initialMeeting: Meeting = {
   name: "",
   link: "",
   description: "",
+  duration: 15,
   timezone: 0,
-  startDate: "",
-  endDate: "",
+  startDate: new Date(),
+  endDate: new Date(),
   timeslots: [],
   schedule: {
     monday: [],
@@ -53,9 +55,11 @@ const InviteCreationContent = () => {
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General toNext={next} onEdit={onMeetingEdited} />
+        return <General meeting={meeting} toNext={next} onEdit={onMeetingEdited} />
       case Steps.Schedule:
-        return <Schedule toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return (
+          <Schedule meeting={meeting} toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+        )
       case Steps.Availability:
         return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
       case Steps.Advanced:

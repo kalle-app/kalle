@@ -10,13 +10,18 @@ type ScheduleProps = {
   toNext: any
   stepBack: any
   onEdit: any
+  meeting: Meeting
 }
 
 const Schedule = (props: ScheduleProps) => {
   const days = ["Monday", "Tuesday", "Wendsday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-  const textChanged = (e: any) => {
+  const handleChange = (e: any) => {
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
+  }
+
+  const handleSelection = (e: any) => {
+    props.onEdit(e.target.name, e.target.value)
   }
 
   return (
@@ -51,6 +56,8 @@ const Schedule = (props: ScheduleProps) => {
                     name="duration"
                     type="radio"
                     value={15}
+                    checked={props.meeting.duration === 15}
+                    onChange={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -66,6 +73,8 @@ const Schedule = (props: ScheduleProps) => {
                     name="duration"
                     type="radio"
                     value={30}
+                    checked={props.meeting.duration === 30}
+                    onChange={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -81,6 +90,8 @@ const Schedule = (props: ScheduleProps) => {
                     name="duration"
                     type="radio"
                     value={60}
+                    checked={props.meeting.duration === 60}
+                    onChange={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -101,7 +112,8 @@ const Schedule = (props: ScheduleProps) => {
                     type="number"
                     id="duration_custom"
                     name="duration"
-                    onBlur={textChanged}
+                    value={props.meeting.duration}
+                    onChange={handleChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -114,6 +126,8 @@ const Schedule = (props: ScheduleProps) => {
                 <select
                   id="timezone"
                   name="timezone"
+                  value={props.meeting.timezone}
+                  onChange={handleChange}
                   className="mt-1 block col-span-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                   <option value="-12">(GMT-12:00) International Date Line West</option>
@@ -148,7 +162,7 @@ const Schedule = (props: ScheduleProps) => {
                   <option value="0">
                     (GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London
                   </option>
-                  <option selected value="1">
+                  <option value="1">
                     (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
                   </option>
                   <option value="1">
@@ -216,22 +230,21 @@ const Schedule = (props: ScheduleProps) => {
               </legend>
               <div className="grid grid-cols-8 gap-6 bg">
                 <div className="col-span-2">
-                  <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">
-                    From
-                  </label>
                   <DatePicker
-                    id="start_date"
-                    name="startDate"
+                    selected={props.meeting.startDate}
+                    onChange={(date) => props.onEdit("startDate", date)}
+                    selectsStart
+                    startDate={props.meeting.startDate}
+                    endDate={props.meeting.endDate}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
-                </div>
-                <div className="col-span-2">
-                  <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">
-                    To
-                  </label>
                   <DatePicker
-                    id="end_date"
-                    name="endDate"
+                    selected={props.meeting.endDate}
+                    onChange={(date) => props.onEdit("endDate", date)}
+                    selectsEnd
+                    startDate={props.meeting.startDate}
+                    endDate={props.meeting.endDate}
+                    minDate={props.meeting.startDate}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -246,7 +259,7 @@ const Schedule = (props: ScheduleProps) => {
               <div className="grid grid-cols-12 mt-3">
                 {days.map((day) => {
                   return (
-                    <div className="col-span-12 grid grid-cols-12">
+                    <div key={day} className="col-span-12 grid grid-cols-12">
                       <div className="col-span-2">{day}</div>
                       <div className="col-span-8 grid grid-cols-9">
                         <input
