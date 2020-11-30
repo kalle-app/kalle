@@ -62,9 +62,6 @@ async function icsEventsToInternalEvents(ics: string): Promise<Event[]> {
 }
 
 export async function getEvents(calendar: CalendarConnectionDetails, start: Date, end: Date) {
-  const formattedStart = formatDateString(start)
-  const formattedEnd = formatDateString(end)
-
   const response = await makeRequestTo(calendar, {
     headers: {
       Depth: 1,
@@ -83,8 +80,8 @@ export async function getEvents(calendar: CalendarConnectionDetails, start: Date
           <c:comp-filter name="VCALENDAR">
             <c:comp-filter name="VEVENT">
               <c:time-range
-                start="${formattedStart}"
-                end="${formattedEnd}"
+                start="${formatDateString(start)}"
+                end="${formatDateString(end)}"
               />
             </c:comp-filter>
           </c:comp-filter>
@@ -136,9 +133,6 @@ export async function getTakenTimeSlots(
   start: Date,
   end: Date
 ) {
-  const formattedStart = formatDateString(start)
-  const formattedEnd = formatDateString(end)
-
   const response = await makeRequestTo(calendar, {
     headers: {
       Depth: 1,
@@ -148,8 +142,8 @@ export async function getTakenTimeSlots(
       <?xml version="1.0"?>
       <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
         <c:time-range
-          start="${formattedStart}"
-          end="${formattedEnd}"
+          start="${formatDateString(start)}"
+          end="${formatDateString(end)}"
         />
       </c:free-busy-query>`.trim(),
   })
