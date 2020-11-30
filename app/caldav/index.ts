@@ -1,5 +1,6 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
+import _ from "lodash"
 
 interface CalendarConnectionDetails {
   url: string
@@ -8,17 +9,6 @@ interface CalendarConnectionDetails {
     password: string
     digest?: boolean
   }
-}
-
-interface TimeSlot {
-  start: Date
-  end: Date
-}
-
-interface Event {
-  title: string
-  start: Date
-  end: Date
 }
 
 async function makeRequestTo(
@@ -38,25 +28,37 @@ async function makeRequestTo(
   })
 }
 
-function formatDateString(date: Date) {
-  return date.toISOString().replace("-", "").replace(":", "").split(".")[0] + "Z"
+interface TimeSlot {
+  start: Date
+  end: Date
 }
 
-function icsEventsToInternalEvents(ics: string): Event[] {
-  const parsed = ical.sync.parseICS(ics)
-  const ids = Object.keys(parsed)
-  const events: Event[] = []
-  for (let id of ids) {
-    if (parsed[id]["type"] === "VEVENT") {
-      events.push({
-        title: parsed[id]["summary"] as any,
-        start: parsed[id]["start"] as any,
-        end: parsed[id]["end"] as any,
-      })
-    }
-  }
-  events.sort((a, b) => (a.start > b.start ? 1 : -1))
-  return events
+interface Event {
+  title: string
+  start: Date
+  end: Date
+}
+
+function formatDateString(date: Date) {
+  return date.toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z"
+}
+
+function isEvent(component: ical.CalendarComponent): component is ical.VEvent {
+  return component.type === "VEVENT"
+}
+
+async function icsEventsToInternalEvents(ics: string): Promise<Event[]> {
+  const parsed = await ical.async.parseICS(ics)
+  const icsEvents = Object.values(parsed).filter(isEvent)
+  const internalEvents = icsEvents.map(
+    (ev): Event => ({
+      start: ev.start,
+      end: ev.end,
+      title: ev.summary,
+    })
+  )
+
+  return _.sortBy(internalEvents, "start")
 }
 
 export async function getEvents(calendar: CalendarConnectionDetails, start: Date, end: Date) {
@@ -91,19 +93,41 @@ export async function getEvents(calendar: CalendarConnectionDetails, start: Date
       </c:calendar-query>`.trim(),
   })
 
-  return icsEventsToInternalEvents(response.data.toString())
+  return await icsEventsToInternalEvents(response.data.toString())
 }
 
-function icsFreeBusyToInternalFreeBusy(ics: string): TimeSlot[] {
-  const parsed = ical.sync.parseICS(ics)
-  const id = Object.keys(parsed)[0]
-  const timeslots: TimeSlot[] = []
-  if (parsed[id].hasOwnProperty("freebusy")) {
-    for (let slot of parsed[id]["freebusy"]) {
-      timeslots.push({ start: slot["start"], end: slot["end"] })
-    }
-  }
-  return timeslots
+interface VFreeBusy {
+  type: "VFREEBUSY"
+  params: any[]
+  datetype: "date-time"
+  start: ical.DateWithTimeZone
+  end: ical.DateWithTimeZone
+  dtstamp: ical.DateWithTimeZone
+  freebusy?: {
+    type: "FREE" | "BUSY"
+    start: ical.DateWithTimeZone
+    end: ical.DateWithTimeZone
+  }[]
+}
+
+function isFreeBusy(component: any): component is VFreeBusy {
+  return (component.type as any) === "VFREEBUSY"
+}
+
+async function icsFreeBusyToInternalFreeBusy(ics: string): Promise<TimeSlot[]> {
+  const parsed = await ical.async.parseICS(ics)
+  const icsFreeBusy = Object.values(parsed as any).filter(isFreeBusy)
+
+  const internalFreeBusy = _.flatMap(
+    icsFreeBusy,
+    (v) =>
+      v.freebusy?.map((fb) => ({
+        start: fb.start,
+        end: fb.end,
+      })) ?? []
+  )
+
+  return _.sortBy(internalFreeBusy, "start")
 }
 
 // currently not working on baikal's default calender
@@ -130,5 +154,5 @@ export async function getTakenTimeSlots(
       </c:free-busy-query>`.trim(),
   })
 
-  return icsFreeBusyToInternalFreeBusy(response.data.toString())
+  return await icsFreeBusyToInternalFreeBusy(response.data.toString())
 }
