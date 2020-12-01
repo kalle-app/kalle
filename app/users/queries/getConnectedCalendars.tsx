@@ -1,4 +1,4 @@
-import db, { ConnectedCalendar } from "db"
+import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getConnectedCalendars(_ = null, ctx: Ctx) {
