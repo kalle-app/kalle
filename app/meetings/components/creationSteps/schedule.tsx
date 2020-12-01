@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/appointments/types"
+import { Meeting } from "app/meetings/types"
 
 type ScheduleProps = {
-  toNext: any
-  stepBack: any
-  onEdit: any
+  stepBack: () => void
+  toNext: () => void
+  onEdit: (key: string, value: any) => void
   meeting: Meeting
 }
 

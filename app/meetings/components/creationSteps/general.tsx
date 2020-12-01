@@ -1,11 +1,12 @@
 import Button from "app/users/components/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
+import { Meeting } from "../../types"
 
 type GeneralProps = {
-  toNext: any
-  onEdit: any
-  meeting: any
+  toNext: () => void
+  onEdit: (key: string, value: any) => void
+  meeting: Meeting
 }
 
 const General = (props: GeneralProps) => {

@@ -4,7 +4,7 @@ import Advanced from "../../components/creationSteps/advanced"
 import Availability from "../../components/creationSteps/availability"
 import General from "../../components/creationSteps/general"
 import Schedule from "../../components/creationSteps/schedule"
-import { Meeting } from "app/appointments/types"
+import { Meeting } from "app/meetings/types"
 
 enum Steps {
   General,
@@ -60,6 +60,8 @@ const InviteCreationContent = () => {
     }
   }
 
+  const submitMeeting = (e: any) => {}
+
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
@@ -71,7 +73,7 @@ const InviteCreationContent = () => {
       case Steps.Availability:
         return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
       case Steps.Advanced:
-        return <Advanced stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} onEdit={onMeetingEdited} />
     }
   }
 
@@ -82,7 +84,7 @@ const InviteCreationContent = () => {
     }
   }
 
-  const stepBack = (lastStep: Steps) => {
+  const stepBack = () => {
     if (step !== stepOrder[0]) {
       const cur = stepOrder.indexOf(step)
       setStep(stepOrder[cur - 1])

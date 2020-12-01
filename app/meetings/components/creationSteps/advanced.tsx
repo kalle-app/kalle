@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 
 type AdvancedProps = {
-  stepBack: any
-  onEdit: any
+  stepBack: () => void
+  onEdit: (key: string, value: any) => void
+  onSubmit: (e: any) => void
 }
 
 const Advanced = (props: AdvancedProps) => {
@@ -25,7 +26,19 @@ const Advanced = (props: AdvancedProps) => {
               <FontAwesomeIcon icon={faAngleDoubleLeft} />
             </Button>
           </div>
-          <div className="col-start-2 col-span-6">Add contact details ...</div>
+          <div className="col-start-2 col-span-6">Coming soon...</div>
+          <div className="col-start-1 col-span-8"></div>
+          <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+            <div className="rounded-md shadow">
+              <a
+                href="#"
+                onClick={props.onSubmit}
+                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+              >
+                Submit
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
