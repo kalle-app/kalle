@@ -9,7 +9,7 @@ export interface Meeting {
   schedule: {
     monday: any[]
     tuesday: any[]
-    wendsday: any[]
+    wednesday: any[]
     thursday: any[]
     friday: any[]
     saturday: any[]

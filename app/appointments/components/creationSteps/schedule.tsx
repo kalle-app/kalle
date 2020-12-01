@@ -14,7 +14,7 @@ type ScheduleProps = {
 }
 
 const Schedule = (props: ScheduleProps) => {
-  const days = ["Monday", "Tuesday", "Wendsday", "Thursday", "Friday", "Saturday", "Sunday"]
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
   const handleChange = (e: any) => {
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
@@ -22,6 +22,10 @@ const Schedule = (props: ScheduleProps) => {
 
   const handleSelection = (e: any) => {
     props.onEdit(e.target.name, e.target.value)
+  }
+
+  const addSchedule = (e: any, day: string, type: string) => {
+    props.onEdit("schedule", { day: day, value: e.currentTarget.value, type: type })
   }
 
   return (
@@ -231,6 +235,7 @@ const Schedule = (props: ScheduleProps) => {
               <div className="grid grid-cols-8 gap-6 bg">
                 <div className="col-span-2">
                   <DatePicker
+                    dateFormat="dd.MM.yyyy"
                     selected={props.meeting.startDate}
                     onChange={(date) => props.onEdit("startDate", date)}
                     selectsStart
@@ -239,6 +244,7 @@ const Schedule = (props: ScheduleProps) => {
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                   <DatePicker
+                    dateFormat="dd.MM.yyyy"
                     selected={props.meeting.endDate}
                     onChange={(date) => props.onEdit("endDate", date)}
                     selectsEnd
@@ -258,19 +264,27 @@ const Schedule = (props: ScheduleProps) => {
               </p>
               <div className="grid grid-cols-12 mt-3">
                 {days.map((day) => {
+                  const startName = day + "Start"
+                  const endName = day + "End"
                   return (
                     <div key={day} className="col-span-12 grid grid-cols-12">
                       <div className="col-span-2">{day}</div>
                       <div className="col-span-8 grid grid-cols-9">
                         <input
                           type="text"
-                          name="monday_start"
+                          value={props.meeting.schedule[day][0]}
+                          onChange={(e) => {
+                            addSchedule(e, day, "start")
+                          }}
                           className="mt-1 mr-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         />
                         <p className="text-center">-</p>
                         <input
                           type="text"
-                          name="monday_end"
+                          onChange={(e) => {
+                            addSchedule(e, day, "end")
+                          }}
+                          value={props.meeting.schedule[day][1]}
                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>

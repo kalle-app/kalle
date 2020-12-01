@@ -25,7 +25,7 @@ const initialMeeting: Meeting = {
   schedule: {
     monday: [],
     tuesday: [],
-    wendsday: [],
+    wednesday: [],
     thursday: [],
     friday: [],
     saturday: [],
@@ -39,7 +39,15 @@ const InviteCreationContent = () => {
   const [meeting, setMeeting] = useState(initialMeeting)
 
   const onMeetingEdited = (key, value) => {
-    if (key === "timeslots") {
+    if (key === "schedule") {
+      const position = value.type === "start" ? 0 : 1
+      const newSchedule = meeting.schedule
+      newSchedule[value.day][position] = value.value
+      setMeeting({
+        ...meeting,
+        schedule: newSchedule,
+      })
+    } else if (key === "timeslots") {
       setMeeting({
         ...meeting,
         timeslots: meeting.timeslots.concat(value),
