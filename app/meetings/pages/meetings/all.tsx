@@ -10,7 +10,7 @@ const MyMeetingsContent = () => {
 }
 
 const Create: BlitzPage = () => {
-  // display all meetings I invited to here
+  // display all meetings I invited to as cards here
   // Customer can click on a meeting and info will be diplayed
   return (
     <div className="bg-gray-100 flex h-screen">
