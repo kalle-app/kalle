@@ -7,13 +7,13 @@ export interface Meeting {
   startDate: Date
   endDate: Date
   schedule: {
-    monday: any[]
-    tuesday: any[]
-    wednesday: any[]
-    thursday: any[]
-    friday: any[]
-    saturday: any[]
-    sunday: any[]
+    monday: string[]
+    tuesday: string[]
+    wednesday: string[]
+    thursday: string[]
+    friday: string[]
+    saturday: string[]
+    sunday: string[]
   }
   timeslots: string[]
 }

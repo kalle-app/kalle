@@ -11,7 +11,6 @@ type GeneralProps = {
 
 const General = (props: GeneralProps) => {
   const textChanged = (e: any) => {
-    console.log(e)
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
   }
 

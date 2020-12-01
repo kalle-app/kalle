@@ -122,9 +122,7 @@ const Schedule = (props: ScheduleProps) => {
                     id="duration_custom"
                     name="duration"
                     value={
-                      [15, 30, 60].includes(props.meeting.duration)
-                        ? undefined
-                        : props.meeting.duration
+                      [15, 30, 60].includes(props.meeting.duration) ? NaN : props.meeting.duration
                     }
                     onChange={handleDurationChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -277,15 +275,15 @@ const Schedule = (props: ScheduleProps) => {
                   const endName = day + "End"
                   return (
                     <div key={day} className="col-span-12 grid grid-cols-12">
-                      <div className="col-span-2">{day}</div>
-                      <div className="col-span-8 grid grid-cols-9">
+                      <div className="col-span-2">{day.charAt(0).toUpperCase() + day.slice(1)}</div>
+                      <div className="col-span-8 grid grid-cols-4">
                         <input
                           type="text"
                           value={props.meeting.schedule[day][0]}
                           onChange={(e) => {
                             addSchedule(e, day, "start")
                           }}
-                          className="mt-1 mr-3 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                          className="mt-1 mr-3 focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md"
                         />
                         <p className="text-center">-</p>
                         <input
@@ -294,7 +292,7 @@ const Schedule = (props: ScheduleProps) => {
                             addSchedule(e, day, "end")
                           }}
                           value={props.meeting.schedule[day][1]}
-                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
                       <div className="col-span-2">
