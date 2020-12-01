@@ -5,7 +5,6 @@ import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Meeting } from "app/meetings/types"
-import { string } from "prop-types"
 
 type ScheduleProps = {
   stepBack: () => void
@@ -271,8 +270,6 @@ const Schedule = (props: ScheduleProps) => {
               </p>
               <div className="grid grid-cols-12 mt-3">
                 {days.map((day) => {
-                  const startName = day + "Start"
-                  const endName = day + "End"
                   return (
                     <div key={day} className="col-span-12 grid grid-cols-12">
                       <div className="col-span-2">{day.charAt(0).toUpperCase() + day.slice(1)}</div>

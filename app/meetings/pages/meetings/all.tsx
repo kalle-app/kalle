@@ -1,5 +1,5 @@
 import { BlitzPage, useQuery } from "blitz"
-import React, { Suspense, useState } from "react"
+import React, { Suspense } from "react"
 import getMeetings from "../../../meetings/queries/getMeetings"
 import MyMeetings from "../../components/myMeetings"
 

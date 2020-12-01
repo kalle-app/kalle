@@ -28,7 +28,7 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
 
   for (const day of Object.keys(meetingCreate.schedule)) {
     if (meetingCreate.schedule[day][0] && meetingCreate.schedule[day][1]) {
-      const dailySchedule = await db.dailySchedule.create({
+      await db.dailySchedule.create({
         data: {
           day: day,
           startTime: meetingCreate.schedule[day][0],

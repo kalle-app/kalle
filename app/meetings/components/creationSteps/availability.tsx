@@ -1,11 +1,8 @@
 import React from "react"
 import Button from "app/users/components/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
-import DatePicker from "react-datepicker"
+import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/meetings/types"
-import Calendar from "../calendar"
 
 type AvailabilityProps = {
   stepBack: () => void

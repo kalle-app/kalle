@@ -5,9 +5,7 @@ import Availability from "../../components/creationSteps/availability"
 import General from "../../components/creationSteps/general"
 import Schedule from "../../components/creationSteps/schedule"
 import { Meeting } from "app/meetings/types"
-import addConnectedCalendar from "../../../users/mutations/addConnectedCalendar"
 import addMeeting from "../../mutations/addMeeting"
-import { router } from "next/client"
 
 enum Steps {
   General,
