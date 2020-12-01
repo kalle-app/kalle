@@ -3,7 +3,13 @@ type MyMeetingsProps = {
 }
 
 const MyMeetings = (props: MyMeetingsProps) => {
-  return <div>My Meetings will be displayed here</div>
+  return (
+    <div className="container">
+      {props.meetings?.map((meeting) => {
+        return <h3>{meeting.name}</h3>
+      })}
+    </div>
+  )
 }
 
 export default MyMeetings

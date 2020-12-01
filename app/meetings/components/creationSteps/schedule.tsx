@@ -5,6 +5,7 @@ import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Meeting } from "app/meetings/types"
+import { string } from "prop-types"
 
 type ScheduleProps = {
   stepBack: () => void
@@ -20,8 +21,12 @@ const Schedule = (props: ScheduleProps) => {
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
   }
 
+  const handleDurationChange = (e: any) => {
+    props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
+  }
+
   const handleSelection = (e: any) => {
-    props.onEdit(e.target.name, e.target.value)
+    props.onEdit(e.target.name, parseInt(e.target.value))
   }
 
   const addSchedule = (e: any, day: string, type: string) => {
@@ -116,8 +121,12 @@ const Schedule = (props: ScheduleProps) => {
                     type="number"
                     id="duration_custom"
                     name="duration"
-                    value={props.meeting.duration}
-                    onChange={handleChange}
+                    value={
+                      [15, 30, 60].includes(props.meeting.duration)
+                        ? undefined
+                        : props.meeting.duration
+                    }
+                    onChange={handleDurationChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>

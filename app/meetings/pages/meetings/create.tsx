@@ -1,10 +1,13 @@
-import { BlitzPage } from "blitz"
+import { BlitzPage, useMutation } from "blitz"
 import React, { Suspense, useState } from "react"
 import Advanced from "../../components/creationSteps/advanced"
 import Availability from "../../components/creationSteps/availability"
 import General from "../../components/creationSteps/general"
 import Schedule from "../../components/creationSteps/schedule"
 import { Meeting } from "app/meetings/types"
+import addConnectedCalendar from "../../../users/mutations/addConnectedCalendar"
+import addMeeting from "../../mutations/addMeeting"
+import { router } from "next/client"
 
 enum Steps {
   General,
@@ -37,6 +40,7 @@ const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
   const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
+  const [createMeetingMutation] = useMutation(addMeeting)
 
   const onMeetingEdited = (key, value) => {
     if (key === "schedule") {
@@ -60,7 +64,15 @@ const InviteCreationContent = () => {
     }
   }
 
-  const submitMeeting = (e: any) => {}
+  const submitMeeting = (e: any) => {
+    createMeetingMutation(meeting)
+      .then((data) => {
+        // Redirect to All Meetings
+      })
+      .catch((error) => {
+        alert(error)
+      })
+  }
 
   const renderSwitch = () => {
     switch (step) {
