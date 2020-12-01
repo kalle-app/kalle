@@ -28,13 +28,8 @@ async function makeRequestTo(
   })
 }
 
-interface TimeSlot {
-  start: Date
-  end: Date
-}
-
-interface Event {
-  title: string
+interface ExternalEvent {
+  title?: string
   start: Date
   end: Date
 }
@@ -47,16 +42,21 @@ function isEvent(component: ical.CalendarComponent): component is ical.VEvent {
   return component.type === "VEVENT"
 }
 
-async function icsEventsToInternalEvents(ics: string): Promise<Event[]> {
+async function icsEventsToInternalEvents(ics: string): Promise<ExternalEvent[]> {
   const parsed = await ical.async.parseICS(ics)
   const icsEvents = Object.values(parsed).filter(isEvent)
-  const internalEvents = icsEvents.map(
-    (ev): Event => ({
-      start: ev.start,
-      end: ev.end,
-      title: ev.summary,
-    })
-  )
+  const internalEvents = icsEvents.flatMap((ev): ExternalEvent[] => {
+    if (ev.transparency === "TRANSPARENT") {
+      return []
+    }
+    return [
+      {
+        start: ev.start,
+        end: ev.end,
+        title: ev.summary,
+      },
+    ]
+  })
 
   return _.sortBy(internalEvents, "start")
 }
@@ -101,7 +101,7 @@ interface VFreeBusy {
   end: ical.DateWithTimeZone
   dtstamp: ical.DateWithTimeZone
   freebusy?: {
-    type: "FREE" | "BUSY"
+    type: "FREE" | "BUSY" | "BUSY-TENTATIVE" | string
     start: ical.DateWithTimeZone
     end: ical.DateWithTimeZone
   }[]
@@ -111,17 +111,23 @@ function isFreeBusy(component: any): component is VFreeBusy {
   return (component.type as any) === "VFREEBUSY"
 }
 
-async function icsFreeBusyToInternalFreeBusy(ics: string): Promise<TimeSlot[]> {
+async function icsFreeBusyToInternalFreeBusy(ics: string): Promise<ExternalEvent[]> {
   const parsed = await ical.async.parseICS(ics)
   const icsFreeBusy = Object.values(parsed as any).filter(isFreeBusy)
 
-  const internalFreeBusy = _.flatMap(
-    icsFreeBusy,
+  const internalFreeBusy = icsFreeBusy.flatMap(
     (v) =>
-      v.freebusy?.map((fb) => ({
-        start: fb.start,
-        end: fb.end,
-      })) ?? []
+      v.freebusy?.flatMap((fb) => {
+        if (fb.type === "FREE") {
+          return []
+        }
+        return [
+          {
+            start: fb.start,
+            end: fb.end,
+          },
+        ]
+      }) ?? []
   )
 
   return _.sortBy(internalFreeBusy, "start")
