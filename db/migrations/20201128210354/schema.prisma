@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -42,8 +42,6 @@ model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
   caldavAddress String
-  username String
-  password String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   status String
@@ -57,19 +55,14 @@ model Meeting {
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   description String
-  duration Int
   timezone Int
-  startDate DateTime
-  endDate DateTime
-  schedule DailySchedule[]
+  timeslots TimeSlot[]
 }
 
-model DailySchedule {
-    id Int @id @default(autoincrement())
-    day String
-    startTime String
-    endTime String
-    meeting Meeting @relation(fields: [meetingId], references: [id])
-    meetingId Int
+model TimeSlot {
+  id  Int @id @default(autoincrement())
+  startTime DateTime
+  endTime DateTime
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int
 }
-
