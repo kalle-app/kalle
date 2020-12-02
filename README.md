@@ -18,7 +18,7 @@ This should contain the following properties:
 
 ```
 DATABASE_URL="file:./db.sqlite"
-EMAIL_FROM="email_address" //email-domain which will be used for email shipping
+EMAIL_FROM="changeme@yourdomain.com"
 SMTP_USER="Insert SMTP Username"
 SMTP_PASSWORD="Insert SMTP Password"
 SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
