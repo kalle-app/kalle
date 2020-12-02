@@ -23,7 +23,10 @@ SMTP_USER="Insert SMTP Username"
 SMTP_PASSWORD="Insert SMTP Password"
 SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
 SMTP_HOST="Insert HOST_Name of SMTP-Server"
+MODE="DEVELOPMENT"
 ```
+
+When mode !== development mails will be sent!
 
 Finally you can start the app via:
 `blitz start`

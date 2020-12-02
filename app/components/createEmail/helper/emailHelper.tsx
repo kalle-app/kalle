@@ -1,14 +1,17 @@
 import nodemailer from "nodemailer"
 import Email from "email-templates"
+import { checkEnvVariable } from "../../../../utils/checkEnvVariables"
 
 export function sendEmail(): Email {
+  checkIfSMTPEnvVariablesExist()
+
   const transporter = createSMTPConnection()
   return new Email({
     message: {
       from: process.env.EMAIL_FROM,
     },
     transport: transporter,
-    send: false,
+    send: process.env.MODE !== "development",
     views: {
       options: {
         extension: "hbs",
@@ -27,4 +30,10 @@ function createSMTPConnection(): nodemailer.Transporter {
       pass: process.env.SMTP_PASSWORD,
     },
   })
+}
+
+function checkIfSMTPEnvVariablesExist(): void {
+  ;["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE"].forEach((v) =>
+    checkEnvVariable(v)
+  )
 }
