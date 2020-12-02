@@ -35,6 +35,9 @@
     ]
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "1.2.32",
+    "@fortawesome/free-solid-svg-icons": "5.15.1",
+    "@fortawesome/react-fontawesome": "0.1.12",
     "@prisma/cli": "2.11.0",
     "@prisma/client": "2.11.0",
     "@tailwindcss/forms": "0.2.1",
@@ -44,6 +47,7 @@
     "node-fetch": "2.6.1",
     "node-ical": "0.12.3",
     "react": "0.0.0-experimental-7f28234f8",
+    "react-datepicker": "3.3.0",
     "react-dom": "0.0.0-experimental-7f28234f8",
     "react-error-boundary": "2.3.2",
     "react-final-form": "6.5.2",
