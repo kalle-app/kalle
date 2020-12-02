@@ -7,7 +7,7 @@ import getConnectedCalendars from "../../queries/getConnectedCalendars"
 import { BlitzPage, useQuery } from "blitz"
 import { Suspense, useState } from "react"
 
-const Settings = () => {
+const SettingsContent = () => {
   const [calendarEntries, { refetch }] = useQuery(getConnectedCalendars, null)
   const [modalHidden, setModelHidden] = useState(true)
 
@@ -42,12 +42,12 @@ const Settings = () => {
   )
 }
 
-const Calendars: BlitzPage = () => {
+const Settings: BlitzPage = () => {
   return (
     <Suspense fallback="Loading...">
-      <Settings />
+      <SettingsContent />
     </Suspense>
   )
 }
 
-export default Calendars
+export default Settings
