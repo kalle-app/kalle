@@ -12,12 +12,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:14
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: "14"
+      - name: Fix file permissions for Baikal data
+        run: sudo chmod -R 777 test/baikal/
       - run: npm ci
+      - run: npm run test:baikal:start
       - run: npm test -- --coverage
+      - run: npm run test:baikal:stop
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
