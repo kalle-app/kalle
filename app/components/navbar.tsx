@@ -55,7 +55,6 @@ const DesktopPrivateNavigation = () => {
 const DesktopUserMenu = () => {
   const currentUser = useCurrentUser()
 
-  const [logout] = useMutation(logoutMutation)
   const [profilDropdownOpen, setProfileDropdownOpen] = React.useState(false)
   return currentUser ? (
     <div className="ml-3 relative">
