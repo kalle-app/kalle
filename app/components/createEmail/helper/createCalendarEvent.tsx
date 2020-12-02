@@ -1,8 +1,9 @@
 import * as ics from "ics"
 import { EventAttributes } from "ics"
+import { appointment } from "../types"
 
-export function createCalendarEvent(appointment) {
-  const object: EventAttributes = {
+export function createCalendarEvent(appointment: appointment): string {
+  const event: EventAttributes = {
     start: [
       appointment.start.year,
       appointment.start.month,
@@ -26,12 +27,13 @@ export function createCalendarEvent(appointment) {
       },
     ],
   }
-
-  return ics.createEvent(object, (error, value) => {
+  let iCalEvent: string = ""
+  ics.createEvent(event, (error, value) => {
     if (error) {
-      console.error()
+      console.log(error)
       return
     }
-    return value
+    iCalEvent = value
   })
+  return iCalEvent
 }

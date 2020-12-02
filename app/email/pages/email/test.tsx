@@ -1,7 +1,7 @@
 import { BlitzPage, invoke } from "blitz"
 import Layout from "app/layouts/Layout"
 import { Suspense } from "react"
-import sendMail from "../../../components/createEmail/queries/sendMail"
+import sendConfirmationMail from "../../../components/createEmail/queries/sendConfirmationMail"
 
 /*
  * This is a development file. It is meant for testing the email server and can be deleted later on
@@ -40,7 +40,7 @@ const Test: BlitzPage = () => {
               email: "lasklu@gmail.com",
             },
           }
-          invoke(sendMail, { appointment: appointment, type: "confirmation" })
+          invoke(sendConfirmationMail, { appointment: appointment })
         }}
       >
         Email versenden
