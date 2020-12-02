@@ -14,33 +14,31 @@ const Scheduler = (meetingLink: any) => {
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
-  
-  if(!(connectedCalendars && connectedCalendars[0])) {
-    throw new Error('No Calendar connected!')
+  if (!(connectedCalendars && connectedCalendars[0])) {
+    throw new Error("No Calendar connected!")
   }
-  
-  if(!meeting) {
-    throw new Error('Meeting is invalid!')
+
+  if (!meeting) {
+    throw new Error("Meeting is invalid!")
   }
 
   // TODO replace connectedCalendars[0] with merging all connected calendars
+  //connectedCalendars[0].username
+  //connectedCalendars[0].password,
   const takenSlots = getTakenTimeSlots(
     {
       url: connectedCalendars[0].caldavAddress,
       auth: {
-        username: connectedCalendars[0].username,
-        password: connectedCalendars[0].password,
-      }
+        username: "",
+        password: "",
+      },
     },
     meeting.startDate,
-    meeting.endDate,
+    meeting.endDate
   )
 
-  const slots = getAvailableSlots(
-    meeting.schedule,
-    meeting.duration,
-    takenSlots,
-  )
+  //meeting.schedule
+  const slots = getAvailableSlots([], meeting.duration, takenSlots)
 
   const onChange = (selectDay, event) => {
     setSelectedDay(selectDay)
