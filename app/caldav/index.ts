@@ -28,6 +28,65 @@ async function makeRequestTo(
   })
 }
 
+interface ConnectionDetailsVerificationFailure {
+  fail: "unauthorized" | "other" | "wrong_url" | "no_caldav_support"
+}
+
+interface ConnectionVerificationSuccess {
+  fail: null
+  caldavBaseUrl: string
+}
+
+/**
+ * @example
+ * const result = verifyConnectionDetails(...)
+ * if (result.fail) {
+ *    switch (result.failed) {
+ *      case "unauthorized":
+ *        ...
+ *    }
+ * } else {
+ *    saveConnectionDetails({
+ *      baseUrl: result.caldavBaseUrl,
+ *      ...
+ *    })
+ * }
+ */
+export async function verifyConnectionDetails(
+  calendar: CalendarConnectionDetails
+): Promise<ConnectionVerificationSuccess | ConnectionDetailsVerificationFailure> {
+  try {
+    const response = await makeRequestTo(calendar, { method: "OPTIONS", data: "", headers: {} })
+
+    if (response.status === 401) {
+      return { fail: "unauthorized" }
+    }
+
+    if (response.status < 200 || response.status >= 300) {
+      return { fail: "no_caldav_support" }
+    }
+
+    const supportedDavFeatures = (response.headers.dav ?? "")
+      .toString()
+      .split(",")
+      .map((v) => v.trim())
+
+    let caldavBaseUrl = calendar.url
+
+    if (!supportedDavFeatures.includes("calendar-access")) {
+      return { fail: "no_caldav_support" }
+    }
+
+    return { fail: null, caldavBaseUrl }
+  } catch (error) {
+    if (error.code === "ENOTFOUND") {
+      return { fail: "wrong_url" }
+    }
+
+    return { fail: "other" }
+  }
+}
+
 interface ExternalEvent {
   title?: string
   start: Date
