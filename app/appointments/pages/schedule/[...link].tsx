@@ -1,24 +1,55 @@
-import { BlitzPage, useQuery } from "blitz"
+import { ConnectedCalendar, Meeting } from "@prisma/client"
+import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
+import getMeeting from "app/appointments/queries/getMeeting"
+import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
+import { getTakenTimeSlots } from "app/caldav"
+import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
 import Calendar from "react-calendar"
-import getAvailableSlots from "../queries/getAvailableSlots"
+import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
 
-const Scheduler = () => {
-  const [availableSlots, { refetch }] = useQuery(getAvailableSlots, null)
+const Scheduler = (meetingLink: any) => {
+  const [meeting] = useQuery(getMeeting, meetingLink)
   const [selected, setSelected] = useState()
+  const [selectedDay, setSelectedDay] = useState(new Date())
+  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  
+  if(!(connectedCalendars && connectedCalendars[0])) {
+    throw new Error('No Calendar connected!')
+  }
+  
+  if(!meeting) {
+    throw new Error('Meeting is invalid!')
+  }
+
+  // TODO replace connectedCalendars[0] with merging all connected calendars
+  const takenSlots = getTakenTimeSlots(
+    {
+      url: connectedCalendars[0].caldavAddress,
+      auth: {
+        username: connectedCalendars[0].username,
+        password: connectedCalendars[0].password,
+      }
+    },
+    meeting.startDate,
+    meeting.endDate,
+  )
+
+  const slots = getAvailableSlots(
+    meeting.schedule,
+    meeting.duration,
+    takenSlots,
+  )
 
   const onChange = (selectDay, event) => {
     setSelectedDay(selectDay)
-    console.log("Test")
-    //todo show timeslots for day
   }
 
   const onSubmit = (e: any) => {
     // Send selected to calendar owner
   }
-  console.log("availableSlots: ", availableSlots);
+
   const start = new Date("2020-11-25T11:00:00.000Z")
   const end = new Date("2020-11-25T13:00:00.000Z")
   const start1 = new Date("2020-11-25T13:00:00.000Z")
@@ -32,46 +63,14 @@ const Scheduler = () => {
   const end1n = new Date("2020-11-26T15:00:00.000Z")
   const start2n = new Date("2020-11-26T15:00:00.000Z")
   const end2n = new Date("2020-11-26T17:00:00.000Z")
-  const slots = [{"start": start, "end": end},{"start": start1, "end": end1},
-                {"start": start2, "end": end2},{"start": startn, "end": endn},
-                {"start": start1n, "end": end1n}, {"start": start2n, "end": end2n}]
-
-  const AvailableTimeSlotsSelection = () => {
-
-    function getTimeString(date){
-      return ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
-    }
-
-    const timeSlotTiles = slots.map(slot => {
-      if (selectedDay.getDate() == slot.start.getDate() && selectedDay.getFullYear() == slot.start.getFullYear()) {
-        return (
-          <SingleTimeSlot
-            start={getTimeString(slot.start)}
-            end={getTimeString(slot.end)}
-          />
-        )
-      }
-    })
-
-    return(
-      <>
-      <p className="text-center col-span-full">
-        Please select a time slot.
-      </p>
-      <br/>
-      {timeSlotTiles}
-      </>
-    )
-  }
-
-  const SingleTimeSlot = ({start, end}) => {
-    return(
-      <div className="p-2 m-1 border border-gray-200 col-span-full">
-        <p>{start}-</p>
-        <p>{end}</p>
-      </div>
-    )
-  }
+  const slotsMock = [
+    { start: start, end: end },
+    { start: start1, end: end1 },
+    { start: start2, end: end2 },
+    { start: startn, end: endn },
+    { start: start1n, end: end1n },
+    { start: start2n, end: end2n },
+  ]
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -93,12 +92,12 @@ const Scheduler = () => {
                 value={selectedDay}
                 maxDetail={"month"}
                 minDetail={"month"}
-                tileClassName={({ class1, date}) => date.getDay() === 3 ? true : false}
+                tileClassName={({ class1, date }) => (date.getDay() === 3 ? true : false)}
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">
-              <AvailableTimeSlotsSelection/>
-              </div>
+              <AvailableTimeSlotsSelection slots={slotsMock} selectedDay={selectedDay} />
+            </div>
           </div>
         </div>
       </div>
@@ -107,11 +106,17 @@ const Scheduler = () => {
 }
 
 const ScheduleAppointment: BlitzPage = () => {
-  return (
-    <Suspense fallback="Loading...">
-      <Scheduler />
-    </Suspense>
-  )
+  const link = useParam("link")
+
+  if (link) {
+    return (
+      <Suspense fallback="Loading...">
+        <Scheduler meetingLink={link} />
+      </Suspense>
+    )
+  }
+
+  return <h3>Meeting not found</h3>
 }
 
 export default ScheduleAppointment
