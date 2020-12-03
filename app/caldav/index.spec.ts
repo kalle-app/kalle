@@ -1,4 +1,4 @@
-import { getTakenTimeSlots, getEvents } from "./"
+import { getTakenTimeSlots, getEvents, verifyConnectionDetails } from "./"
 import fetch from "node-fetch"
 import { skipWithoutDocker } from "test/skip-without-docker"
 
@@ -23,6 +23,106 @@ describe("baikal test instance", () => {
         "Baikal not available. Run `npm run test:baikal:start` to start the container."
       )
     }
+  })
+})
+
+describe("auth test", () => {
+  describe("when given invalid credentials", () => {
+    it("returns unauthorized", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "http://localhost:5232/dav.php/calendars/john.doe/test",
+          auth: {
+            username: "john.doe",
+            password: "wrong-password",
+            digest: true,
+          },
+        })
+      ).resolves.toEqual({ fail: "unauthorized" })
+    })
+  })
+
+  describe("when given invalid authentication method", () => {
+    it("returns unauthorized", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "http://localhost:5232/dav.php/calendars/john.doe/test",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: false,
+          },
+        })
+      ).resolves.toEqual({ fail: "unauthorized" })
+    })
+  })
+
+  describe("when given non-existant url", () => {
+    it("returns wrong_url", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "http://non-existant-calendar.com/",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: false,
+          },
+        })
+      ).resolves.toEqual({ fail: "wrong_url" })
+    })
+  })
+
+  describe("when given non-caldav url", () => {
+    it("returns no_caldav_support", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "https://google.com/",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: false,
+          },
+        })
+      ).resolves.toEqual({ fail: "no_caldav_support" })
+    })
+  })
+
+  // We can use https://tools.ietf.org/html/rfc4791#section-6.2.1 to implement this,
+  // but Baikal doesn't support it.
+  describe.skip("when given valid webdav url, but not a calendar resource", () => {
+    it("returns the normalised caldav base URL", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "http://localhost:5232/dav.php/john.doe",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: true,
+          },
+        })
+      ).resolves.toEqual({
+        fail: null,
+        caldavBaseUrl: "http://localhost:5232/dav.php/calendars/john.doe/test",
+      })
+    })
+  })
+
+  describe("when given valid connection details", () => {
+    it("returns the normalised caldav base URL", async () => {
+      await expect(
+        verifyConnectionDetails({
+          url: "http://localhost:5232/dav.php/calendars/john.doe/test",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: true,
+          },
+        })
+      ).resolves.toEqual({
+        fail: null,
+        caldavBaseUrl: "http://localhost:5232/dav.php/calendars/john.doe/test",
+      })
+    })
   })
 })
 
