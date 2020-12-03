@@ -35,13 +35,10 @@ const AddConnectedCalendarModal = (props: AddCalendarProps) => {
       case "CalDav":
         const response = await authenticateCalDav({
           url: calendar.url,
-          auth: {
-            username: calendar.username,
-            password: calendar.password,
-            digest: true,
-          },
+          username: calendar.username,
+          password: calendar.password,
         })
-        if (response.fail != null) {
+        if (response.fail !== null) {
           alert("Invalid Credentials")
           return
         }

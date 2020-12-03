@@ -1,6 +1,12 @@
 import { verifyConnectionDetails, CalendarConnectionDetails } from "app/caldav"
 
-export default async function authenticateCalDav(calendar: CalendarConnectionDetails) {
-  const res = await verifyConnectionDetails(calendar)
+interface AuthenticateCaldavArgs {
+  url: string
+  username: string
+  password: string
+}
+
+export default async function authenticateCalDav(args: AuthenticateCaldavArgs) {
+  const res = await verifyConnectionDetails(args.url, args.username, args.password)
   return res
 }
