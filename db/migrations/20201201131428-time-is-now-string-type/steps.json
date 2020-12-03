@@ -1,0 +1,17 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateField",
+      "model": "DailySchedule",
+      "field": "startTime",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "DailySchedule",
+      "field": "endTime",
+      "type": "String"
+    }
+  ]
+}

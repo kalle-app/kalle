@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -65,8 +65,8 @@ model Meeting {
 model DailySchedule {
     id Int @id @default(autoincrement())
     day String
-    startTime String
-    endTime String
+    startTime DateTime
+    endTime DateTime
     meeting Meeting @relation(fields: [meetingId], references: [id])
     meetingId Int
 }
