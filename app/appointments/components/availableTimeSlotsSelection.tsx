@@ -1,9 +1,11 @@
 import { Slot } from "../types"
 import SingleTimeSlot from "./singleTimeSlot"
 
-type AvailableSlotsProps = {
+interface AvailableSlotsProps {
   slots: Slot[]
   selectedDay: Date
+  setSelectedTimeSlot: any
+  selectedTimeSlot: any
 }
 
 const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
@@ -16,16 +18,22 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
       props.selectedDay.getDate() === slot.start.getDate() &&
       props.selectedDay.getFullYear() === slot.start.getFullYear()
     ) {
-      return <SingleTimeSlot start={getTimeString(slot.start)} end={getTimeString(slot.end)} />
+      return (
+        <SingleTimeSlot
+          start={getTimeString(slot.start)}
+          end={getTimeString(slot.end)}
+          selectedTimeSlot={props.selectedTimeSlot}
+          setSelectedTimeSlot={props.setSelectedTimeSlot}
+        />
+      )
     }
   })
 
   return (
-    <>
-      <p className="text-center col-span-full">Please select a time slot.</p>
-      <br />
+    <div className="flex-col w-full">
+      <p>Please select a time slot.</p>
       {timeSlotTiles}
-    </>
+    </div>
   )
 }
 

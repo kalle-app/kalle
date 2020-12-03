@@ -8,9 +8,16 @@ import React, { Suspense, useState } from "react"
 import Calendar from "react-calendar"
 import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
 
-const Scheduler = (meetingLink: any) => {
-  const [meeting] = useQuery(getMeeting, meetingLink)
-  const [selected, setSelected] = useState()
+interface SchedulerProps {
+  meetingSlug: string
+  uid: string
+}
+
+const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
+  console.log("linkzz: ", meetingSlug)
+  //TODO warum ist meetingLink ein array?
+  const [meeting] = useQuery(getMeeting, meetingSlug)
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
@@ -23,8 +30,8 @@ const Scheduler = (meetingLink: any) => {
   }
 
   // TODO replace connectedCalendars[0] with merging all connected calendars
-  //connectedCalendars[0].username
-  //connectedCalendars[0].password,
+  // connectedCalendars[0].username
+  // connectedCalendars[0].password,
   const takenSlots = getTakenTimeSlots(
     {
       url: connectedCalendars[0].caldavAddress,
@@ -41,6 +48,7 @@ const Scheduler = (meetingLink: any) => {
   const slots = getAvailableSlots([], meeting.duration, takenSlots)
 
   const onChange = (selectDay, event) => {
+    setSelectedTimeSlot({ start: null, end: null })
     setSelectedDay(selectDay)
   }
 
@@ -69,6 +77,7 @@ const Scheduler = (meetingLink: any) => {
     { start: start1n, end: end1n },
     { start: start2n, end: end2n },
   ]
+  // const slots = slotsMock
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -94,7 +103,12 @@ const Scheduler = (meetingLink: any) => {
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">
-              <AvailableTimeSlotsSelection slots={slotsMock} selectedDay={selectedDay} />
+              <AvailableTimeSlotsSelection
+                slots={slotsMock}
+                selectedDay={selectedDay}
+                selectedTimeSlot={selectedTimeSlot}
+                setSelectedTimeSlot={setSelectedTimeSlot}
+              />
             </div>
           </div>
         </div>
@@ -104,7 +118,7 @@ const Scheduler = (meetingLink: any) => {
 }
 
 const ScheduleAppointment: BlitzPage = () => {
-  const link = useParam("link")
+  const link = useParam("link", "string")
 
   if (link) {
     return (
