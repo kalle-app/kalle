@@ -103,21 +103,18 @@ const DesktopUserMenu = () => {
           <div className="block px-4 py-2 text-base font-bold leading-none text-gray700">
             {currentUser.email}
           </div>
-          <a
-            href="/"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            role="menuitem"
-          >
-            Your Profile
-          </a>
 
-          <a
-            href="/"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            role="menuitem"
-          >
-            Settings
-          </a>
+          <Link href="/">
+            <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+              Your Profile
+            </a>
+          </Link>
+
+          <Link href="/">
+            <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+              Settings
+            </a>
+          </Link>
           <CustomSignOutButton
             className={"block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"}
           />
