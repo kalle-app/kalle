@@ -1,4 +1,4 @@
-import { BlitzPage } from "blitz"
+import { BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
 import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/buttons"
 
@@ -7,11 +7,17 @@ const Home: BlitzPage = () => {
     <div className="container">
       <h1>Kalle.app</h1>
       <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
-      <PrimaryButton label="Log in" href="/auth/login" />
+      <Link href="/auth/login">
+        <PrimaryButton>Log in</PrimaryButton>
+      </Link>
+
       <p>Not registered yet?</p>
-      <SecondaryButton label="Sign up" href="/signup" />
+
+      <Link href="/signup">
+        <SecondaryButton>Sign up</SecondaryButton>
+      </Link>
       <p>Or just bubble a bit...</p>
-      <TertiaryButton label="Bubble!" />
+      <TertiaryButton>Bubble!</TertiaryButton>
     </div>
   )
 }
