@@ -2,7 +2,7 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 
-interface CalendarConnectionDetails {
+export interface CalendarConnectionDetails {
   url: string
   auth: {
     username: string
