@@ -2,7 +2,6 @@ import { ConnectedCalendar, Meeting } from "@prisma/client"
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
-import { getTakenTimeSlots } from "app/caldav"
 import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
 import Calendar from "react-calendar"
@@ -32,17 +31,6 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   // TODO replace connectedCalendars[0] with merging all connected calendars
   // connectedCalendars[0].username
   // connectedCalendars[0].password,
-  const takenSlots = getTakenTimeSlots(
-    {
-      url: connectedCalendars[0].caldavAddress,
-      auth: {
-        username: "",
-        password: "",
-      },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
 
   //meeting.schedule
   const slots = getAvailableSlots([], meeting.duration, takenSlots)
