@@ -1,9 +1,9 @@
 import { BlitzPage, useMutation } from "blitz"
 import React, { Suspense, useState } from "react"
-import Advanced from "../../components/creationSteps/advanced"
-import Availability from "../../components/creationSteps/availability"
-import General from "../../components/creationSteps/general"
-import Schedule from "../../components/creationSteps/schedule"
+import Advanced from "../../components/creationSteps/Advanced"
+import Availability from "../../components/creationSteps/Availability"
+import General from "../../components/creationSteps/General"
+import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
 

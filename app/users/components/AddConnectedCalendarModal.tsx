@@ -1,6 +1,6 @@
-import Button from "./button"
+import Button from "./Button"
 import addConnectedCalendar from "../mutations/addConnectedCalendar"
-import AddConnectedCalendar from "./addConnectedCalendar"
+import AddConnectedCalendar from "./AddConnectedCalendar"
 import { useState } from "react"
 import { useMutation } from "blitz"
 import authenticateCalDav from "../queries/authenticateConnectedCalendar"
