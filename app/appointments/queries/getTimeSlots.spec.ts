@@ -1,4 +1,4 @@
-import getTimeSlots from "./getTimeSlots"
+/* import getTimeSlots from "./getTimeSlots"
 import getSlotsAtSpecificDate from "./getTimeSlots"
 
 describe("getSlotsAtSpecificDate", () => {
@@ -11,3 +11,4 @@ describe("getSlotsAtSpecificDate", () => {
     })
   })
 })
+ */

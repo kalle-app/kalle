@@ -8,44 +8,49 @@ import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
 import { getDay } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
-import getSlotsAtSpecificDate from "app/appointments/queries/getSlotsAtSpecificDate"
+import getTimeSlots from "app/appointments/queries/getTimeSlots"
 
 interface SchedulerProps {
   meetingSlug: string
   uid: string
 }
+// Dummy Data
+const dailySchedule = [
+  { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+  { day: "tuesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+  { day: "wednesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+  { day: "thursday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+  { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+]
+
+const start = new Date("2020-11-25T11:00:00.000Z")
+const end = new Date("2020-11-25T13:00:00.000Z")
+const start1 = new Date("2020-11-25T13:00:00.000Z")
+const end1 = new Date("2020-11-25T15:00:00.000Z")
+const start2 = new Date("2020-11-25T15:00:00.000Z")
+const end2 = new Date("2020-11-25T17:00:00.000Z")
+
+const startn = new Date("2020-11-26T11:00:00.000Z")
+const endn = new Date("2020-11-26T13:00:00.000Z")
+const start1n = new Date("2020-11-26T13:00:00.000Z")
+const end1n = new Date("2020-11-26T15:00:00.000Z")
+const start2n = new Date("2020-11-26T15:00:00.000Z")
+const end2n = new Date("2020-11-26T17:00:00.000Z")
+const slotsMock = [
+  { start: start, end: end },
+  { start: start1, end: end1 },
+  { start: start2, end: end2 },
+  { start: startn, end: endn },
+  { start: start1n, end: end1n },
+  { start: start2n, end: end2n },
+]
+// const slots = slotsMock
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
-  //TODO warum ist meetingLink ein array?
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)  
-
-  const dailySchedule = [
-    { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-    { day: "tuesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-    { day: "wednesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-    { day: "thursday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-    { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  ]
-
-  //todo how to pass multiple arguments to query
-  // const [daySlots] = useQuery(getSlotsAtSpecificDate, {duration:60, takenSlots:[{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }], dailySchedule:dailySchedule})
-  // interface QueryProps {
-  //   duration: number,
-  //   takenTimeSlots: Array<any>,
-  //   dailySchedule: Array<any>
-  // }
-  // const [daySlots] = useQuery(getSlotsAtSpecificDate, {60, [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }], dailySchedule}:QueryProps)
-  // const [daySlots] = useQuery(
-  //   getSlotsAtSpecificDate,
-  //   60,
-  //   [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }],
-  //   dailySchedule
-  // )
-  // console.log("blub: ", daySlots)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
     throw new Error("No Calendar connected!")
@@ -55,12 +60,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     throw new Error("Meeting is invalid!")
   }
 
-  // TODO replace connectedCalendars[0] with merging all connected calendars
-  // connectedCalendars[0].username
-  // connectedCalendars[0].password,
-
-  //meeting.schedule
-  // const slots = getAvailableSlots([], meeting.duration, takenSlots)
+  const slots = useQuery(getTimeSlots, {meetingSlug: meetingSlug, calendarOwner: uid})
 
   const onChange = (selectedDay) => {
     setSelectedTimeSlot({ start: null, end: null })
@@ -70,29 +70,6 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const onSubmit = (e: any) => {
     // Send selected to calendar owner
   }
-
-  const start = new Date("2020-11-25T11:00:00.000Z")
-  const end = new Date("2020-11-25T13:00:00.000Z")
-  const start1 = new Date("2020-11-25T13:00:00.000Z")
-  const end1 = new Date("2020-11-25T15:00:00.000Z")
-  const start2 = new Date("2020-11-25T15:00:00.000Z")
-  const end2 = new Date("2020-11-25T17:00:00.000Z")
-
-  const startn = new Date("2020-11-26T11:00:00.000Z")
-  const endn = new Date("2020-11-26T13:00:00.000Z")
-  const start1n = new Date("2020-11-26T13:00:00.000Z")
-  const end1n = new Date("2020-11-26T15:00:00.000Z")
-  const start2n = new Date("2020-11-26T15:00:00.000Z")
-  const end2n = new Date("2020-11-26T17:00:00.000Z")
-  const slotsMock = [
-    { start: start, end: end },
-    { start: start1, end: end1 },
-    { start: start2, end: end2 },
-    { start: startn, end: endn },
-    { start: start1n, end: end1n },
-    { start: start2n, end: end2n },
-  ]
-  // const slots = slotsMock
 
   const modifiers = {
     disabled: date => !is_day_available(date),
@@ -108,7 +85,6 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
            first.getMonth() === second.getMonth() &&
            first.getDate() === second.getDate()
   }
-
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -148,12 +124,13 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
 }
 
 const ScheduleAppointment: BlitzPage = () => {
-  const link = useParam("link", "string")
+  const slug = useParam("slug", "string")
+  const uid = useParam("uid", "string")
 
-  if (link) {
+  if (slug && uid) {
     return (
       <Suspense fallback="Loading...">
-        <Scheduler meetingLink={link} />
+        <Scheduler meetingSlug={slug} uid={uid} />
       </Suspense>
     )
   }

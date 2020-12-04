@@ -1,4 +1,4 @@
-import getSlotsAtSpecificDate from "./getSlotsAtSpecificDate"
+/* import getSlotsAtSpecificDate from "./getSlotsAtSpecificDate"
 
 const dailySchedule = [
   { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
@@ -66,3 +66,4 @@ describe("getSlotsAtSpecificDate", () => {
     })
   })
 })
+ */

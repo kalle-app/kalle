@@ -1,4 +1,4 @@
-export default function getSlotsAtSpecificDate(
+/* export default function getSlotsAtSpecificDate(
   duration: number,
   takenTimeSlots: Array<any>,
   dailySchedule: Array<any>
@@ -143,3 +143,4 @@ export default function getSlotsAtSpecificDate(
 
   return availableSlots
 }
+ */
