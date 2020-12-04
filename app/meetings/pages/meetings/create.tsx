@@ -62,7 +62,7 @@ const InviteCreationContent = () => {
     }
   }
 
-  const submitMeeting = (e: any) => {
+  const submitMeeting = () => {
     createMeetingMutation(meeting)
       .then((data) => {
         // Redirect to All Meetings

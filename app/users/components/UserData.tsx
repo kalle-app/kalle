@@ -61,7 +61,9 @@ const UserData = () => {
       </div>
 
       <div className="text-right sm:px-6 my-3">
-        <Button action={() => {}}>Save</Button>
+        <Button onClick={() => {}} type="submit">
+          Save
+        </Button>
       </div>
     </div>
   )
