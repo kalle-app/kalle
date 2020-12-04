@@ -6,6 +6,7 @@ import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
 import { DatePickerCalendar } from 'react-nice-dates'
 import 'react-nice-dates/build/style.css'
+import { getDay } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
 import getSlotsAtSpecificDate from "app/appointments/queries/getSlotsAtSpecificDate"
@@ -20,7 +21,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)  
 
   const dailySchedule = [
     { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
@@ -93,6 +94,22 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   ]
   // const slots = slotsMock
 
+  const modifiers = {
+    disabled: date => !is_day_available(date),
+  }
+
+  const is_day_available = (date) => {
+    const sameDay = (slot) => datesAreOnSameDay(slot['start'], date)
+    return slotsMock.some(sameDay)
+  }
+
+  const datesAreOnSameDay = (first, second) => {
+    return first.getFullYear() === second.getFullYear() &&
+           first.getMonth() === second.getMonth() &&
+           first.getDate() === second.getDate()
+  }
+
+
   return (
     <div className="container mx-auto p-4 mt-5">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -111,7 +128,8 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
               <DatePickerCalendar 
                 date={selectedDay} 
                 onDateChange={onChange} 
-                locale={enUS} 
+                locale={enUS}
+                modifiers={modifiers}
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">

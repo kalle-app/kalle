@@ -1,8 +1,6 @@
 import getTimeSlots from "./getTimeSlots"
 import getSlotsAtSpecificDate from "./getTimeSlots"
 
-}
-
 describe("getSlotsAtSpecificDate", () => {
   describe("when given invalid input", () => {
     it("return null", () => {
