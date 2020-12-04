@@ -4,7 +4,9 @@ import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
 import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
-import Calendar from "react-calendar"
+import { DatePickerCalendar } from 'react-nice-dates'
+import 'react-nice-dates/build/style.css'
+import { enUS } from 'date-fns/locale'
 import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
 import getSlotsAtSpecificDate from "app/appointments/queries/getSlotsAtSpecificDate"
 
@@ -16,8 +18,8 @@ interface SchedulerProps {
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   //TODO warum ist meetingLink ein array?
   const [meeting] = useQuery(getMeeting, meetingSlug)
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
   const [selectedDay, setSelectedDay] = useState(new Date())
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   const dailySchedule = [
@@ -59,9 +61,9 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   //meeting.schedule
   // const slots = getAvailableSlots([], meeting.duration, takenSlots)
 
-  const onChange = (selectDay, event) => {
+  const onChange = (selectedDay) => {
     setSelectedTimeSlot({ start: null, end: null })
-    setSelectedDay(selectDay)
+    setSelectedDay(selectedDay)
   }
 
   const onSubmit = (e: any) => {
@@ -105,13 +107,11 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
             <div className="flex p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
               <div>Title, Description and other general stuff here</div>
             </div>
-            <div className="flex p-4 col-span-full lg:col-span-1">
-              <Calendar
-                onChange={onChange}
-                value={selectedDay}
-                maxDetail={"month"}
-                minDetail={"month"}
-                tileClassName={({ class1, date }) => (date.getDay() === 3 ? true : false)}
+            <div className="p-4 col-span-full lg:col-span-1">
+              <DatePickerCalendar 
+                date={selectedDay} 
+                onDateChange={onChange} 
+                locale={enUS} 
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">
