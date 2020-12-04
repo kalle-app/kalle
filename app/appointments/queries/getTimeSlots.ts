@@ -55,6 +55,5 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
   ]
 
-  const test = getSlotsAtSpecificDate(60, slotsMock, dailySchedule)
-  console.log("test?????????????????????????")
+  // const test = getSlotsAtSpecificDate(60, slotsMock, dailySchedule)
 }

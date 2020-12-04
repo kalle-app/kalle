@@ -45,11 +45,13 @@ describe("getSlotsAtSpecificDate", () => {
   })
   describe("when no time slot available", () => {
     it("return null", () => {
-      typeof getSlotsAtSpecificDate(
-        60,
-        [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }],
-        dailySchedule
-      ) === null
+      expect(
+        getSlotsAtSpecificDate(
+          60,
+          [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-01-25T22:00:00.000Z" }],
+          dailySchedule
+        )?.length
+      ).toEqual(0)
     })
   })
   describe("one single slot is available", () => {
@@ -57,10 +59,10 @@ describe("getSlotsAtSpecificDate", () => {
       expect(
         getSlotsAtSpecificDate(
           60,
-          [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }],
+          [{ start: new Date("2050-01-25T01:00:00.000Z"), end: "2050-01-25T16:00:00.000Z" }],
           dailySchedule
-        )
-      ).toEqual("monday")
+        )?.length
+      ).toEqual(1)
     })
   })
 })

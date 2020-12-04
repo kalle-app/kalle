@@ -6,6 +6,7 @@ import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
 import Calendar from "react-calendar"
 import { getAvailableSlots } from "app/appointments/utils/getAvailableSlots"
+import getSlotsAtSpecificDate from "app/appointments/queries/getSlotsAtSpecificDate"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -13,12 +14,35 @@ interface SchedulerProps {
 }
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
-  console.log("linkzz: ", meetingSlug)
   //TODO warum ist meetingLink ein array?
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+
+  const dailySchedule = [
+    { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+    { day: "tuesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+    { day: "wednesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+    { day: "thursday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+    { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
+  ]
+
+  //todo how to pass multiple arguments to query
+  // const [daySlots] = useQuery(getSlotsAtSpecificDate, {duration:60, takenSlots:[{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }], dailySchedule:dailySchedule})
+  // interface QueryProps {
+  //   duration: number,
+  //   takenTimeSlots: Array<any>,
+  //   dailySchedule: Array<any>
+  // }
+  // const [daySlots] = useQuery(getSlotsAtSpecificDate, {60, [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }], dailySchedule}:QueryProps)
+  // const [daySlots] = useQuery(
+  //   getSlotsAtSpecificDate,
+  //   60,
+  //   [{ start: new Date("2050-01-25T00:00:00.000Z"), end: "2050-05-26T11:00:00.000Z" }],
+  //   dailySchedule
+  // )
+  // console.log("blub: ", daySlots)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
     throw new Error("No Calendar connected!")
@@ -33,7 +57,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   // connectedCalendars[0].password,
 
   //meeting.schedule
-  const slots = getAvailableSlots([], meeting.duration, takenSlots)
+  // const slots = getAvailableSlots([], meeting.duration, takenSlots)
 
   const onChange = (selectDay, event) => {
     setSelectedTimeSlot({ start: null, end: null })
