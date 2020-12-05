@@ -22,7 +22,7 @@ function sendMail(mail: Email, appointment: Appointment): void {
         ],
       },
       locals: {
-        appointment: Appointment,
+        appointment: appointment,
       },
     })
     .then(console.log)
