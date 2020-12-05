@@ -1,7 +1,6 @@
 import { BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
 import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/buttons"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const Home: BlitzPage = () => {
   return (
