@@ -1,7 +1,7 @@
 import { EmailProvider } from "../helper/emailHelper"
 import { createCalendarEvent } from "../helper/createCalendarEvent"
 import Email from "email-templates"
-import { appointment } from "../types"
+import { Appointment } from "../types"
 
 export default async function sendConfirmationMail(properties: { appointment: appointment; }) {
   const mail = EmailProvider.Connection;
