@@ -60,6 +60,32 @@ const AddConnectedCalendar = (props: AddConnectedCalendarProps) => {
             <option>Outlook</option>
           </select>
         </div>
+
+        <div className="col-start-1 col-end-4">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            onBlur={handleCalendarInfoChanged}
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="col-start-4 col-end-8">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            onBlur={handleCalendarInfoChanged}
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          />
+        </div>
       </div>
     </div>
   )

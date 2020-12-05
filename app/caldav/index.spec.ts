@@ -30,29 +30,11 @@ describe("auth test", () => {
   describe("when given invalid credentials", () => {
     it("returns unauthorized", async () => {
       await expect(
-        verifyConnectionDetails({
-          url: "http://localhost:5232/dav.php/calendars/john.doe/test",
-          auth: {
-            username: "john.doe",
-            password: "wrong-password",
-            digest: true,
-          },
-        })
-      ).resolves.toEqual({ fail: "unauthorized" })
-    })
-  })
-
-  describe("when given invalid authentication method", () => {
-    it("returns unauthorized", async () => {
-      await expect(
-        verifyConnectionDetails({
-          url: "http://localhost:5232/dav.php/calendars/john.doe/test",
-          auth: {
-            username: "john.doe",
-            password: "root",
-            digest: false,
-          },
-        })
+        verifyConnectionDetails(
+          "http://localhost:5232/dav.php/calendars/john.doe/test",
+          "john.doe",
+          "wrong-password"
+        )
       ).resolves.toEqual({ fail: "unauthorized" })
     })
   })
@@ -60,14 +42,7 @@ describe("auth test", () => {
   describe("when given non-existant url", () => {
     it("returns wrong_url", async () => {
       await expect(
-        verifyConnectionDetails({
-          url: "http://non-existant-calendar.com/",
-          auth: {
-            username: "john.doe",
-            password: "root",
-            digest: false,
-          },
-        })
+        verifyConnectionDetails("http://non-existant-calendar.com/", "john.doe", "root")
       ).resolves.toEqual({ fail: "wrong_url" })
     })
   })
@@ -75,14 +50,7 @@ describe("auth test", () => {
   describe("when given non-caldav url", () => {
     it("returns no_caldav_support", async () => {
       await expect(
-        verifyConnectionDetails({
-          url: "https://google.com/",
-          auth: {
-            username: "john.doe",
-            password: "root",
-            digest: false,
-          },
-        })
+        verifyConnectionDetails("https://google.com/", "john.doe", "root")
       ).resolves.toEqual({ fail: "no_caldav_support" })
     })
   })
@@ -92,14 +60,7 @@ describe("auth test", () => {
   describe.skip("when given valid webdav url, but not a calendar resource", () => {
     it("returns the normalised caldav base URL", async () => {
       await expect(
-        verifyConnectionDetails({
-          url: "http://localhost:5232/dav.php/john.doe",
-          auth: {
-            username: "john.doe",
-            password: "root",
-            digest: true,
-          },
-        })
+        verifyConnectionDetails("http://localhost:5232/dav.php/john.doe", "john.doe", "root")
       ).resolves.toEqual({
         fail: null,
         caldavBaseUrl: "http://localhost:5232/dav.php/calendars/john.doe/test",
@@ -107,20 +68,34 @@ describe("auth test", () => {
     })
   })
 
-  describe("when given valid connection details", () => {
-    it("returns the normalised caldav base URL", async () => {
+  describe("when given an url without a protocol", () => {
+    it("assumes https and fails b/c Baikal doesnt support it", async () => {
       await expect(
-        verifyConnectionDetails({
+        verifyConnectionDetails("localhost:5232/dav.php/john.doe", "john.doe", "root")
+      ).resolves.toEqual({
+        fail: "wrong_protocol",
+      })
+    })
+  })
+
+  describe("when given valid details", () => {
+    it("returns the connection details including the correct auth method", async () => {
+      await expect(
+        verifyConnectionDetails(
+          "http://localhost:5232/dav.php/calendars/john.doe/test",
+          "john.doe",
+          "root"
+        )
+      ).resolves.toEqual({
+        fail: null,
+        connectionDetails: {
           url: "http://localhost:5232/dav.php/calendars/john.doe/test",
           auth: {
             username: "john.doe",
             password: "root",
             digest: true,
           },
-        })
-      ).resolves.toEqual({
-        fail: null,
-        caldavBaseUrl: "http://localhost:5232/dav.php/calendars/john.doe/test",
+        },
       })
     })
   })

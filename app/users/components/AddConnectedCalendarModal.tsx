@@ -1,13 +1,17 @@
-import Button from "./button"
+import Button from "./Button"
 import addConnectedCalendar from "../mutations/addConnectedCalendar"
-import AddConnectedCalendar from "./addConnectedCalendar"
+import AddConnectedCalendar from "./AddConnectedCalendar"
 import { useState } from "react"
-import { useMutation } from "blitz"
+import { invalidateQuery, useMutation } from "blitz"
+import authenticatesCalDavCredentials from "../queries/authenticateConnectedCalendar"
+import getConnectedCalendars from "../queries/getConnectedCalendars"
 
 const initialCalendar = {
   name: "",
   type: "CalDav",
   url: "",
+  username: "",
+  password: "",
 }
 
 type AddCalendarProps = {
@@ -15,15 +19,42 @@ type AddCalendarProps = {
   hidden: boolean
 }
 
-const AddCalendarModal = (props: AddCalendarProps) => {
+const AddConnectedCalendarModal = (props: AddCalendarProps) => {
   const [calendar, setCalendar] = useState(initialCalendar)
   const [createCalendarMutation] = useMutation(addConnectedCalendar)
 
-  const handleCalenderInfoChanged = (field, value) => {
+  const handleCalenderInfoChanged = (field: string, value: any) => {
     setCalendar({
       ...calendar,
       [field]: value,
     })
+  }
+
+  const onSubmit = async () => {
+    let credentialsCorrect = false
+    switch (calendar.type) {
+      case "CalDav":
+        const response = await authenticatesCalDavCredentials({
+          url: calendar.url,
+          username: calendar.username,
+          password: calendar.password,
+        })
+        if (response.fail !== null) {
+          alert("Invalid Credentials")
+          return
+        }
+        break
+      default:
+        alert("Calendartype not supported")
+        return
+    }
+
+    try {
+      await createCalendarMutation(calendar)
+      invalidateQuery(getConnectedCalendars)
+    } catch (error) {
+      alert("Error saving project")
+    }
   }
 
   if (props.hidden) {
@@ -43,18 +74,7 @@ const AddCalendarModal = (props: AddCalendarProps) => {
             <AddConnectedCalendar handleChange={handleCalenderInfoChanged} />
           </div>
           <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <Button
-              action={async () => {
-                try {
-                  await createCalendarMutation(calendar)
-                  props.updateCalendarList()
-                } catch (error) {
-                  alert("Error saving project")
-                }
-              }}
-            >
-              Add Calendar
-            </Button>
+            <Button action={onSubmit}>Add Calendar</Button>
             <button
               type="button"
               className="mt-3 mx-4 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
@@ -68,4 +88,4 @@ const AddCalendarModal = (props: AddCalendarProps) => {
   )
 }
 
-export default AddCalendarModal
+export default AddConnectedCalendarModal

@@ -1,8 +1,8 @@
-import ConnectedCalendarsList from "app/users/components/connectedCalendarsList"
-import Divider from "app/users/components/divider"
-import AddCalendarModal from "app/users/components/addCalendarModal"
-import Section from "app/users/components/section"
-import UserData from "app/users/components/userData"
+import ConnectedCalendarsList from "app/users/components/ConnectedCalendarsList"
+import Divider from "app/users/components/Divider"
+import AddConnectedCalendarModal from "app/users/components/AddConnectedCalendarModal"
+import Section from "app/users/components/Section"
+import UserData from "app/users/components/UserData"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
 import { BlitzPage, useQuery } from "blitz"
 import { Suspense, useState } from "react"
@@ -37,7 +37,7 @@ const SettingsContent = () => {
           </Suspense>
         </Section>
       </div>
-      <AddCalendarModal hidden={modalHidden} updateCalendarList={handleCalendarAdded} />
+      <AddConnectedCalendarModal hidden={modalHidden} updateCalendarList={handleCalendarAdded} />
     </div>
   )
 }
