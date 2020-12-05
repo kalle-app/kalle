@@ -4,7 +4,6 @@ import Email from "email-templates"
 import { appointment } from "../types"
 
 export default async function sendConfirmationMail(properties: { appointment: appointment; }) {
-  //const mail = getMailService();
   const mail = EmailProvider.Connection;
   sendMail(mail, properties.appointment);
 }
