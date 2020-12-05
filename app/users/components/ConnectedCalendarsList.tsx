@@ -1,6 +1,6 @@
 import { ConnectedCalendar } from "@prisma/client"
-import Button from "./button"
-import ConnectedCalendardsEntry from "./connectedCalendarsEntry"
+import Button from "./Button"
+import ConnectedCalendardsEntry from "./ConnectedCalendarsEntry"
 
 type ConnectedCalendarsListProps = {
   calendars: ConnectedCalendar[]

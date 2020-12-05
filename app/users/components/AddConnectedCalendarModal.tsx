@@ -1,9 +1,10 @@
-import Button from "./button"
+import Button from "./Button"
 import addConnectedCalendar from "../mutations/addConnectedCalendar"
-import AddConnectedCalendar from "./addConnectedCalendar"
+import AddConnectedCalendar from "./AddConnectedCalendar"
 import { useState } from "react"
-import { useMutation } from "blitz"
-import authenticateCalDav from "../queries/authenticateConnectedCalendar"
+import { invalidateQuery, useMutation } from "blitz"
+import authenticatesCalDavCredentials from "../queries/authenticateConnectedCalendar"
+import getConnectedCalendars from "../queries/getConnectedCalendars"
 
 const initialCalendar = {
   name: "",
@@ -33,7 +34,7 @@ const AddConnectedCalendarModal = (props: AddCalendarProps) => {
     let credentialsCorrect = false
     switch (calendar.type) {
       case "CalDav":
-        const response = await authenticateCalDav({
+        const response = await authenticatesCalDavCredentials({
           url: calendar.url,
           username: calendar.username,
           password: calendar.password,
@@ -50,7 +51,7 @@ const AddConnectedCalendarModal = (props: AddCalendarProps) => {
 
     try {
       await createCalendarMutation(calendar)
-      props.updateCalendarList()
+      invalidateQuery(getConnectedCalendars)
     } catch (error) {
       alert("Error saving project")
     }
