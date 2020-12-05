@@ -1,8 +1,8 @@
 import * as ics from "ics"
 import { EventAttributes } from "ics"
-import { appointment } from "../types"
+import { Appointment } from "../types"
 
-export function createCalendarEvent(appointment: appointment): string {
+export function createCalendarEvent(appointment: Appointment): string {
   const event: EventAttributes = {
     start: [
       appointment.start.year,
