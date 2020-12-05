@@ -1,12 +1,13 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
-import { BlitzPage, useQuery, useParam } from "blitz"
+import { BlitzPage, useQuery, useParam, invoke } from "blitz"
 import React, { Suspense, useState } from "react"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
+import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -40,8 +41,39 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     setSelectedDay(selectedDay)
   }
 
-  const onSubmit = (e: any) => {
-    // Send selected to calendar owner
+  const onSubmit = (e: any) => { 
+    if(!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+      alert("No timeslot selected")
+      return
+    }
+    
+    const appointment = {
+      start: {
+        year: selectedDay.getFullYear(),
+        month: selectedDay.getMonth(),
+        day: selectedDay.getDate(),
+        hour: selectedTimeSlot.start.split(':')[0],
+        minute: selectedTimeSlot.start.split(':')[1],
+      },
+      duration: {
+        hours: Math.floor(meeting.duration / 60),
+        minutes: meeting.duration % 60,
+      },
+      title: meeting.name,
+      description: meeting.description,
+      method: "request",
+      location: "Berlin",
+      url: "www.kalle.app",
+      organiser: {
+        name: "Kalle app",
+        email: "info@kalle.app",
+      },
+      owner: {
+        name: "Lukas Laskowski",
+        email: "rohan.sawahn@student.hpi.de",
+      }
+    }
+    invoke(sendConfirmationMail, { appointment: appointment })
   }
 
   const modifiers = {
