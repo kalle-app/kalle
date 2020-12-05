@@ -72,8 +72,11 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         </div>
         <div className="border-t border-gray-200">
           <div className="grid grid-cols-full lg:grid-cols-3">
-            <div className="flex p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
-              <div>Title, Description and other general stuff here</div>
+            <div className="p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
+              <h1 className="text-xl font-medium">
+                {meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}
+              </h1>
+              <p>{meeting.description}</p>
             </div>
             <div className="p-4 col-span-full lg:col-span-1">
               <DatePickerCalendar
@@ -91,6 +94,15 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
                 setSelectedTimeSlot={setSelectedTimeSlot}
               />
             </div>
+          </div>
+          <div className="rounded-md shadow">
+            <a
+              href="#"
+              onClick={onSubmit}
+              className="w-1 m-4 flex float-right items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+            >
+              Submit
+            </a>
           </div>
         </div>
       </div>
