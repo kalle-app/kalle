@@ -2,11 +2,17 @@ import nodemailer from "nodemailer"
 import Email from "email-templates"
 import { checkEnvVariable } from "../../../../utils/checkEnvVariables"
 
-export function sendEmail(): Email {
-  checkIfSMTPEnvVariablesExist()
+export class EmailProvider
+{
+  private static _connection: Email
 
-  const transporter = createSMTPConnection()
-  return new Email({
+  private constructor() {}
+
+  getMailService(): Email {
+  this.checkIfSMTPEnvVariablesExist()
+
+  const transporter = this.createSMTPConnection()
+    return new Email({
     message: {
       from: process.env.EMAIL_FROM,
     },
@@ -20,11 +26,11 @@ export function sendEmail(): Email {
   })
 }
 
-function createSMTPConnection(): nodemailer.Transporter {
+  createSMTPConnection(): nodemailer.Transporter {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT!, 10),
-    secure: false, //TODO upgrade later with STARTTLS
+    secure: false,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
@@ -32,8 +38,21 @@ function createSMTPConnection(): nodemailer.Transporter {
   })
 }
 
-function checkIfSMTPEnvVariablesExist(): void {
-  ;["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE"].forEach((v) =>
-    checkEnvVariable(v)
+  checkIfSMTPEnvVariablesExist(): void {
+  ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE"].forEach((env) =>
+    checkEnvVariable(env)
   )
 }
+
+  public static get Connection()
+  {
+    return this._connection || (this._connection = new this().getMailService());
+  }
+}
+
+
+
+
+
+
+

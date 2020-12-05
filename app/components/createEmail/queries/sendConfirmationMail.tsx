@@ -1,15 +1,16 @@
-import { sendEmail } from "../helper/emailHelper"
+import { EmailProvider } from "../helper/emailHelper"
 import { createCalendarEvent } from "../helper/createCalendarEvent"
 import Email from "email-templates"
 import { appointment } from "../types"
 
-export default async function sendConfirmationMail(properties) {
-  const email = sendEmail()
-  buildConfirmationMail(email, properties.appointment)
+export default async function sendConfirmationMail(properties: { appointment: appointment; }) {
+  //const mail = getMailService();
+  const mail = EmailProvider.Connection;
+  sendMail(mail, properties.appointment);
 }
 
-function buildConfirmationMail(email: Email, appointment: appointment): void {
-  email
+function sendMail(mail: Email, appointment: appointment): void {
+  mail
     .send({
       template: "confirmation",
       message: {
