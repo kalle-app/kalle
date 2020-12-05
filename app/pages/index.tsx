@@ -1,14 +1,9 @@
-import { BlitzPage, Link, Router } from "blitz"
+import { BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
 import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/buttons"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const Home: BlitzPage = () => {
-  function useIsLoggedIn() {
-    const currentUser = useCurrentUser()
-    return !!currentUser
-  }
-
   return (
     <div className="container mx-auto p-4 mt-5">
       <h1>Kalle.app</h1>
