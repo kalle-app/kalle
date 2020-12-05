@@ -2,12 +2,20 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 
-interface CalendarConnectionDetails {
+function ensureProtocolIsSpecified(url: string) {
+  if (url.startsWith("https://") || url.startsWith("http://")) {
+    return url
+  }
+
+  return "https://" + url
+}
+
+export interface CalendarConnectionDetails {
   url: string
   auth: {
     username: string
     password: string
-    digest?: boolean
+    digest: boolean
   }
 }
 
@@ -26,6 +34,109 @@ async function makeRequestTo(
     headers: headers as any,
     data,
   })
+}
+
+interface ConnectionDetailsVerificationFailure {
+  fail: "unauthorized" | "other" | "wrong_url" | "wrong_protocol" | "no_caldav_support"
+}
+
+interface ConnectionVerificationSuccess {
+  fail: null
+  connectionDetails: CalendarConnectionDetails
+}
+
+/**
+ * Tries to connect to the calendar.
+ * If `auth.digest` is undefined, it will detect wihch auth method to use.
+ * @example
+ * const result = verifyConnectionDetails(...)
+ * if (result.fail) {
+ *    switch (result.failed) {
+ *      case "unauthorized":
+ *        ...
+ *    }
+ * } else {
+ *    saveConnectionDetails(result.connectionDetails)
+ * }
+ */
+export async function verifyConnectionDetails(
+  url: string,
+  username: string,
+  password: string
+): Promise<ConnectionVerificationSuccess | ConnectionDetailsVerificationFailure> {
+  try {
+    url = ensureProtocolIsSpecified(url)
+
+    const checkConnectionWith = async (
+      method: "digest auth" | "basic auth"
+    ): Promise<urllib.HttpClientResponse<unknown> | "unauthorized" | "no_caldav_support"> => {
+      const response = await makeRequestTo(
+        {
+          url,
+          auth: {
+            username,
+            password,
+            digest: method === "digest auth",
+          },
+        },
+        { method: "OPTIONS", data: "", headers: {} }
+      )
+
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      } else if (response.status === 401) {
+        return "unauthorized"
+      } else {
+        return "no_caldav_support"
+      }
+    }
+
+    let digest = true
+    let response = await checkConnectionWith("digest auth")
+    if (response === "unauthorized" && url.startsWith("https://")) {
+      digest = false
+      response = await checkConnectionWith("basic auth")
+    }
+
+    if (response === "no_caldav_support") {
+      return { fail: "no_caldav_support" }
+    }
+
+    if (response === "unauthorized") {
+      return { fail: "unauthorized" }
+    }
+
+    const supportedDavFeatures = (response.headers.dav ?? "")
+      .toString()
+      .split(",")
+      .map((v) => v.trim())
+
+    if (!supportedDavFeatures.includes("calendar-access")) {
+      return { fail: "no_caldav_support" }
+    }
+
+    return {
+      fail: null,
+      connectionDetails: {
+        url,
+        auth: {
+          username,
+          password,
+          digest,
+        },
+      },
+    }
+  } catch (error) {
+    if (error.code === "ENOTFOUND") {
+      return { fail: "wrong_url" }
+    }
+
+    if (error.code === "EPROTO") {
+      return { fail: "wrong_protocol" }
+    }
+
+    return { fail: "other" }
+  }
 }
 
 interface ExternalEvent {

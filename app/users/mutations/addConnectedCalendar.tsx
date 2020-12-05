@@ -5,6 +5,8 @@ type CalendarCreate = {
   name: string
   url: string
   type: string
+  username: string
+  password: string
 }
 
 export default async function addConnectedCalendar(calendarCreate: CalendarCreate, ctx: Ctx) {
@@ -16,12 +18,16 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
 
   if (!owner) return null
 
+  const pseudeoEncryptedPassword = calendarCreate.password
+
   const calendar = await db.connectedCalendar.create({
     data: {
       name: calendarCreate.name,
       caldavAddress: calendarCreate.url,
       status: "active",
       type: calendarCreate.type,
+      username: calendarCreate.username,
+      password: pseudeoEncryptedPassword,
       owner: {
         connect: { id: owner.id },
       },

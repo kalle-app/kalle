@@ -1,5 +1,6 @@
 import { getTakenTimeSlots } from "app/caldav"
 import db from "db"
+import { date } from "zod";
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
@@ -35,7 +36,7 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   if (!calendar) return null
 
   let takenTimeSlots = await getTakenTimeSlots(
-    { url: calendar.caldavAddress, auth: { username: "blub", password: "", digest: false } },
+    { url: calendar.caldavAddress, auth: { username: calendar.username, password: calendar.password, digest: true } },
     meeting.startDate,
     meeting.endDate
   )
@@ -66,21 +67,35 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   // As soon, as we cannot fit an appointment anymore there seems to be a blocking event, so we start to
   // Greedy find the next fitting slot after that event 
   slots.forEach((day: DailySlot) => {
-    let time = dailySchedule[dayNames[day.date.getDay()]].startTime
-    while(time + meeting.duration <= dailySchedule[dayNames[day.date.getDay()]].endTime) {
-      if(noCollision(time, day.events[0], meeting.description)){
-        day.free.push(time)
-        time = time + meeting.duration
-      }else{
-        time = day.events[0].endTime
-        const eventToRemove = day.events[0]
-        day.events.filter((event) => event != eventToRemove)
+    const weekdaySchedule = dailySchedule.find((schedule) => schedule.day == dayNames[day.date.getDay()])
+    if(weekdaySchedule) {
+      let time = makeDateTime(weekdaySchedule.startTime, day.date)
+      let endTime = makeDateTime(weekdaySchedule.endTime, day.date)
+      while(new Date(time.getTime() + meeting.duration * 60000) <= endTime) {
+        if(day.events.length == 0 || noCollision(time, day.events[0], meeting.description)){
+          day.free.push(time)
+          time = new Date(time.getTime() + meeting.duration * 60000)
+        }else{
+          time = makeDateTime(day.events[0].endTime, day.date)
+          const eventToRemove = day.events[0]
+          day.events.filter((event) => event != eventToRemove)
+        }
       }
     }
   })
 
+  console.log(slots)
+
   // think about what to return, currently in calendar only start, end are returned
   return slots
+}
+
+function makeDateTime(time: string, date: Date) : Date{
+  const newDate = new Date(date)
+  const timeSplit = time.split(':')
+  newDate.setHours(Number(timeSplit[0]))
+  newDate.setMinutes(Number(timeSplit[1]))
+  return newDate
 }
 
 function noCollision(time, event, duration) {

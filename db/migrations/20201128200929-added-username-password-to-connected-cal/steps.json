@@ -1,0 +1,19 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "ConnectedCalendar",
+      "field": "userName",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ConnectedCalendar",
+      "field": "password",
+      "type": "String",
+      "arity": "Required"
+    }
+  ]
+}
