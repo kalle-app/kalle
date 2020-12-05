@@ -27,6 +27,8 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
           setSelectedTimeSlot={props.setSelectedTimeSlot}
         />
       )
+    } else {
+      return <div></div>
     }
   })
 

@@ -1,7 +1,5 @@
 import { getTakenTimeSlots } from "app/caldav"
 import db from "db"
-import { date } from "zod"
-import { Slot } from "../types"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
@@ -59,7 +57,7 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
 
   // Map all externalEvents to the according day in slots
   slots.forEach((day: DailySlot) => {
-    while (takenTimeSlots.length != 0 && datesAreOnSameDay(takenTimeSlots[0].start, day.date)) {
+    while (takenTimeSlots.length !== 0 && datesAreOnSameDay(takenTimeSlots[0].start, day.date)) {
       day.events.push(takenTimeSlots[0])
       takenTimeSlots.shift()
     }
@@ -71,20 +69,20 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   // Greedy find the next fitting slot after that event
   slots.forEach((day: DailySlot) => {
     const weekdaySchedule = dailySchedule.find(
-      (schedule) => schedule.day == dayNames[day.date.getDay()]
+      (schedule) => schedule.day === dayNames[day.date.getDay()]
     )
     if (weekdaySchedule) {
       let time = makeDateTime(weekdaySchedule.startTime, day.date)
       let endTime = makeDateTime(weekdaySchedule.endTime, day.date)
       while (getTimePlusMinutes(time, meeting.duration) <= endTime) {
-        if (day.events.length == 0 || noCollision(time, day.events[0], meeting.duration)) {
+        if (day.events.length === 0 || noCollision(time, day.events[0], meeting.duration)) {
           day.free.push(time)
           time = getTimePlusMinutes(time, meeting.duration)
         } else {
           // Currently default 0 minutes to next meeting, could be customized
           time = getTimePlusMinutes(day.events[0].end, 0)
           const eventToRemove = day.events[0]
-          day.events = day.events.filter((event) => event != eventToRemove)
+          day.events = day.events.filter((event) => event !== eventToRemove)
         }
       }
     }

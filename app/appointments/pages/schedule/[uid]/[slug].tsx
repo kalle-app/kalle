@@ -1,4 +1,3 @@
-import { ConnectedCalendar, Meeting } from "@prisma/client"
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
@@ -6,7 +5,6 @@ import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
-import { getDay } from "date-fns"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 
@@ -14,36 +12,6 @@ interface SchedulerProps {
   meetingSlug: string
   uid: string
 }
-// Dummy Data
-const dailySchedule = [
-  { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "tuesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "wednesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "thursday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-]
-
-const start = new Date("2020-11-25T11:00:00.000Z")
-const end = new Date("2020-11-25T13:00:00.000Z")
-const start1 = new Date("2020-11-25T13:00:00.000Z")
-const end1 = new Date("2020-11-25T15:00:00.000Z")
-const start2 = new Date("2020-11-25T15:00:00.000Z")
-const end2 = new Date("2020-11-25T17:00:00.000Z")
-
-const startn = new Date("2020-11-26T11:00:00.000Z")
-const endn = new Date("2020-11-26T13:00:00.000Z")
-const start1n = new Date("2020-11-26T13:00:00.000Z")
-const end1n = new Date("2020-11-26T15:00:00.000Z")
-const start2n = new Date("2020-11-26T15:00:00.000Z")
-const end2n = new Date("2020-11-26T17:00:00.000Z")
-const slotsMock = [
-  { start: start, end: end },
-  { start: start1, end: end1 },
-  { start: start2, end: end2 },
-  { start: startn, end: endn },
-  { start: start1n, end: end1n },
-  { start: start2n, end: end2n },
-]
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
