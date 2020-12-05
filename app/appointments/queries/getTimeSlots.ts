@@ -71,7 +71,7 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     if(weekdaySchedule) {
       let time = makeDateTime(weekdaySchedule.startTime, day.date)
       let endTime = makeDateTime(weekdaySchedule.endTime, day.date)
-      while(new Date(time.getTime() + meeting.duration * 60000) <= endTime) {
+      while(getTimePlusMinutes(time, meeting.duration) <= endTime) {
         if(day.events.length == 0 || noCollision(time, day.events[0], meeting.description)){
           day.free.push(time)
           time = new Date(time.getTime() + meeting.duration * 60000)
@@ -88,6 +88,10 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
 
   // think about what to return, currently in calendar only start, end are returned
   return slots
+}
+
+function getTimePlusMinutes(date: Date, minutes: number) {
+  return new Date(date.getTime() + (minutes * 60000))
 }
 
 function makeDateTime(time: string, date: Date) : Date{
