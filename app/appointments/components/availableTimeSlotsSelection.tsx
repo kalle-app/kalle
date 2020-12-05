@@ -13,13 +13,14 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
     return ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
   }
 
-  const timeSlotTiles = props.slots.map((slot) => {
+  const timeSlotTiles = props.slots.map((slot, index) => {
     if (
       props.selectedDay.getDate() === slot.start.getDate() &&
       props.selectedDay.getFullYear() === slot.start.getFullYear()
     ) {
       return (
         <SingleTimeSlot
+          key={index}
           start={getTimeString(slot.start)}
           end={getTimeString(slot.end)}
           selectedTimeSlot={props.selectedTimeSlot}

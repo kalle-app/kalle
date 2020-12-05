@@ -4,10 +4,10 @@ import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
 import { BlitzPage, useQuery, useParam } from "blitz"
 import React, { Suspense, useState } from "react"
-import { DatePickerCalendar } from 'react-nice-dates'
-import 'react-nice-dates/build/style.css'
-import { getDay } from 'date-fns'
-import { enUS } from 'date-fns/locale'
+import { DatePickerCalendar } from "react-nice-dates"
+import "react-nice-dates/build/style.css"
+import { getDay } from "date-fns"
+import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 
 interface SchedulerProps {
@@ -44,23 +44,28 @@ const slotsMock = [
   { start: start1n, end: end1n },
   { start: start2n, end: end2n },
 ]
-// const slots = slotsMock
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)  
+  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
+    alert("No calendar connected :(")
     throw new Error("No Calendar connected!")
   }
 
   if (!meeting) {
+    alert("Meeting invalid :(")
     throw new Error("Meeting is invalid!")
   }
 
-  const slots = useQuery(getTimeSlots, {meetingSlug: meetingSlug, calendarOwner: uid})
+  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+  if (!slots) {
+    alert("No free slots available :(")
+    throw new Error("No free slots available")
+  }
 
   const onChange = (selectedDay) => {
     setSelectedTimeSlot({ start: null, end: null })
@@ -72,18 +77,20 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   }
 
   const modifiers = {
-    disabled: date => !is_day_available(date),
+    disabled: (date) => !is_day_available(date),
   }
 
   const is_day_available = (date) => {
-    const sameDay = (slot) => datesAreOnSameDay(slot['start'], date)
-    return slotsMock.some(sameDay)
+    const sameDay = (slot) => datesAreOnSameDay(slot["start"], date)
+    return slots.some(sameDay)
   }
 
   const datesAreOnSameDay = (first, second) => {
-    return first.getFullYear() === second.getFullYear() &&
-           first.getMonth() === second.getMonth() &&
-           first.getDate() === second.getDate()
+    return (
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate()
+    )
   }
 
   return (
@@ -101,16 +108,16 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
               <div>Title, Description and other general stuff here</div>
             </div>
             <div className="p-4 col-span-full lg:col-span-1">
-              <DatePickerCalendar 
-                date={selectedDay} 
-                onDateChange={onChange} 
+              <DatePickerCalendar
+                date={selectedDay}
+                onDateChange={onChange}
                 locale={enUS}
                 modifiers={modifiers}
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">
               <AvailableTimeSlotsSelection
-                slots={slotsMock}
+                slots={slots}
                 selectedDay={selectedDay}
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}

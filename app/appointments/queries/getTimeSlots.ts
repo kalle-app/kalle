@@ -1,6 +1,7 @@
 import { getTakenTimeSlots } from "app/caldav"
 import db from "db"
 import { date } from "zod"
+import { Slot } from "../types"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
@@ -64,8 +65,6 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     }
   })
 
-  console.log("ok")
-
   // Create free slots for every day
   // For every day we start with the schedule startTime and then try to greedy find the next possible appointment
   // As soon, as we cannot fit an appointment anymore there seems to be a blocking event, so we start to
@@ -78,23 +77,27 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
       let time = makeDateTime(weekdaySchedule.startTime, day.date)
       let endTime = makeDateTime(weekdaySchedule.endTime, day.date)
       while (getTimePlusMinutes(time, meeting.duration) <= endTime) {
-        console.log(time, " ", day.events[0].start)
         if (day.events.length == 0 || noCollision(time, day.events[0], meeting.duration)) {
           day.free.push(time)
           time = getTimePlusMinutes(time, meeting.duration)
         } else {
-          time = day.events[0].end
+          // Currently default 0 minutes to next meeting, could be customized
+          time = getTimePlusMinutes(day.events[0].end, 0)
           const eventToRemove = day.events[0]
-          day.events.filter((event) => event != eventToRemove)
+          day.events = day.events.filter((event) => event != eventToRemove)
         }
       }
     }
   })
 
-  console.log(slots)
+  const freeSlots = slots.map((slot) =>
+    slot.free.map((item) => {
+      return { start: getTimePlusMinutes(item, 0), end: getTimePlusMinutes(item, meeting.duration) }
+    })
+  )
+  const freeSlotsFlat = freeSlots.flat()
 
-  // think about what to return, currently in calendar only start, end are returned
-  return slots
+  return freeSlotsFlat
 }
 
 function getTimePlusMinutes(date: Date, minutes: number) {
