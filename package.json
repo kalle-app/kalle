@@ -41,7 +41,7 @@
     "@prisma/cli": "2.11.0",
     "@prisma/client": "2.11.0",
     "@tailwindcss/forms": "0.2.1",
-    "blitz": "0.25.0",
+    "blitz": "0.27.0",
     "bootstrap": "4.5.3",
     "email-templates": "8.0.0",
     "final-form": "4.20.1",
