@@ -1,5 +1,3 @@
-import { InputJsonArray } from "@prisma/client"
-
 interface SlotProps {
   start: string
   end: string

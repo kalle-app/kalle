@@ -1,89 +1,104 @@
-import { ConnectedCalendar, Meeting } from "@prisma/client"
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
-import { BlitzPage, useQuery, useParam } from "blitz"
+import { BlitzPage, useQuery, useParam, invoke } from "blitz"
 import React, { Suspense, useState } from "react"
-import { DatePickerCalendar } from 'react-nice-dates'
-import 'react-nice-dates/build/style.css'
-import { getDay } from 'date-fns'
-import { enUS } from 'date-fns/locale'
+import { DatePickerCalendar } from "react-nice-dates"
+import "react-nice-dates/build/style.css"
+import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
+import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
+
 
 interface SchedulerProps {
   meetingSlug: string
   uid: string
 }
-// Dummy Data
-const dailySchedule = [
-  { day: "monday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "tuesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "wednesday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "thursday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-  { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
-]
-
-const start = new Date("2020-11-25T11:00:00.000Z")
-const end = new Date("2020-11-25T13:00:00.000Z")
-const start1 = new Date("2020-11-25T13:00:00.000Z")
-const end1 = new Date("2020-11-25T15:00:00.000Z")
-const start2 = new Date("2020-11-25T15:00:00.000Z")
-const end2 = new Date("2020-11-25T17:00:00.000Z")
-
-const startn = new Date("2020-11-26T11:00:00.000Z")
-const endn = new Date("2020-11-26T13:00:00.000Z")
-const start1n = new Date("2020-11-26T13:00:00.000Z")
-const end1n = new Date("2020-11-26T15:00:00.000Z")
-const start2n = new Date("2020-11-26T15:00:00.000Z")
-const end2n = new Date("2020-11-26T17:00:00.000Z")
-const slotsMock = [
-  { start: start, end: end },
-  { start: start1, end: end1 },
-  { start: start2, end: end2 },
-  { start: startn, end: endn },
-  { start: start1n, end: end1n },
-  { start: start2n, end: end2n },
-]
-// const slots = slotsMock
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)  
+  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
+    alert("No calendar connected :(")
     throw new Error("No Calendar connected!")
   }
 
   if (!meeting) {
+    alert("Meeting invalid :(")
     throw new Error("Meeting is invalid!")
   }
 
-  const slots = useQuery(getTimeSlots, {meetingSlug: meetingSlug, calendarOwner: uid})
+  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+  if (!slots) {
+    alert("No free slots available :(")
+    throw new Error("No free slots available")
+  }
 
   const onChange = (selectedDay) => {
     setSelectedTimeSlot({ start: null, end: null })
     setSelectedDay(selectedDay)
   }
 
-  const onSubmit = (e: any) => {
-    // Send selected to calendar owner
+  const onSubmit = (e: any) => { 
+    if(!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+      alert("No timeslot selected")
+      return
+    }
+
+    const hour = selectedTimeSlot.start.split(':')[0]
+    const minute = selectedTimeSlot.start.split(':')[1]
+    if(!hour || !minute){
+      alert("Invalid Time give")
+      return
+    }
+
+    const appointment = {
+      start: {
+        year: selectedDay.getFullYear(),
+        month: selectedDay.getMonth() + 1,
+        day: selectedDay.getDate(),
+        hour: hour,
+        minute: minute,
+      },
+      duration: {
+        hours: Math.floor(meeting.duration / 60),
+        minutes: meeting.duration % 60,
+      },
+      title: meeting.name,
+      description: meeting.description,
+      method: "request",
+      location: "Berlin",
+      url: "www.kalle.app",
+      organiser: {
+        name: "Kalle app",
+        email: "info@kalle.app",
+      },
+      owner: {
+        name: "Lukas Laskowski",
+        email: "rohan.sawahn@student.hpi.de",
+      }
+    }
+    invoke(sendConfirmationMail, { appointment: appointment })
   }
 
   const modifiers = {
-    disabled: date => !is_day_available(date),
+    disabled: (date) => !is_day_available(date),
   }
 
   const is_day_available = (date) => {
-    const sameDay = (slot) => datesAreOnSameDay(slot['start'], date)
-    return slotsMock.some(sameDay)
+    const sameDay = (slot) => datesAreOnSameDay(slot["start"], date)
+    return slots.some(sameDay)
   }
 
   const datesAreOnSameDay = (first, second) => {
-    return first.getFullYear() === second.getFullYear() &&
-           first.getMonth() === second.getMonth() &&
-           first.getDate() === second.getDate()
+    return (
+      first.getFullYear() === second.getFullYear() &&
+      first.getMonth() === second.getMonth() &&
+      first.getDate() === second.getDate()
+    )
   }
 
   return (
@@ -97,25 +112,37 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         </div>
         <div className="border-t border-gray-200">
           <div className="grid grid-cols-full lg:grid-cols-3">
-            <div className="flex p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
-              <div>Title, Description and other general stuff here</div>
+            <div className="p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
+              <h1 className="text-xl font-medium">
+                {meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}
+              </h1>
+              <p>{meeting.description}</p>
             </div>
             <div className="p-4 col-span-full lg:col-span-1">
-              <DatePickerCalendar 
-                date={selectedDay} 
-                onDateChange={onChange} 
+              <DatePickerCalendar
+                date={selectedDay}
+                onDateChange={onChange}
                 locale={enUS}
                 modifiers={modifiers}
               />
             </div>
             <div className="flex p-4 col-span-full lg:col-span-1">
               <AvailableTimeSlotsSelection
-                slots={slotsMock}
+                slots={slots}
                 selectedDay={selectedDay}
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
               />
             </div>
+          </div>
+          <div className="rounded-md shadow">
+            <a
+              href="#"
+              onClick={onSubmit}
+              className="w-1 m-4 flex float-right items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+            >
+              Submit
+            </a>
           </div>
         </div>
       </div>
