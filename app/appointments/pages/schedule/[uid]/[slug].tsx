@@ -9,6 +9,7 @@ import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
 
+
 interface SchedulerProps {
   meetingSlug: string
   uid: string
@@ -46,14 +47,21 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
       alert("No timeslot selected")
       return
     }
-    
+
+    const hour = selectedTimeSlot.start.split(':')[0]
+    const minute = selectedTimeSlot.start.split(':')[1]
+    if(!hour || !minute){
+      alert("Invalid Time give")
+      return
+    }
+
     const appointment = {
       start: {
         year: selectedDay.getFullYear(),
-        month: selectedDay.getMonth(),
+        month: selectedDay.getMonth() + 1,
         day: selectedDay.getDate(),
-        hour: selectedTimeSlot.start.split(':')[0],
-        minute: selectedTimeSlot.start.split(':')[1],
+        hour: hour,
+        minute: minute,
       },
       duration: {
         hours: Math.floor(meeting.duration / 60),
