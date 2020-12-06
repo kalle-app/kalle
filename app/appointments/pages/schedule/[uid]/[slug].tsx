@@ -8,7 +8,7 @@ import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
-
+import { PrimaryButton } from "app/components/buttons"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -16,25 +16,29 @@ interface SchedulerProps {
 }
 
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
-  const [meeting] = useQuery(getMeeting, meetingSlug)
-  const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
+  const [selectedDay, setSelectedDay] = useState(new Date())
+
+  const [meeting] = useQuery(getMeeting, meetingSlug)
+  if (!meeting) {
+    return <NoMeetingNotice text="This Meeting does not longer exist." />
+  }
+
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
-    alert("No calendar connected :(")
-    throw new Error("No Calendar connected!")
+    return (
+      <NoMeetingNotice text="The person that invited you has removed his calender. The meeting can not longer be scheduled with this tool." />
+    )
   }
-
-  if (!meeting) {
-    alert("Meeting invalid :(")
-    throw new Error("Meeting is invalid!")
-  }
-
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
-  if (!slots) {
-    alert("No free slots available :(")
-    throw new Error("No free slots available")
+  // const slots = []
+  var slots
+  try {
+    ;[slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+  } catch (e) {
+    return (
+      <NoMeetingNotice text="The person that invited you has no available time slots anymore." />
+    )
   }
 
   const onChange = (selectedDay) => {
@@ -42,15 +46,15 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     setSelectedDay(selectedDay)
   }
 
-  const onSubmit = (e: any) => { 
-    if(!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+  const onSubmit = (e: any) => {
+    if (!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
       alert("No timeslot selected")
       return
     }
 
-    const hour = selectedTimeSlot.start.split(':')[0]
-    const minute = selectedTimeSlot.start.split(':')[1]
-    if(!hour || !minute){
+    const hour = selectedTimeSlot.start.split(":")[0]
+    const minute = selectedTimeSlot.start.split(":")[1]
+    if (!hour || !minute) {
       alert("Invalid Time give")
       return
     }
@@ -79,7 +83,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
       owner: {
         name: "Lukas Laskowski",
         email: "rohan.sawahn@student.hpi.de",
-      }
+      },
     }
     invoke(sendConfirmationMail, { appointment: appointment })
   }
@@ -162,7 +166,23 @@ const ScheduleAppointment: BlitzPage = () => {
     )
   }
 
-  return <h3>Meeting not found</h3>
+  return <NoMeetingNotice text="This Meeting does not exist." />
+}
+
+interface NoMeetingNoticeProps {
+  text: string
+}
+
+const NoMeetingNotice = ({ text }: NoMeetingNoticeProps) => {
+  return (
+    <div className="container mx-auto p-4 mt-5  flex-col">
+      <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">{text}</h3>
+      <div className="flex justify-center">
+        <PrimaryButton href="/">Create own Meeting</PrimaryButton>
+      </div>
+      {/* TODO insert sad goldfish picture*/}
+    </div>
+  )
 }
 
 export default ScheduleAppointment

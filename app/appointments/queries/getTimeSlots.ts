@@ -24,24 +24,28 @@ const dailySchedule = [
 ]
 
 export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTimeSlotsArgs) {
-  const meeting = await db.meeting.findFirst({
-    where: { link: meetingSlug, ownerId: Number(calendarOwner) },
-  })
-  if (!meeting) return null
-
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meeting.ownerId },
-  })
-  if (!calendar) return null
-
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password: calendar.password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  var meeting
+  var calendar
+  var takenTimeSlots
+  try {
+    meeting = await db.meeting.findFirst({
+      where: { link: meetingSlug, ownerId: Number(calendarOwner) },
+    })
+    calendar = await db.connectedCalendar.findFirst({
+      where: { ownerId: meeting.ownerId },
+    })
+    takenTimeSlots = await getTakenTimeSlots(
+      {
+        url: calendar.caldavAddress,
+        auth: { username: calendar.username, password: calendar.password, digest: true },
+      },
+      meeting.startDate,
+      meeting.endDate
+    )
+  } catch (e) {
+    console.log("An unexpected error occured: ", e)
+    return null
+  }
 
   takenTimeSlots = takenTimeSlots.sort((a, b) => a.start.getTime() - b.start.getTime())
 
