@@ -1,23 +1,9 @@
 import { getTakenTimeSlots, getEvents, verifyConnectionDetails } from "./"
-import fetch from "node-fetch"
 import { skipWithoutDocker } from "test/skip-without-docker"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 
 skipWithoutDocker()
-
-describe("baikal test instance", () => {
-  it("is available", async () => {
-    try {
-      const response = await fetch("http://localhost:5232")
-      expect(response.status).toEqual(200)
-    } catch (error) {
-      throw new Error(
-        "Baikal not available. Run `npm run test:baikal:start` to start the container."
-      )
-    }
-  })
-})
 
 describe("caldav stuff", () => {
   let baseUrl: string
