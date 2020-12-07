@@ -44,7 +44,7 @@ const Schedule = (props: ScheduleProps) => {
       <div className="border-t border-gray-200">
         <div className="grid grid-cols-8 gap-6 bg-white px-4 py-5 sm:px-6">
           <div className="col-span-1">
-            <Button action={() => props.stepBack()}>
+            <Button onClick={props.stepBack} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleLeft} />
             </Button>
           </div>
@@ -293,7 +293,7 @@ const Schedule = (props: ScheduleProps) => {
                         />
                       </div>
                       <div className="col-span-2">
-                        <Button action={() => {}}>
+                        <Button onClick={() => {}} type="submit">
                           <FontAwesomeIcon icon={faPlus} />
                         </Button>
                       </div>
@@ -304,7 +304,7 @@ const Schedule = (props: ScheduleProps) => {
             </div>
           </div>
           <div className="col-span-1">
-            <Button action={() => props.toNext()}>
+            <Button onClick={() => props.toNext()} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleRight} />
             </Button>
           </div>

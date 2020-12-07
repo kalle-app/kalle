@@ -1,12 +1,10 @@
 type AddConnectedCalendarProps = {
-  handleChange: any
+  handleChange(field: string, value: string): void
 }
 
 const AddConnectedCalendar = (props: AddConnectedCalendarProps) => {
-  const handleCalendarInfoChanged = (e: any) => {
-    const field = e.currentTarget.name
-    const value = e.currentTarget.value
-    props.handleChange(field, value)
+  const handleCalendarInfoChanged = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    props.handleChange(e.currentTarget.name, e.currentTarget.value)
   }
 
   return (

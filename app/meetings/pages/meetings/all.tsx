@@ -1,7 +1,7 @@
 import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense } from "react"
 import getMeetings from "../../../meetings/queries/getMeetings"
-import MyMeetings from "../../components/myMeetings"
+import MyMeetings from "../../components/MyMeetings"
 
 const MyMeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
