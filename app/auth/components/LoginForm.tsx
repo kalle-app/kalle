@@ -22,7 +22,8 @@ export const LoginForm = (props: LoginFormProps) => {
         onSubmit={async (values) => {
           try {
             await login({ email: values.email, password: values.password })
-            props.onSuccess && props.onSuccess()
+            props.onSuccess?.()
+            return undefined
           } catch (error) {
             if (error.name === "AuthenticationError") {
               return { [FORM_ERROR]: "Sorry, those credentials are invalid" }

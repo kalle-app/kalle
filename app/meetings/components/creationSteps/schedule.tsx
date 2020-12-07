@@ -13,9 +13,9 @@ type ScheduleProps = {
   meeting: Meeting
 }
 
-const Schedule = (props: ScheduleProps) => {
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
 
+const Schedule = (props: ScheduleProps) => {
   const handleChange = (e: any) => {
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
   }

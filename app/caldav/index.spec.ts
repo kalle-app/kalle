@@ -133,8 +133,7 @@ describe("freeBusy", () => {
       new Date("2020-11-16T00:00:00.000Z"),
       new Date("2020-11-21T00:00:00.000Z")
     )
-    const expected = []
-    expect(result).toEqual(expected)
+    expect(result).toEqual([])
   })
   it("with events", async () => {
     const result = await getTakenTimeSlots(
@@ -158,8 +157,7 @@ describe("events", () => {
       new Date("2020-11-16T00:00:00.000Z"),
       new Date("2020-11-21T00:00:00.000Z")
     )
-    const expected = []
-    expect(result).toEqual(expected)
+    expect(result).toEqual([])
   })
   it("with events", async () => {
     const result = await getEvents(

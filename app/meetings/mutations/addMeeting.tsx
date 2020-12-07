@@ -26,13 +26,13 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
     },
   })
 
-  for (const day of Object.keys(meetingCreate.schedule)) {
-    if (meetingCreate.schedule[day][0] && meetingCreate.schedule[day][1]) {
+  for (const [day, [startTime, endTime]] of Object.entries(meetingCreate.schedule)) {
+    if (startTime && endTime) {
       await db.dailySchedule.create({
         data: {
           day: day,
-          startTime: meetingCreate.schedule[day][0],
-          endTime: meetingCreate.schedule[day][1],
+          startTime,
+          endTime,
           meeting: {
             connect: { id: meeting.id },
           },

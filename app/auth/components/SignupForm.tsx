@@ -22,7 +22,8 @@ export const SignupForm = (props: SignupFormProps) => {
         onSubmit={async (values) => {
           try {
             await signup({ email: values.email, password: values.password })
-            props.onSuccess && props.onSuccess()
+            props.onSuccess?.()
+            return undefined
           } catch (error) {
             if (error.code === "P2002" && error.meta?.target?.includes("email")) {
               // This error comes from Prisma

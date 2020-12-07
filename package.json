@@ -65,6 +65,7 @@
     "@types/lodash": "4.14.165",
     "@types/node-fetch": "2.5.7",
     "@types/react": "16.9.56",
+    "@types/react-datepicker": "3.1.2",
     "@types/secure-password": "3.1.0",
     "@typescript-eslint/eslint-plugin": "4.8.1",
     "@typescript-eslint/parser": "4.8.1",
