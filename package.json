@@ -7,11 +7,7 @@
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific:rw -v $(pwd)/test/baikal/config:/var/www/baikal/config:rw ckulka/baikal:nginx",
-    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test",
-    "test:baikal:start:windows": "docker run -d --name baikal-test -p 5232:80 -v \"%cd%\"/test/baikal/Specific:/var/www/baikal/Specific -v \"%cd%\"/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
-    "test:baikal:stop:windows": "docker stop baikal-test && docker rm baikal-test"
+    "test:watch": "jest --watch"
   },
   "browserslist": [
     "defaults"
@@ -92,6 +88,7 @@
     "prettier": "2.1.2",
     "pretty-quick": "3.1.0",
     "react-test-renderer": "16.14.0",
+    "testcontainers": "6.3.0",
     "ts-jest": "26.4.4",
     "typescript": "4.0.5"
   },
