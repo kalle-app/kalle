@@ -15,7 +15,7 @@ export default async function getCalendars(_ = null, ctx: Ctx) {
       status: true,
       type: true,
       username: true,
-      password: false,
+      encryptedPassword: false,
     },
   })
 

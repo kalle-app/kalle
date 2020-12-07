@@ -15,7 +15,7 @@ export default async function getConnectedCalendars(_ = null, ctx: Ctx) {
       status: true,
       type: true,
       username: true,
-      password: false,
+      encryptedPassword: false,
     },
   })
 

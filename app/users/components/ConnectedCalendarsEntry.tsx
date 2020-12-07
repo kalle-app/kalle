@@ -1,7 +1,7 @@
 import { ConnectedCalendar } from "@prisma/client"
 
 type CalendarEntryProps = {
-  calendar: Omit<ConnectedCalendar, "password">
+  calendar: Omit<ConnectedCalendar, "encryptedPassword">
 }
 
 const ConnectedCalendarsEntry = (props: CalendarEntryProps) => {

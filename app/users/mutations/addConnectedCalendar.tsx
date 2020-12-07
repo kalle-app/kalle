@@ -28,7 +28,7 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
       status: "active",
       type: calendarCreate.type,
       username: calendarCreate.username,
-      password: encryptedPassword,
+      encryptedPassword,
       owner: {
         connect: { id: owner.id },
       },
