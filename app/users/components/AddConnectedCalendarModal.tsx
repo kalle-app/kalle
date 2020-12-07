@@ -3,7 +3,7 @@ import addConnectedCalendar from "../mutations/addConnectedCalendar"
 import AddConnectedCalendar from "./AddConnectedCalendar"
 import { useState } from "react"
 import { invalidateQuery, useMutation } from "blitz"
-import authenticateCalDav from "../queries/authenticateConnectedCalendar"
+import authenticateConnectedCalendar from "../queries/authenticateConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 
 const initialCalendar = {
@@ -33,7 +33,7 @@ const AddConnectedCalendarModal = (props: AddCalendarProps) => {
     let credentialsCorrect = false
     switch (calendar.type) {
       case "CalDav":
-        const response = await authenticateCalDav({
+        const response = await authenticateConnectedCalendar({
           url: calendar.url,
           username: calendar.username,
           password: calendar.password,

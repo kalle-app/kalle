@@ -1,4 +1,4 @@
-import { verifyConnectionDetails, CalendarConnectionDetails } from "app/caldav"
+import { verifyConnectionDetails } from "app/caldav"
 
 interface AuthenticateCaldavArgs {
   url: string
@@ -6,7 +6,7 @@ interface AuthenticateCaldavArgs {
   password: string
 }
 
-export default async function authenticateCalDav(args: AuthenticateCaldavArgs) {
+export default async function authenticateConnectedCalendar(args: AuthenticateCaldavArgs) {
   const res = await verifyConnectionDetails(args.url, args.username, args.password)
   return res
 }
