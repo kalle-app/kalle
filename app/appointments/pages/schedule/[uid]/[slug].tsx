@@ -9,7 +9,6 @@ import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
 
-
 interface SchedulerProps {
   meetingSlug: string
   uid: string
@@ -18,7 +17,10 @@ interface SchedulerProps {
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState({ start: null, end: null })
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
+    start: string | null
+    end: string | null
+  }>({ start: null, end: null })
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
@@ -42,15 +44,15 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     setSelectedDay(selectedDay)
   }
 
-  const onSubmit = (e: any) => { 
-    if(!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+  const onSubmit = (e: any) => {
+    if (!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
       alert("No timeslot selected")
       return
     }
 
-    const hour = selectedTimeSlot.start.split(':')[0]
-    const minute = selectedTimeSlot.start.split(':')[1]
-    if(!hour || !minute){
+    const hour = selectedTimeSlot.start.split(":")[0]
+    const minute = selectedTimeSlot.start.split(":")[1]
+    if (!hour || !minute) {
       alert("Invalid Time give")
       return
     }
@@ -79,7 +81,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
       owner: {
         name: "Lukas Laskowski",
         email: "rohan.sawahn@student.hpi.de",
-      }
+      },
     }
     invoke(sendConfirmationMail, { appointment: appointment })
   }
