@@ -28,7 +28,7 @@ const Advanced = (props: AdvancedProps) => {
           </div>
           <div className="col-start-2 col-span-6">Coming soon...</div>
           <div className="col-start-1 col-span-8"></div>
-          <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+          <div className="col-start-8 mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
             <div className="rounded-md shadow">
               <a
                 href="#"

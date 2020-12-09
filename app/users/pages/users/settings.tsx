@@ -6,7 +6,7 @@ import Divider from "app/users/components/Divider"
 import SectionHeader from "app/users/components/SectionHeader"
 import UserDataForm from "app/users/components/UserDataForm"
 import { BlitzPage, useQuery } from "blitz"
-import { Suspense, useState } from "react"
+import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
 
 const SettingsContent = () => {

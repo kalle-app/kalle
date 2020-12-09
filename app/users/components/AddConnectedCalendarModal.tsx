@@ -30,7 +30,6 @@ const AddConnectedCalendarModal = (props: AddCalendarProps) => {
   }
 
   const onSubmit = async () => {
-    let credentialsCorrect = false
     switch (calendar.type) {
       case "CalDav":
         const response = await authenticateConnectedCalendar({

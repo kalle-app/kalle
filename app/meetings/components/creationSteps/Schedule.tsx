@@ -24,6 +24,10 @@ const Schedule = (props: ScheduleProps) => {
     props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
   }
 
+  const handleTimezoneChange = (e: any) => {
+    props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
+  }
+
   const handleSelection = (e: any) => {
     props.onEdit(e.target.name, parseInt(e.target.value))
   }
@@ -137,7 +141,7 @@ const Schedule = (props: ScheduleProps) => {
                   id="timezone"
                   name="timezone"
                   value={props.meeting.timezone}
-                  onChange={handleChange}
+                  onChange={handleTimezoneChange}
                   className="mt-1 block col-span-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                   <option value="-12">(GMT-12:00) International Date Line West</option>
