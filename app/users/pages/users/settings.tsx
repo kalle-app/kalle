@@ -8,12 +8,8 @@ import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense, useState } from "react"
 
 const SettingsContent = () => {
-  const [calendarEntries, { refetch }] = useQuery(getConnectedCalendars, null)
+  const [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [modalHidden, setModelHidden] = useState(true)
-
-  const handleCalendarAdded = () => {
-    refetch()
-  }
 
   const toggleModal = () => {
     setModelHidden(!modalHidden)
@@ -37,7 +33,7 @@ const SettingsContent = () => {
           </Suspense>
         </Section>
       </div>
-      <AddConnectedCalendarModal hidden={modalHidden} updateCalendarList={handleCalendarAdded} />
+      <AddConnectedCalendarModal hidden={modalHidden} />
     </div>
   )
 }

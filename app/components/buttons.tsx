@@ -2,6 +2,7 @@ import { forwardRef } from "react"
 
 function makeCustomAnchorComponent(className: string) {
   return forwardRef<HTMLAnchorElement, React.HTMLProps<HTMLAnchorElement>>((props, ref) => {
+    // eslint-disable-next-line jsx-a11y/anchor-has-content
     return <a {...props} className={className + " " + props.className} ref={ref} />
   })
 }
