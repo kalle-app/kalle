@@ -43,6 +43,8 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     meeting.endDate
   )
 
+  console.log(takenTimeSlots)
+
   takenTimeSlots = takenTimeSlots.sort((a, b) => a.start.getTime() - b.start.getTime())
 
   // Build Array of DailySlots for every Day inbetween our dates

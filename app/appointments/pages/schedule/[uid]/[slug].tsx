@@ -62,15 +62,15 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         year: selectedDay.getFullYear(),
         month: selectedDay.getMonth() + 1,
         day: selectedDay.getDate(),
-        hour: hour,
-        minute: minute,
+        hour: Number(hour),
+        minute: Number(minute),
       },
       duration: {
         hours: Math.floor(meeting.duration / 60),
         minutes: meeting.duration % 60,
       },
       title: meeting.name,
-      description: meeting.description,
+      description: meeting.description ? meeting.description : "Description",
       method: "request",
       location: "Berlin",
       url: "www.kalle.app",
@@ -79,10 +79,11 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         email: "info@kalle.app",
       },
       owner: {
-        name: "Lukas Laskowski",
+        name: "Rohan Sawahn",
         email: "rohan.sawahn@student.hpi.de",
       },
     }
+    console.log(appointment)
     invoke(sendConfirmationMail, { appointment: appointment })
   }
 
