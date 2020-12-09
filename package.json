@@ -7,7 +7,11 @@
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific:rw -v $(pwd)/test/baikal/config:/var/www/baikal/config:rw ckulka/baikal:nginx",
+    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test",
+    "test:baikal:start:windows": "docker run -d --name baikal-test -p 5232:80 -v \"%cd%\"/test/baikal/Specific:/var/www/baikal/Specific -v \"%cd%\"/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
+    "test:baikal:stop:windows": "docker stop baikal-test && docker rm baikal-test"
   },
   "browserslist": [
     "defaults"
@@ -38,6 +42,7 @@
     "@prisma/client": "2.11.0",
     "@tailwindcss/forms": "0.2.1",
     "blitz": "0.25.0",
+    "bootstrap": "4.5.3",
     "email-templates": "8.0.0",
     "final-form": "4.20.1",
     "hbs": "4.1.1",
@@ -52,6 +57,7 @@
     "react-dom": "0.0.0-experimental-7f28234f8",
     "react-error-boundary": "2.3.2",
     "react-final-form": "6.5.2",
+    "react-nice-dates": "3.0.7",
     "secure-password": "4.0.0",
     "tailwindcss": "2",
     "urllib": "2.36.1",

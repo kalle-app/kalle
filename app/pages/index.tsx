@@ -4,7 +4,7 @@ import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/b
 
 const Home: BlitzPage = () => {
   return (
-    <div className="container">
+    <div className="container mx-auto p-4 mt-5">
       <h1>Kalle.app</h1>
       <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
       <Link href="/auth/login">

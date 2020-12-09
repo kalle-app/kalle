@@ -9,7 +9,7 @@ const MyMeetingsContent = () => {
   return <MyMeetings meetings={meetings ? meetings : []} />
 }
 
-const Create: BlitzPage = () => {
+const AllMeetings: BlitzPage = () => {
   // display all meetings I invited to as cards here
   // Customer can click on a meeting and info will be diplayed
   return (
@@ -23,4 +23,4 @@ const Create: BlitzPage = () => {
   )
 }
 
-export default Create
+export default AllMeetings

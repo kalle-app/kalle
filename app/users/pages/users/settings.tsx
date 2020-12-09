@@ -5,7 +5,7 @@ import Section from "app/users/components/Section"
 import UserData from "app/users/components/UserData"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
 import { BlitzPage, useQuery } from "blitz"
-import { Suspense, useState } from "react"
+import React, { Suspense, useState } from "react"
 
 const SettingsContent = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
