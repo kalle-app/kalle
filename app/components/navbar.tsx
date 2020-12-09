@@ -2,7 +2,7 @@ import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Link, useMutation } from "blitz"
 import { Suspense, useState } from "react"
-import { SecondaryButton, TertiaryButton } from "./buttons"
+import { SecondaryLink, TertiaryLink } from "./Links"
 import React from "react"
 
 interface CustomSignOutButtonProps {
@@ -39,11 +39,7 @@ const DesktopPublicNavigation = () => {
   return (
     <div className="ml-10 flex items-baseline space-x-4">
       <Link href="/">
-        <TertiaryButton>Home</TertiaryButton>
-      </Link>
-
-      <Link href="/pricing">
-        <TertiaryButton>Pricing</TertiaryButton>
+        <TertiaryLink>Home</TertiaryLink>
       </Link>
     </div>
   )
@@ -53,11 +49,13 @@ const DesktopPrivateNavigation = () => {
   return (
     <div className="ml-10 flex items-baseline space-x-4">
       <Link href="/">
-        <TertiaryButton>Home</TertiaryButton>
+        <TertiaryLink>Home</TertiaryLink>
       </Link>
-
-      <Link href="/calendar">
-        <TertiaryButton>My Calendars</TertiaryButton>
+      <Link href="/meetings/all">
+        <TertiaryLink>Meetings</TertiaryLink>
+      </Link>
+      <Link href="/calendars">
+        <TertiaryLink>Calendars</TertiaryLink>
       </Link>
     </div>
   )
@@ -69,8 +67,8 @@ const DesktopUserMenu = () => {
 
   if (!currentUser) {
     return (
-      <Link href="/auth/login">
-        <SecondaryButton>Login</SecondaryButton>
+      <Link href="/login">
+        <SecondaryLink>Login</SecondaryLink>
       </Link>
     )
   }
@@ -88,7 +86,7 @@ const DesktopUserMenu = () => {
           <img
             className="h-8 w-8 rounded-full"
             src="https://upload.wikimedia.org/wikipedia/commons/3/38/Goldfisch_Bloch2.jpg"
-            alt=""
+            alt="profile"
           />
         </button>
       </div>
@@ -101,16 +99,16 @@ const DesktopUserMenu = () => {
           aria-labelledby="user-menu"
         >
           <div className="block px-4 py-2 text-base font-bold leading-none text-gray700">
-            {currentUser.email}
+            {currentUser?.email}
           </div>
 
-          <Link href="/">
+          {/* <Link href="/">
             <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
               Your Profile
             </a>
-          </Link>
+          </Link> */}
 
-          <Link href="/">
+          <Link href="/users/settings">
             <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
               Settings
             </a>
@@ -136,15 +134,8 @@ const MobilePublicNavigation = () => {
           Dashboard
         </a>
       </Link>
-
-      <Link href="/pricing">
-        <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
-          Pricing
-        </a>
-      </Link>
-
-      <Link href="/auth/login">
-        <SecondaryButton>Login</SecondaryButton>
+      <Link href="/login">
+        <SecondaryLink>Login</SecondaryLink>
       </Link>
     </>
   )
@@ -157,15 +148,15 @@ const MobilePrivateNavigation = () => {
     <>
       <Link href="/">
         <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
-          Dashboard public
+          Home
         </a>
       </Link>
-      <Link href="/calendar">
+      <Link href="/meetings/all">
         <a
-          href="/calendar"
+          href="/meetings/all"
           className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
         >
-          My Calendars
+          Meetings
         </a>
       </Link>
 
@@ -175,21 +166,21 @@ const MobilePrivateNavigation = () => {
             <img
               className="h-10 w-10 rounded-full"
               src="https://upload.wikimedia.org/wikipedia/commons/3/38/Goldfisch_Bloch2.jpg"
-              alt=""
+              alt="profile"
             />
           </div>
           <div className="ml-3">
             <div className="text-base font-bold leading-none text-gray-700">
-              {currentUser.email}
+              {currentUser?.email}
             </div>
           </div>
         </div>
         <div className="mt-3 px-2 space-y-1">
-          <Link href="/">
+          {/* <Link href="/">
             <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
               Your Profile
             </a>
-          </Link>
+          </Link> */}
 
           <Link href="/users/settings">
             <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200">
@@ -217,16 +208,12 @@ const NavBar = () => {
   return (
     <div>
       <nav className="bg-gray-100 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               {/* logo container */}
               <div className="flex-shrink-0">
-                <img
-                  className="h-8 w-8"
-                  src="https://upload.wikimedia.org/wikipedia/commons/3/38/Goldfisch_Bloch2.jpg"
-                  alt="Kalle.app Logo"
-                />
+                <img className="h-8 w-8" src="logo.png" alt="Logo" />
               </div>
               <div className="hidden md:block">
                 <Suspense fallback={<DesktopPublicNavigation />}>

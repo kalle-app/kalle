@@ -6,6 +6,7 @@ import General from "../../components/creationSteps/General"
 import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
+import Layout from "app/layouts/Layout"
 
 enum Steps {
   General,
@@ -105,14 +106,14 @@ const InviteCreationContent = () => {
 
 const Create: BlitzPage = () => {
   return (
-    <div className="bg-gray-100 flex h-screen">
-      <div className="container flex flex-col justify-center mx-auto">
-        <Suspense fallback="Loading...">
-          <InviteCreationContent />
-        </Suspense>
-      </div>
+    <div className="container flex flex-col justify-center mx-auto">
+      <Suspense fallback="Loading...">
+        <InviteCreationContent />
+      </Suspense>
     </div>
   )
 }
+
+Create.getLayout = (page) => <Layout title="Create Kalle Meeting">{page}</Layout>
 
 export default Create
