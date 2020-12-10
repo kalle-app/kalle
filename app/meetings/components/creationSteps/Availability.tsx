@@ -21,7 +21,7 @@ const Availability = (props: AvailabilityProps) => {
       <div className="border-t border-gray-200">
         <div className="grid grid-cols-8 gap-6 bg-white px-4 py-5 sm:px-6">
           <div className="col-span-1">
-            <Button action={() => props.stepBack()}>
+            <Button onClick={props.stepBack} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleLeft} />
             </Button>
           </div>
@@ -29,7 +29,7 @@ const Availability = (props: AvailabilityProps) => {
           <div className="col-span-6"></div>
 
           <div className="col-span-1">
-            <Button action={() => props.toNext()}>
+            <Button onClick={props.toNext} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleRight} />
             </Button>
           </div>

@@ -77,7 +77,7 @@ const General = (props: GeneralProps) => {
             </div>
           </div>
           <div className="col-span-1">
-            <Button action={() => props.toNext()}>
+            <Button onClick={props.toNext} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleRight} />
             </Button>
           </div>

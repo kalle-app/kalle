@@ -44,7 +44,9 @@ const ConnectedCalendarsList = (props: ConnectedCalendarsListProps) => {
       </table>
 
       <div className="text-right sm:px-6 my-3">
-        <Button action={props.toggleModal}>Add Calendar</Button>
+        <Button onClick={props.toggleModal} type="submit">
+          Add Calendar
+        </Button>
       </div>
     </div>
   )
