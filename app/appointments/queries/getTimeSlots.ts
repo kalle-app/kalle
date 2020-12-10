@@ -1,4 +1,5 @@
 import { getTakenTimeSlots } from "app/caldav"
+import passwordEncryptor from "app/users/password-encryptor"
 import db from "db"
 
 interface GetTimeSlotsArgs {
@@ -34,10 +35,12 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   })
   if (!calendar) return null
 
+  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+
   let takenTimeSlots = await getTakenTimeSlots(
     {
       url: calendar.caldavAddress,
-      auth: { username: calendar.username, password: calendar.password, digest: true },
+      auth: { username: calendar.username, password, digest: true },
     },
     meeting.startDate,
     meeting.endDate
