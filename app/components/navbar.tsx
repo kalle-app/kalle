@@ -56,7 +56,7 @@ const DesktopPrivateNavigation = () => {
         <TertiaryButton>Home</TertiaryButton>
       </Link>
 
-      <Link href="/calendar">
+      <Link href="/users/settings">
         <TertiaryButton>My Calendars</TertiaryButton>
       </Link>
     </div>
@@ -101,7 +101,7 @@ const DesktopUserMenu = () => {
           aria-labelledby="user-menu"
         >
           <div className="block px-4 py-2 text-base font-bold leading-none text-gray700">
-            {currentUser.email}
+            {/*currentUser.email*/}
           </div>
 
           <Link href="/">
@@ -160,9 +160,9 @@ const MobilePrivateNavigation = () => {
           Dashboard public
         </a>
       </Link>
-      <Link href="/calendar">
+      <Link href="/users/calendar">
         <a
-          href="/calendar"
+          href="/users/calendar"
           className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200"
         >
           My Calendars
@@ -180,7 +180,7 @@ const MobilePrivateNavigation = () => {
           </div>
           <div className="ml-3">
             <div className="text-base font-bold leading-none text-gray-700">
-              {currentUser.email}
+              {/*currentUser.email*/}
             </div>
           </div>
         </div>

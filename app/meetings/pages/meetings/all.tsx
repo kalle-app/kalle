@@ -1,7 +1,7 @@
 import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense } from "react"
 import getMeetings from "../../../meetings/queries/getMeetings"
-import MyMeetings from "../../components/myMeetings"
+import MyMeetings from "../../components/MyMeetings"
 
 const MyMeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -9,7 +9,7 @@ const MyMeetingsContent = () => {
   return <MyMeetings meetings={meetings ? meetings : []} />
 }
 
-const Create: BlitzPage = () => {
+const AllMeetings: BlitzPage = () => {
   // display all meetings I invited to as cards here
   // Customer can click on a meeting and info will be diplayed
   return (
@@ -23,4 +23,4 @@ const Create: BlitzPage = () => {
   )
 }
 
-export default Create
+export default AllMeetings

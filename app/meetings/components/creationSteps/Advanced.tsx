@@ -6,7 +6,7 @@ import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 type AdvancedProps = {
   stepBack: () => void
   onEdit: (key: string, value: any) => void
-  onSubmit: (e: any) => void
+  onSubmit: () => void
 }
 
 const Advanced = (props: AdvancedProps) => {
@@ -22,13 +22,13 @@ const Advanced = (props: AdvancedProps) => {
       <div className="border-t border-gray-200">
         <div className="grid grid-cols-8 gap-6 bg-white px-4 py-5 sm:px-6">
           <div className="col-span-1">
-            <Button action={() => props.stepBack()}>
+            <Button onClick={props.stepBack} type="submit">
               <FontAwesomeIcon icon={faAngleDoubleLeft} />
             </Button>
           </div>
           <div className="col-start-2 col-span-6">Coming soon...</div>
           <div className="col-start-1 col-span-8"></div>
-          <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+          <div className="col-start-8 mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
             <div className="rounded-md shadow">
               <a
                 href="#"

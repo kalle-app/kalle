@@ -1,9 +1,9 @@
-import { BlitzPage, useMutation } from "blitz"
+import { BlitzPage, Router, useMutation } from "blitz"
 import React, { Suspense, useState } from "react"
-import Advanced from "../../components/creationSteps/advanced"
-import Availability from "../../components/creationSteps/availability"
-import General from "../../components/creationSteps/general"
-import Schedule from "../../components/creationSteps/schedule"
+import Advanced from "../../components/creationSteps/Advanced"
+import Availability from "../../components/creationSteps/Availability"
+import General from "../../components/creationSteps/General"
+import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
 
@@ -36,7 +36,8 @@ const initialMeeting: Meeting = {
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
+  // removed Steps.Availability for demo
+  const stepOrder = [Steps.General, Steps.Schedule, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
   const [createMeetingMutation] = useMutation(addMeeting)
 
@@ -62,10 +63,12 @@ const InviteCreationContent = () => {
     }
   }
 
-  const submitMeeting = (e: any) => {
+  const submitMeeting = () => {
     createMeetingMutation(meeting)
       .then((data) => {
-        // Redirect to All Meetings
+        Router.push("/meetings/all")
+        const meetingLink = data?.ownerId + "/" + data?.link
+        alert("Meeting succesfully created. Your Meetinglink is: " + meetingLink)
       })
       .catch((error) => {
         alert(error)
