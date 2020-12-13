@@ -1,23 +1,16 @@
 import { BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
-import { PrimaryButton, SecondaryButton, TertiaryButton } from "app/components/buttons"
+import { PrimaryLink } from "app/components/Links"
 
 const Home: BlitzPage = () => {
   return (
-    <div className="container mx-auto p-4 mt-5">
-      <h1>Kalle.app</h1>
-      <p>Ich bin Kalle, dein fischiger Freund, und helfe dir Termine zu plätschern.</p>
-      <Link href="/auth/login">
-        <PrimaryButton>Log in</PrimaryButton>
-      </Link>
-
-      <p>Not registered yet?</p>
-
+    <div className="container flex flex-col items-center">
+      <h1 className="flex-grow-0 mt-20 mb-10 text-4xl font-serif">
+        Haven't used Kalle to manage your Meetings?
+      </h1>
       <Link href="/signup">
-        <SecondaryButton>Sign up</SecondaryButton>
+        <PrimaryLink className="flex-grow-0 text-2xl">Sign up</PrimaryLink>
       </Link>
-      <p>Or just bubble a bit...</p>
-      <TertiaryButton>Bubble!</TertiaryButton>
     </div>
   )
 }

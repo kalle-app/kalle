@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { Head } from "blitz"
-import NavBar from "app/components/navbar"
+import NavBar from "app/components/Navbar"
 
 type LayoutProps = {
   title?: string
@@ -12,11 +12,10 @@ const Layout = ({ title, children }: LayoutProps) => {
     <>
       <Head>
         <title>{title || "kalle"}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="logo.png" type="image/png" />
       </Head>
       <NavBar />
-
-      {children}
+      <div className="container mx-auto mt-8">{children}</div>
     </>
   )
 }
