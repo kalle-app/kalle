@@ -9,6 +9,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "browserslist": [
     "defaults"
   ],
