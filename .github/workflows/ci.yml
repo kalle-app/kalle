@@ -29,7 +29,7 @@ jobs:
           path-to-lcov: ./.coverage/lcov.info
       - run: npm run build
       - name: Start services for E2E test
-        run: docker-compose up
+        run: docker-compose up -d
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
@@ -41,3 +41,7 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print Dashboard URL
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.dashboardUrl }}
