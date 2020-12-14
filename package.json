@@ -2,16 +2,15 @@
   "name": "kalle",
   "version": "1.0.0",
   "scripts": {
-    "start": "blitz start",
+    "start": "concurrently -r 'blitz start' 'docker-compose up > /dev/null'",
     "studio": "blitz db studio",
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific:rw -v $(pwd)/test/baikal/config:/var/www/baikal/config:rw ckulka/baikal:nginx",
-    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test",
-    "test:baikal:start:windows": "docker run -d --name baikal-test -p 5232:80 -v \"%cd%\"/test/baikal/Specific:/var/www/baikal/Specific -v \"%cd%\"/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
-    "test:baikal:stop:windows": "docker stop baikal-test && docker rm baikal-test"
+    "test:watch": "jest --watch"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "browserslist": [
     "defaults"
@@ -38,8 +37,8 @@
     "@fortawesome/fontawesome-svg-core": "1.2.32",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
-    "@prisma/cli": "2.11.0",
-    "@prisma/client": "2.11.0",
+    "@prisma/cli": "2.12.0",
+    "@prisma/client": "2.12.0",
     "@tailwindcss/forms": "0.2.1",
     "blitz": "0.25.0",
     "bootstrap": "4.5.3",
@@ -47,11 +46,11 @@
     "final-form": "4.20.1",
     "hbs": "4.1.1",
     "ics": "2.26.1",
-    "nodemailer": "6.4.16",
-    "pug": "3.0.0",
     "lodash": "4.17.20",
     "node-fetch": "2.6.1",
     "node-ical": "0.12.3",
+    "nodemailer": "6.4.16",
+    "pug": "3.0.0",
     "react": "0.0.0-experimental-7f28234f8",
     "react-datepicker": "3.3.0",
     "react-dom": "0.0.0-experimental-7f28234f8",
@@ -78,6 +77,7 @@
     "@typescript-eslint/parser": "4.8.1",
     "autoprefixer": "10.0.2",
     "babel-eslint": "10.1.0",
+    "concurrently": "5.3.0",
     "eslint": "7.13.0",
     "eslint-config-react-app": "5.2.1",
     "eslint-plugin-flowtype": "5.2.0",
