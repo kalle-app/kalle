@@ -1,9 +1,6 @@
 import { getTakenTimeSlots, getEvents, verifyConnectionDetails } from "./"
-import { skipWithoutDocker } from "test/skip-without-docker"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
-
-skipWithoutDocker()
 
 describe("caldav stuff", () => {
   let baseUrl: string
