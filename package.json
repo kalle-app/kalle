@@ -8,7 +8,7 @@
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open --env host=localhost,port=3000"
   },
   "engines": {
     "node": "14.x"

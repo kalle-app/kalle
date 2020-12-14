@@ -1,6 +1,8 @@
+import { url } from "../support/url"
+
 describe("Landing Page", () => {
   it("displays the headpage", () => {
-    cy.visit("http://localhost:3000")
+    cy.visit(url("/"))
     cy.contains("Sign up")
   })
 })
