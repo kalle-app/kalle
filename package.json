@@ -7,7 +7,8 @@
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "cypress:open": "cypress open --env host=localhost,port=3000"
   },
   "engines": {
     "node": "14.x"
@@ -78,6 +79,7 @@
     "autoprefixer": "10.0.2",
     "babel-eslint": "10.1.0",
     "concurrently": "5.3.0",
+    "cypress": "6.1.0",
     "eslint": "7.13.0",
     "eslint-config-prettier": "7.0.0",
     "eslint-config-react-app": "5.2.1",
