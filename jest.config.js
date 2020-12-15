@@ -9,7 +9,13 @@ module.exports = {
   testEnvironment: "jest-environment-jsdom-fourteen",
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
-  testPathIgnorePatterns: ["/node_modules/", "/.blitz/", "/.next/", "<rootDir>/db/migrations"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.blitz/",
+    "/.next/",
+    "<rootDir>/db/migrations",
+    "/cypress/",
+  ],
   transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
   transform: {
     "^.+\\.(ts|tsx)$": "babel-jest",
