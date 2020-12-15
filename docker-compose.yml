@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:13.1
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: kalle
+
+  baikal:
+    image: ckulka/baikal:nginx
+    ports:
+      - 5232:80
+    volumes:
+      - ./test/baikal/Specific:/var/www/baikal/Specific
+      - ./test/baikal/config:/var/www/baikal/config

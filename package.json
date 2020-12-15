@@ -2,16 +2,16 @@
   "name": "kalle",
   "version": "1.0.0",
   "scripts": {
-    "start": "blitz start",
+    "start": "concurrently -r 'blitz start' 'docker-compose up > /dev/null'",
     "studio": "blitz db studio",
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:baikal:start": "docker run -d --name baikal-test -p 5232:80 -v $(pwd)/test/baikal/Specific:/var/www/baikal/Specific:rw -v $(pwd)/test/baikal/config:/var/www/baikal/config:rw ckulka/baikal:nginx",
-    "test:baikal:stop": "docker stop baikal-test && docker rm baikal-test",
-    "test:baikal:start:windows": "docker run -d --name baikal-test -p 5232:80 -v \"%cd%\"/test/baikal/Specific:/var/www/baikal/Specific -v \"%cd%\"/test/baikal/config:/var/www/baikal/config ckulka/baikal:nginx",
-    "test:baikal:stop:windows": "docker stop baikal-test && docker rm baikal-test"
+    "cypress:open": "cypress open --env host=localhost,port=3000"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "browserslist": [
     "defaults"
@@ -38,8 +38,8 @@
     "@fortawesome/fontawesome-svg-core": "1.2.32",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
-    "@prisma/cli": "2.11.0",
-    "@prisma/client": "2.11.0",
+    "@prisma/cli": "2.12.0",
+    "@prisma/client": "2.12.0",
     "@tailwindcss/forms": "0.2.1",
     "blitz": "0.25.0",
     "bootstrap": "4.5.3",
@@ -79,11 +79,15 @@
     "@typescript-eslint/parser": "4.8.1",
     "autoprefixer": "10.0.2",
     "babel-eslint": "10.1.0",
+    "concurrently": "5.3.0",
+    "cypress": "6.1.0",
     "eslint": "7.13.0",
+    "eslint-config-prettier": "7.0.0",
     "eslint-config-react-app": "5.2.1",
     "eslint-plugin-flowtype": "5.2.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsx-a11y": "6.4.1",
+    "eslint-plugin-prettier": "3.3.0",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "4.3.0",

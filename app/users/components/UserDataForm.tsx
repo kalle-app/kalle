@@ -1,8 +1,13 @@
+// import Form from "app/components/Form"
+// import LabeledTextField from "app/components/LabeledTextField"
 import Button from "./Button"
-
-const UserData = () => {
+// TODO: add proper Form and mutation
+const UserDataForm = () => {
   return (
     <div>
+      {/* <Form>
+        <LabeledTextField name="Firs Name" label="Type here.." type="text" />
+      </Form> */}
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-6 sm:col-span-3">
           <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
@@ -69,4 +74,4 @@ const UserData = () => {
   )
 }
 
-export default UserData
+export default UserDataForm
