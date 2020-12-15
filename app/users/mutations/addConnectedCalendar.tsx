@@ -1,5 +1,6 @@
 import db from "db"
 import { Ctx } from "blitz"
+import passwordEncryptor from "../password-encryptor"
 
 type CalendarCreate = {
   name: string
@@ -18,7 +19,7 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
 
   if (!owner) return null
 
-  const pseudeoEncryptedPassword = calendarCreate.password
+  const encryptedPassword = await passwordEncryptor.encrypt(calendarCreate.password)
 
   const calendar = await db.connectedCalendar.create({
     data: {
@@ -27,7 +28,7 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
       status: "active",
       type: calendarCreate.type,
       username: calendarCreate.username,
-      password: pseudeoEncryptedPassword,
+      encryptedPassword,
       owner: {
         connect: { id: owner.id },
       },

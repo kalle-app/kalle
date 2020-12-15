@@ -29,6 +29,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./.coverage/lcov.info
       - run: npm run build
+        env:
+          CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
       - name: Start services for E2E test
         run: docker-compose up -d
       - name: Run Cypress

@@ -3,7 +3,7 @@ import Button from "./Button"
 import ConnectedCalendardsEntry from "./ConnectedCalendarsEntry"
 
 type ConnectedCalendarsListProps = {
-  calendars: ConnectedCalendar[]
+  calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
   toggleModal
 }
 

@@ -1,6 +1,6 @@
 Closes: #xxxx
 
-__ What does this PR change? Provide a detailed & concise explanation that makes it easy to review. __
+** What does this PR change? Provide a detailed & concise explanation that makes it easy to review. **
 
 ## PR Checklist:
 
@@ -10,12 +10,13 @@ __ What does this PR change? Provide a detailed & concise explanation that makes
 - [ ] PR is structured into distinct & easy-to-review commits
 
 ## Pull Request Guidelines:
+
 Make sure that:
 
 a. You have done your changes in a separate branch. Branches MUST have descriptive names prefixed with according to the convention outlined [here](https://medium.com/tarkalabs/git-branch-naming-convention-60af30cd9a07). Good examples are: `bugfix/signin-issue`, `feature/google-calendar-integration` or `chore/issue-templates`.
 
 b. Your commit messages are concise & descriptive.
-       Non-trivial changes can be explained in the commit body. (if not, use interactive rebase to rewrite history)
+Non-trivial changes can be explained in the commit body. (if not, use interactive rebase to rewrite history)
 
 c. Your PR is thoughtfully structured into distinct commits, making it easy to review. (if not, use interactive rebase to rewrite history)
 
