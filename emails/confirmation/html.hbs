@@ -1,0 +1,38 @@
+<html lang="DE">
+<head>
+    <title>Appointment</title>
+</head>
+<body style="font-family: 'Helvetica Neue','Helvetica','Arial',sans-serif; margin: 0; background: #eee; padding: 10px 0 50px;">
+<div style="max-width: 600px; margin: 10px auto; background: white;">
+    <div style="background: #ff654f; height: 50px;"></div>
+    <div style="padding: 30px">
+        <h1 style="font-weight: 200; margin: 0 0 20px; font-size: 28px;">
+            A new appointment has been booked!
+        </h1>
+        <p style="margin-bottom: 30px; font-size: 16px;">
+            {{ appointment.title }} - {{appointment.start.hour}}:{{appointment.start.minute}}, {{appointment.start.day}}.{{appointment.start.month}}.{{appointment.start.year}}
+        </p>
+        <table style="margin-bottom: 20px; font-size: 12px; color: #555; width:100%;">
+            <tbody>
+            <tr>
+                <td style="width: 50%;">
+                    <div style="color: black; font-weight: bold; margin-bottom: 5px;">Appointmentdetails:</div>
+                    <div>Date: {{appointment.start.day}}.{{appointment.start.month}}.{{appointment.start.year}}</div>
+                    <div>Time: {{appointment.start.hour}}:{{appointment.start.minute}}</div>
+                    <div>Length: {{appointment.duration.hours}}h {{appointment.duration.minutes}}min</div>
+                    <div>Location: {{appointment.location}} </div>
+                    <div>Description: {{appointment.description}}</div>
+                </td>
+                <td style="vertical-align: top;">
+                    <div style="color: black; font-weight: bold; margin-bottom: 5px;">Organisator:</div>
+                    <div>{{appointment.organiser.name}}</div>
+                    <div style="color: black; font-weight: bold; margin: 9px 0 5px;">Owner:</div>
+                    <div>{{appointment.owner.name}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

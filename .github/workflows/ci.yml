@@ -21,12 +21,24 @@ jobs:
       - name: Fix file permissions for Baikal data
         run: sudo chmod -R 777 test/baikal/
       - run: npm ci
-      - run: npm run test:baikal:start
       - run: npm test -- --coverage
-      - run: npm run test:baikal:stop
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./.coverage/lcov.info
       - run: npm run build
+      - name: Start services for E2E test
+        run: docker-compose up -d
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          record: true
+          env: host=localhost,port=3000
+          build: npx blitz db migrate
+          start: npx blitz start --production --port 3000
+          wait-on: "http://localhost:3000"
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

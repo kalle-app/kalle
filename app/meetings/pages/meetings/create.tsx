@@ -1,11 +1,12 @@
-import { BlitzPage, useMutation } from "blitz"
+import { BlitzPage, Router, useMutation } from "blitz"
 import React, { Suspense, useState } from "react"
-import Advanced from "../../components/creationSteps/advanced"
-import Availability from "../../components/creationSteps/availability"
-import General from "../../components/creationSteps/general"
-import Schedule from "../../components/creationSteps/schedule"
+import Advanced from "../../components/creationSteps/Advanced"
+import Availability from "../../components/creationSteps/Availability"
+import General from "../../components/creationSteps/General"
+import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
+import Layout from "app/layouts/Layout"
 
 enum Steps {
   General,
@@ -36,11 +37,12 @@ const initialMeeting: Meeting = {
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
+  // removed Steps.Availability for demo
+  const stepOrder = [Steps.General, Steps.Schedule, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
   const [createMeetingMutation] = useMutation(addMeeting)
 
-  const onMeetingEdited = (key, value) => {
+  const onMeetingEdited = (key: string, value: any) => {
     if (key === "schedule") {
       const position = value.type === "start" ? 0 : 1
       const newSchedule = meeting.schedule
@@ -62,10 +64,12 @@ const InviteCreationContent = () => {
     }
   }
 
-  const submitMeeting = (e: any) => {
+  const submitMeeting = () => {
     createMeetingMutation(meeting)
       .then((data) => {
-        // Redirect to All Meetings
+        Router.push("/meetings/all")
+        const meetingLink = data?.ownerId + "/" + data?.link
+        alert("Meeting succesfully created. Your Meetinglink is: " + meetingLink)
       })
       .catch((error) => {
         alert(error)
@@ -105,14 +109,14 @@ const InviteCreationContent = () => {
 
 const Create: BlitzPage = () => {
   return (
-    <div className="bg-gray-100 flex h-screen">
-      <div className="container flex flex-col justify-center mx-auto">
-        <Suspense fallback="Loading...">
-          <InviteCreationContent />
-        </Suspense>
-      </div>
+    <div className="container flex flex-col justify-center mx-auto">
+      <Suspense fallback="Loading...">
+        <InviteCreationContent />
+      </Suspense>
     </div>
   )
 }
+
+Create.getLayout = (page) => <Layout title="Create Kalle Meeting">{page}</Layout>
 
 export default Create

@@ -13,7 +13,7 @@ export const LoginForm = (props: LoginFormProps) => {
   const [login] = useMutation(loginMutation)
   return (
     <div>
-      <h1>Login</h1>
+      <h1 className="text-2xl text-center mb-6">Login</h1>
 
       <Form<LoginInputType>
         submitText="Log In"
@@ -40,7 +40,7 @@ export const LoginForm = (props: LoginFormProps) => {
         <LabeledTextField name="password" label="Password" placeholder="Password" type="password" />
       </Form>
 
-      <div style={{ marginTop: "1rem" }}>
+      <div style={{ marginTop: "2rem" }}>
         Or <Link href="/signup">Sign Up</Link>
       </div>
     </div>

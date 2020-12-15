@@ -17,3 +17,9 @@ export interface Meeting {
   }
   timeslots: string[]
 }
+
+export interface DailySlot {
+  day: string,
+  value: string,
+  type: string
+}

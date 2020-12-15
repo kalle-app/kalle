@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -42,6 +42,8 @@ model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
   caldavAddress String
+  username String
+  password String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   status String
