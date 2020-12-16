@@ -1,5 +1,5 @@
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import { BlitzPage} from "blitz"
+import { BlitzPage } from "blitz"
 import Layout from "app/layouts/Layout"
 import Button from "react-bootstrap/Button"
 import { Suspense } from "react"
@@ -12,7 +12,9 @@ const PublicContent = () => {
   return (
     <main className="text-center">
       <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
-      <Button variant="primary" className="m-1" size="lg">Sign up</Button>
+      <Button variant="primary" className="m-1" size="lg">
+        Sign up
+      </Button>
     </main>
   )
 }
@@ -21,7 +23,9 @@ const PrivateContent = () => {
   return (
     <main className="text-center">
       <h2 className="p-4">You're already using Kalle to manage your Meetings!</h2>
-      <Button variant="primary" className="m-1" size="lg">Dashboard</Button>
+      <Button variant="primary" className="m-1" size="lg">
+        Dashboard
+      </Button>
     </main>
   )
 }
