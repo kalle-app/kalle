@@ -18,7 +18,9 @@ const PrivateNavigation = () => {
         <Nav.Link href="/meetings/all">Meetings</Nav.Link>
         <Nav.Link href="/calendars">Calendars</Nav.Link>
       </Nav>
-      <Button href="/users/settings" variant="outline-primary"> {currentUser?.email} </Button>
+      <Button href="/users/settings" variant="outline-primary"> 
+        {currentUser?.email}
+      </Button>
     </>
   )
 }
@@ -37,8 +39,7 @@ const NavBar = () => {
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
-          <img src="/logo.png" width="30" height="30"className="d-inline-block align-top"/>{' '}
-          Kalle
+          <img alt="logo" src="/logo.png" width="30" height="30" className="d-inline-block align-top"/>{' '}Kalle
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
