@@ -52,6 +52,7 @@
     "nodemailer": "6.4.16",
     "pug": "3.0.0",
     "react": "0.0.0-experimental-7f28234f8",
+    "react-bootstrap": "1.4.0",
     "react-datepicker": "3.3.0",
     "react-dom": "0.0.0-experimental-7f28234f8",
     "react-error-boundary": "2.3.2",
