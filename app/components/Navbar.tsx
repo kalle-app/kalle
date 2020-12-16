@@ -9,14 +9,8 @@ import Nav from "react-bootstrap/Nav"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 
-
-function isUserLoggedIn() {
-  const currentUser = useCurrentUser()
-  return !!currentUser
-}
-
 const Navigation = () => {
-  return isUserLoggedIn() ? <PrivateNavigation/> : <PublicNavigation/>
+  return useCurrentUser() ? <PrivateNavigation/> : <PublicNavigation/>
 }
 
 const PrivateNavigation = () => {
@@ -27,7 +21,7 @@ const PrivateNavigation = () => {
         <Nav.Link href="/meetings/all">Meetings</Nav.Link>
         <Nav.Link href="/calendars">Calendars</Nav.Link>
       </Nav>
-      <Button href="/users/settings" variant="outline-success">{currentUser?.email}</Button>
+      <Button href="/users/settings" variant="outline-primary">{currentUser?.email}</Button>
     </>
   )
 }
@@ -36,7 +30,7 @@ const PublicNavigation = () => {
   return (
     <>
       <Nav className="mr-auto"></Nav>
-      <Button variant="outline-success">Login</Button>
+      <Button variant="outline-primary">Login</Button>
     </>
   )
 }
