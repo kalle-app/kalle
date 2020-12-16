@@ -39,12 +39,14 @@ const NavBar = () => {
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
-          <img alt="logo" 
-            src="/logo.png" 
-            width="30" 
-            height="30" 
-            className="d-inline-block align-top"/>{' '}
-            Kalle
+          <img
+            alt="logo"
+            src="/logo.png"
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+          />{" "}
+          Kalle
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
