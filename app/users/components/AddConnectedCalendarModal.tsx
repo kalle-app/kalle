@@ -1,10 +1,10 @@
-import Button from "./Button"
 import addConnectedCalendar from "../mutations/addConnectedCalendar"
 import AddConnectedCalendar from "./AddConnectedCalendar"
 import { useState } from "react"
 import { invalidateQuery, useMutation } from "blitz"
 import authenticateConnectedCalendar from "../queries/authenticateConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
+import Button from "react-bootstrap/Button"
 
 const initialCalendar = {
   name: "",

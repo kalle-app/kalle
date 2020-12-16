@@ -12,7 +12,7 @@ const PublicContent = () => {
   return (
     <main className="text-center">
       <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
-      <Button variant="primary" className="m-1" size="lg">
+      <Button href="/signup" variant="primary" className="m-1" size="lg">
         Sign up
       </Button>
     </main>
@@ -23,7 +23,7 @@ const PrivateContent = () => {
   return (
     <main className="text-center">
       <h2 className="p-4">You're already using Kalle to manage your Meetings!</h2>
-      <Button variant="primary" className="m-1" size="lg">
+      <Button href="/users/settings" variant="primary" className="m-1" size="lg">
         Dashboard
       </Button>
     </main>

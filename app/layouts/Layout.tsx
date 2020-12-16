@@ -15,7 +15,7 @@ const Layout = ({ title, children }: LayoutProps) => {
         <link rel="icon" href="logo.png" type="image/png" />
       </Head>
       <NavBar />
-      <div className="container mt-5">{children}</div>
+      <div className="container my-5">{children}</div>
     </>
   )
 }

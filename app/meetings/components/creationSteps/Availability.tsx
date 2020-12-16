@@ -1,5 +1,5 @@
 import React from "react"
-import Button from "app/users/components/Button"
+import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import "react-datepicker/dist/react-datepicker.css"
