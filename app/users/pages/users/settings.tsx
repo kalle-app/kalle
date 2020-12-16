@@ -1,4 +1,3 @@
-import Card from "app/components/Card"
 import Layout from "app/layouts/Layout"
 import AddConnectedCalendarModal from "app/users/components/AddConnectedCalendarModal"
 import ConnectedCalendarsList from "app/users/components/ConnectedCalendarsList"
@@ -8,6 +7,7 @@ import UserDataForm from "app/users/components/UserDataForm"
 import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
+import Card from "react-bootstrap/Card"
 
 const SettingsContent = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)

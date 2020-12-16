@@ -1,16 +1,13 @@
 import React from "react"
-import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import { Link, useMutation } from "blitz"
-import { Suspense, useState } from "react"
-import { SecondaryLink, TertiaryLink } from "./Links"
+import { Suspense } from "react"
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 
 const Navigation = () => {
-  return useCurrentUser() ? <PrivateNavigation/> : <PublicNavigation/>
+  return useCurrentUser() ? <PrivateNavigation /> : <PublicNavigation />
 }
 
 const PrivateNavigation = () => {
@@ -21,7 +18,7 @@ const PrivateNavigation = () => {
         <Nav.Link href="/meetings/all">Meetings</Nav.Link>
         <Nav.Link href="/calendars">Calendars</Nav.Link>
       </Nav>
-      <Button href="/users/settings" variant="outline-primary">{currentUser?.email}</Button>
+      <Button href="/users/settings" variant="outline-primary"> {currentUser?.email} </Button>
     </>
   )
 }
@@ -40,19 +37,13 @@ const NavBar = () => {
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
-          <img
-            alt=""
-            src="/logo.png"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />{' '}
+          <img src="/logo.png" width="30" height="30"className="d-inline-block align-top"/>{' '}
           Kalle
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-        <Suspense fallback={<PublicNavigation/>}>
-          <Navigation/>
+        <Suspense fallback={<PublicNavigation />}>
+          <Navigation />
         </Suspense>
         </Navbar.Collapse>
       </Container>
