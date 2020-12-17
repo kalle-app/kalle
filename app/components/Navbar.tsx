@@ -43,7 +43,7 @@ const PublicNavigation = () => {
     <>
       <Nav className="mr-auto"></Nav>
       <Nav>
-        <Nav.Link href="/login">Login</Nav.Link>
+        <Nav.Link href="/login">Log In</Nav.Link>
       </Nav>
     </>
   )

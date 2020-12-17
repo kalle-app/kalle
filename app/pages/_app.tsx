@@ -1,7 +1,6 @@
 import { AppProps, ErrorComponent, useRouter } from "blitz"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import { queryCache } from "react-query"
-import LoginForm from "app/auth/components/LoginForm"
 import "bootstrap/dist/css/bootstrap.min.css"
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -25,7 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
 function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   if (error?.name === "AuthenticationError") {
-    return <LoginForm onSuccess={resetErrorBoundary} />
+    return (
+      <ErrorComponent statusCode={(error as any).statusCode} title="Sorry, authentication failed" />
+    )
   } else if (error?.name === "AuthorizationError") {
     return (
       <ErrorComponent

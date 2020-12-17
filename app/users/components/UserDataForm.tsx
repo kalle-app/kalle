@@ -19,11 +19,11 @@ const UserDataForm = () => {
       <Form.Row>
         <Form.Group as={Col} controlId="formPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control type="password" />
         </Form.Group>
         <Form.Group as={Col} controlId="formPassword">
           <Form.Label>Repeat Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control type="password" />
         </Form.Group>
       </Form.Row>
     </Form>
