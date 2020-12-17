@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 
 type ConnectedCalendarsProps = {
-  calendars: ConnectedCalendar[]
+  calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
   toggleModal
 }
 

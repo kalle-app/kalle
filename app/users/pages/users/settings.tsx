@@ -13,19 +13,6 @@ const SettingsContent = () => {
   let [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [modalHidden, setModelHidden] = useState(true)
 
-  const mock = {
-    id: 0,
-    name: "Work",
-    caldavAddress: "vabhjbasakhxbsajb",
-    username: "test",
-    password: "test",
-    ownerId: 1,
-    status: "active",
-    type: "CalDav",
-  }
-
-  calendarEntries = [mock, mock]
-
   const toggleModal = () => {
     setModelHidden(!modalHidden)
   }

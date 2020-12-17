@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 
 type CalendarEntryProps = {
-  calendar: ConnectedCalendar
+  calendar: Omit<ConnectedCalendar, "encryptedPassword">
 }
 
 const CalendarEntry = (props: CalendarEntryProps) => {
