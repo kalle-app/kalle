@@ -16,10 +16,6 @@ type ScheduleProps = {
 const Schedule = (props: ScheduleProps) => {
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
-  const handleChange = (e: any) => {
-    props.onEdit(e.currentTarget.name, e.currentTarget.value)
-  }
-
   const handleDurationChange = (e: any) => {
     props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
   }
@@ -69,7 +65,7 @@ const Schedule = (props: ScheduleProps) => {
                     type="radio"
                     value={15}
                     checked={props.meeting.duration === 15}
-                    onChange={handleSelection}
+                    onBlur={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -86,7 +82,7 @@ const Schedule = (props: ScheduleProps) => {
                     type="radio"
                     value={30}
                     checked={props.meeting.duration === 30}
-                    onChange={handleSelection}
+                    onBlur={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -103,7 +99,7 @@ const Schedule = (props: ScheduleProps) => {
                     type="radio"
                     value={60}
                     checked={props.meeting.duration === 60}
-                    onChange={handleSelection}
+                    onBlur={handleSelection}
                     className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                   />
                   <label
@@ -127,7 +123,7 @@ const Schedule = (props: ScheduleProps) => {
                     value={
                       [15, 30, 60].includes(props.meeting.duration) ? NaN : props.meeting.duration
                     }
-                    onChange={handleDurationChange}
+                    onBlur={handleDurationChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -141,7 +137,7 @@ const Schedule = (props: ScheduleProps) => {
                   id="timezone"
                   name="timezone"
                   value={props.meeting.timezone}
-                  onChange={handleTimezoneChange}
+                  onBlur={handleTimezoneChange}
                   className="mt-1 block col-span-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                   <option value="-12">(GMT-12:00) International Date Line West</option>
