@@ -4,7 +4,7 @@ import { invalidateQuery, useMutation } from "blitz"
 import authenticateConnectedCalendar from "../queries/authenticateConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
-import styles from "../AddCalendar.module.css"
+import styles from "../styles/AddCalendar.module.css"
 import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 
