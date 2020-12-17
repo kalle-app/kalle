@@ -1,5 +1,4 @@
 import Layout from "app/layouts/Layout"
-import AddConnectedCalendarModal from "app/users/components/AddConnectedCalendarModal"
 import ConnectedCalendars from "app/users/components/ConnectedCalendars"
 import SectionHeader from "app/users/components/SectionHeader"
 import UserDataForm from "app/users/components/UserDataForm"
@@ -8,14 +7,11 @@ import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
+import AddCalendar from "app/users/components/AddCalendar"
 
 const SettingsContent = () => {
-  let [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [modalHidden, setModelHidden] = useState(true)
-
-  const toggleModal = () => {
-    setModelHidden(!modalHidden)
-  }
+  const [calendarEntries] = useQuery(getConnectedCalendars, null)
+  const [state, showOverlay] = useState(false)
 
   return (
     <>
@@ -25,12 +21,9 @@ const SettingsContent = () => {
           subtitle="Add Calendars that you want to connect to Kalle"
         />
         <Suspense fallback="Loading ...">
-          <ConnectedCalendars
-            calendars={calendarEntries ? calendarEntries : []}
-            toggleModal={toggleModal}
-          />
+          <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
         </Suspense>
-        <SectionFooter text="Add Calendar" />
+        <SectionFooter text="Add Calendar" action={() => showOverlay(true)} />
       </Card>
       <Card className="mt-4">
         <SectionHeader
@@ -38,9 +31,9 @@ const SettingsContent = () => {
           subtitle="Change your account information here"
         />
         <UserDataForm />
-        <SectionFooter text="Update" />
+        <SectionFooter text="Update" action={() => alert("Test")} />
       </Card>
-      <AddConnectedCalendarModal hidden={modalHidden} />
+      <AddCalendar state={state} showOverlay={showOverlay} />
     </>
   )
 }
