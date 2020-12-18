@@ -10,7 +10,7 @@ const UserDataForm = () => {
     <Form className="m-3">
       <Form.Group controlId="formName">
         <Form.Label>Full name</Form.Label>
-        <Form.Control defaultValue="Name" />
+        <Form.Control defaultValue={currentUser?.name} />
       </Form.Group>
       <Form.Group controlId="formEmail">
         <Form.Label>Email address</Form.Label>

@@ -7,6 +7,7 @@ import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
+import Card from "react-bootstrap/Card"
 
 enum Steps {
   General,
@@ -37,8 +38,7 @@ const initialMeeting: Meeting = {
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  // removed Steps.Availability for demo
-  const stepOrder = [Steps.General, Steps.Schedule, Steps.Advanced]
+  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
   const [createMeetingMutation] = useMutation(addMeeting)
 
@@ -67,7 +67,7 @@ const InviteCreationContent = () => {
   const submitMeeting = () => {
     createMeetingMutation(meeting)
       .then((data) => {
-        Router.push("/meetings/all")
+        Router.push("/meetings")
         const meetingLink = data?.ownerId + "/" + data?.link
         alert("Meeting succesfully created. Your Meetinglink is: " + meetingLink)
       })
@@ -104,19 +104,17 @@ const InviteCreationContent = () => {
       setStep(stepOrder[cur - 1])
     }
   }
-  return <div className="bg-white shadow overflow-hidden sm:rounded-lg">{renderSwitch()}</div>
+  return <Card>{renderSwitch()}</Card>
 }
 
 const Create: BlitzPage = () => {
   return (
-    <div className="container flex flex-col justify-center mx-auto">
-      <Suspense fallback="Loading...">
-        <InviteCreationContent />
-      </Suspense>
-    </div>
+    <Suspense fallback="Loading...">
+      <InviteCreationContent />
+    </Suspense>
   )
 }
 
-Create.getLayout = (page) => <Layout title="Create Kalle Meeting">{page}</Layout>
+Create.getLayout = (page) => <Layout title="Create a Meeting">{page}</Layout>
 
 export default Create

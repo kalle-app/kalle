@@ -1,3 +1,6 @@
+import Button from "react-bootstrap/Button"
+import Col from "react-bootstrap/Col"
+
 interface SlotProps {
   start: string
   end: string
@@ -7,17 +10,15 @@ interface SlotProps {
 
 const SingleTimeSlot = (props: SlotProps) => {
   return (
-    <button
-      className={
-        "w-full p-2 m-1 border border-gray-200 col-span-full bg-gray-200 rounded-md hover:bg-gray-400" +
-        (props.selectedTimeSlot?.start === props.start ? " bg-gray-600 text-white" : null)
-      }
+    <Button
+      variant="outline-secondary"
+      className={"w-50 m-1 " + (props.selectedTimeSlot?.start === props.start ? "active" : "")}
       onClick={(e) => {
         props.setSelectedTimeSlot({ start: props.start, end: props.end })
       }}
     >
       {props.start}-{props.end}
-    </button>
+    </Button>
   )
 }
 

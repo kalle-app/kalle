@@ -2,7 +2,7 @@ import React from "react"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
-import { useMutation } from "blitz"
+import { useRouter, useMutation } from "blitz"
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 import Container from "react-bootstrap/Container"
@@ -13,6 +13,7 @@ const Navigation = () => {
 }
 
 const PrivateNavigation = () => {
+  const router = useRouter()
   const [logout] = useMutation(logoutMutation)
   const currentUser = useCurrentUser()
   return (
@@ -27,6 +28,7 @@ const PrivateNavigation = () => {
           <NavDropdown.Item
             onClick={async () => {
               await logout()
+              router.push("/")
             }}
           >
             Sign out
