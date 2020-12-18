@@ -19,7 +19,6 @@ const PrivateNavigation = () => {
     <>
       <Nav className="mr-auto">
         <Nav.Link href="/meetings/all">Meetings</Nav.Link>
-        <Nav.Link href="/calendars">Calendars</Nav.Link>
       </Nav>
       <Nav>
         <NavDropdown alignRight title={currentUser?.email} id="basic-nav-dropdown">
