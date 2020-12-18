@@ -2,8 +2,8 @@ import { PrimaryLink } from "app/components/Links"
 import Layout from "app/layouts/Layout"
 import { BlitzPage, useQuery } from "blitz"
 import React, { Suspense } from "react"
-import getMeetings from "../../../meetings/queries/getMeetings"
-import Meetings from "../../components/Meetings"
+import getMeetings from "../../meetings/queries/getMeetings"
+import Meetings from "../components/Meetings"
 
 const MyMeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)

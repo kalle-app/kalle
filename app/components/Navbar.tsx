@@ -18,11 +18,11 @@ const PrivateNavigation = () => {
   return (
     <>
       <Nav className="mr-auto">
-        <Nav.Link href="/meetings/all">Meetings</Nav.Link>
+        <Nav.Link href="/meetings">Meetings</Nav.Link>
       </Nav>
       <Nav>
         <NavDropdown alignRight title={currentUser?.email} id="basic-nav-dropdown">
-          <NavDropdown.Item href="/users/settings">Settings</NavDropdown.Item>
+          <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item
             onClick={async () => {
