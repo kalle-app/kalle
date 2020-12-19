@@ -22,9 +22,9 @@ const PublicContent = () => {
 const PrivateContent = () => {
   return (
     <main className="text-center">
-      <h2 className="p-4">You're already using Kalle to manage your Meetings!</h2>
-      <Button href="/users/settings" variant="primary" className="m-1" size="lg">
-        Dashboard
+      <h2 className="p-4">Welcome to Kalle!</h2>
+      <Button href="/settings" variant="primary" className="m-1" size="lg">
+        Connect a Calendar!
       </Button>
     </main>
   )
