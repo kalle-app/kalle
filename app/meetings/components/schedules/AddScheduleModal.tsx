@@ -1,4 +1,5 @@
-import { useMutation } from "blitz"
+import getSchedules from "app/meetings/queries/getSchedules"
+import { invalidateQuery, useMutation } from "blitz"
 import React, { useState } from "react"
 import { Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
@@ -44,6 +45,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const submit = () => {
     createScheduleMutation(schedule)
       .then((data) => {
+        invalidateQuery(getSchedules)
         props.setVisibility(false)
       })
       .catch((error) => {

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
@@ -8,6 +8,7 @@ import { Meeting } from "app/meetings/types"
 import Form from "react-bootstrap/Form"
 import { Schedule } from "@prisma/client"
 import { FormControl } from "react-bootstrap"
+import AddSchedule from "../schedules/AddScheduleModal"
 
 type ScheduleProps = {
   stepBack: () => void
@@ -19,6 +20,7 @@ type ScheduleProps = {
 
 const ScheduleStep = (props: ScheduleProps) => {
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  const [modalVisible, setModalVisibility] = useState(false)
 
   const handleTimezoneChange = (e: any) => {
     props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
@@ -197,6 +199,7 @@ const ScheduleStep = (props: ScheduleProps) => {
             })}
           </Form.Control>
         </Form.Group>
+        <Button onClick={() => setModalVisibility(true)}>Add Schedule</Button>
       </Form>
       <div className="p-3 d-flex justify-content-end">
         <Button onClick={props.stepBack} type="submit" className="mx-1">
@@ -206,6 +209,7 @@ const ScheduleStep = (props: ScheduleProps) => {
           <FontAwesomeIcon icon={faAngleDoubleRight} />
         </Button>
       </div>
+      <AddSchedule show={modalVisible} setVisibility={setModalVisibility} />
     </div>
   )
 }
