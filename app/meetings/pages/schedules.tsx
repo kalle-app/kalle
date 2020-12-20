@@ -5,14 +5,17 @@ import { BlitzPage, useQuery } from "blitz"
 import AddSchedule from "../components/schedules/AddScheduleModal"
 import SectionHeader from "app/users/components/SectionHeader"
 import SectionFooter from "app/users/components/SectionFooter"
+import AllSchedules from "../components/schedules/AllSchedules"
 
 const MainContent = () => {
   const [modalVisible, showOverlay] = useState(false)
   return (
     <>
       <Card>
-        <SectionHeader title="My Schedules" subtitle="View and Add new Schedules" />
-        <Suspense fallback="Loading ..."></Suspense>
+        <SectionHeader title="My Schedules" subtitle="View and Add new Schedule Presets" />
+        <Suspense fallback="Loading ...">
+          <AllSchedules />
+        </Suspense>
         <SectionFooter text="Add Schedule" action={() => showOverlay(true)} />
       </Card>
       <AddSchedule show={modalVisible} setVisibility={showOverlay} />

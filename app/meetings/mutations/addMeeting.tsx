@@ -11,6 +11,8 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
 
   if (!owner) return null
 
+  console.log(meetingCreate)
+
   const meeting = await db.meeting.create({
     data: {
       name: meetingCreate.name,
@@ -20,26 +22,14 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       timezone: meetingCreate.timezone,
       startDate: meetingCreate.startDate,
       endDate: meetingCreate.endDate,
+      schedule: {
+        connect: { id: meetingCreate.scheduleId },
+      },
       owner: {
         connect: { id: owner.id },
       },
     },
   })
-
-  for (const day of Object.keys(meetingCreate.schedule)) {
-    if (meetingCreate.schedule[day][0] && meetingCreate.schedule[day][1]) {
-      await db.dailySchedule.create({
-        data: {
-          day: day,
-          startTime: meetingCreate.schedule[day][0],
-          endTime: meetingCreate.schedule[day][1],
-          meeting: {
-            connect: { id: meeting.id },
-          },
-        },
-      })
-    }
-  }
 
   return meeting
 }

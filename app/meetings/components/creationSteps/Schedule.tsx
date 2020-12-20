@@ -6,17 +6,18 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Meeting } from "app/meetings/types"
 import Form from "react-bootstrap/Form"
-import Col from "react-bootstrap/Col"
-import Row from "react-bootstrap/Row"
+import { Schedule } from "@prisma/client"
+import { FormControl } from "react-bootstrap"
 
 type ScheduleProps = {
   stepBack: () => void
   toNext: () => void
   onEdit: (key: string, value: any) => void
   meeting: Meeting
+  schedulePresets: Schedule[]
 }
 
-const Schedule = (props: ScheduleProps) => {
+const ScheduleStep = (props: ScheduleProps) => {
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
   const handleTimezoneChange = (e: any) => {
@@ -27,8 +28,9 @@ const Schedule = (props: ScheduleProps) => {
     props.onEdit(e.target.name, parseInt(e.target.value))
   }
 
-  const addSchedule = (e: any, day: string, type: string) => {
-    props.onEdit("schedule", { day: day, value: e.currentTarget.value, type: type })
+  const setSchedule = (e: any) => {
+    console.log(e)
+    props.onEdit("scheduleId", parseInt(e.currentTarget.value))
   }
 
   return (
@@ -186,31 +188,14 @@ const Schedule = (props: ScheduleProps) => {
             />
           </Form.Row>
         </Form.Group>
-        <Form.Group controlId="formDays">
-          {days.map((day) => {
-            return (
-              <Form.Row key={day}>
-                <Form.Group as={Col}>
-                  <Form.Label>{day.charAt(0).toUpperCase() + day.slice(1)}</Form.Label>
-                  <Form.Control
-                    value={props.meeting.schedule[day][0]}
-                    onChange={(e) => {
-                      addSchedule(e, day, "start")
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>&nbsp;</Form.Label>
-                  <Form.Control
-                    value={props.meeting.schedule[day][1]}
-                    onChange={(e) => {
-                      addSchedule(e, day, "end")
-                    }}
-                  />
-                </Form.Group>
-              </Form.Row>
-            )
-          })}
+        <Form.Group controlId="select-schedule">
+          <Form.Label>Select Schedule</Form.Label>
+          <Form.Control as="select" onChange={setSchedule}>
+            <option>Select a Schedule</option>
+            {props.schedulePresets.map((schedule: Schedule) => {
+              return <option value={schedule.id}>{schedule.name}</option>
+            })}
+          </Form.Control>
         </Form.Group>
       </Form>
       <div className="p-3 d-flex justify-content-end">
@@ -225,4 +210,4 @@ const Schedule = (props: ScheduleProps) => {
   )
 }
 
-export default Schedule
+export default ScheduleStep

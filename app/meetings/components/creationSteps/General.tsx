@@ -11,7 +11,7 @@ type GeneralProps = {
   meeting: Meeting
 }
 
-const General = (props: GeneralProps) => {
+const GeneralStep = (props: GeneralProps) => {
   const textChanged = (e: any) => {
     props.onEdit(e.currentTarget.name, e.currentTarget.value)
   }
@@ -52,4 +52,4 @@ const General = (props: GeneralProps) => {
   )
 }
 
-export default General
+export default GeneralStep

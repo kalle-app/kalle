@@ -10,7 +10,7 @@ type AvailabilityProps = {
   onEdit: (key: string, value: any) => void
 }
 
-const Availability = (props: AvailabilityProps) => {
+const AvailabilityStep = (props: AvailabilityProps) => {
   return (
     <div className="p-3">
       <h4>Availability</h4>
@@ -27,4 +27,4 @@ const Availability = (props: AvailabilityProps) => {
   )
 }
 
-export default Availability
+export default AvailabilityStep

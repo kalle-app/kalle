@@ -9,7 +9,7 @@ type AdvancedProps = {
   onSubmit: () => void
 }
 
-const Advanced = (props: AdvancedProps) => {
+const AdvancedStep = (props: AdvancedProps) => {
   return (
     <div className="p-3">
       <h4>Advanced Options</h4>
@@ -26,4 +26,4 @@ const Advanced = (props: AdvancedProps) => {
   )
 }
 
-export default Advanced
+export default AdvancedStep

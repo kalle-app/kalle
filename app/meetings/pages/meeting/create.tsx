@@ -1,13 +1,14 @@
-import { BlitzPage, Router, useMutation } from "blitz"
+import { BlitzPage, Router, useMutation, useQuery } from "blitz"
 import React, { Suspense, useState } from "react"
-import Advanced from "../../components/creationSteps/Advanced"
-import Availability from "../../components/creationSteps/Availability"
-import General from "../../components/creationSteps/General"
-import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeeting from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
 import Card from "react-bootstrap/Card"
+import getSchedules from "app/meetings/queries/getSchedules"
+import GeneralStep from "../../components/creationSteps/General"
+import ScheduleStep from "../../components/creationSteps/Schedule"
+import AvailabilityStep from "../../components/creationSteps/Availability"
+import AdvancedStep from "../../components/creationSteps/Advanced"
 
 enum Steps {
   General,
@@ -25,33 +26,18 @@ const initialMeeting: Meeting = {
   startDate: new Date(),
   endDate: new Date(),
   timeslots: [],
-  schedule: {
-    monday: ["9:00", "17:00"],
-    tuesday: ["9:00", "17:00"],
-    wednesday: ["9:00", "17:00"],
-    thursday: ["9:00", "17:00"],
-    friday: ["9:00", "17:00"],
-    saturday: ["", ""],
-    sunday: ["", ""],
-  },
+  scheduleId: 0,
 }
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
   const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
   const [meeting, setMeeting] = useState(initialMeeting)
+  const [schedules] = useQuery(getSchedules, null)
   const [createMeetingMutation] = useMutation(addMeeting)
 
   const onMeetingEdited = (key, value) => {
-    if (key === "schedule") {
-      const position = value.type === "start" ? 0 : 1
-      const newSchedule = meeting.schedule
-      newSchedule[value.day][position] = value.value
-      setMeeting({
-        ...meeting,
-        schedule: newSchedule,
-      })
-    } else if (key === "timeslots") {
+    if (key === "timeslots") {
       setMeeting({
         ...meeting,
         timeslots: meeting.timeslots.concat(value),
@@ -79,15 +65,23 @@ const InviteCreationContent = () => {
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General meeting={meeting} toNext={next} onEdit={onMeetingEdited} />
+        return <GeneralStep meeting={meeting} toNext={next} onEdit={onMeetingEdited} />
       case Steps.Schedule:
         return (
-          <Schedule meeting={meeting} toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+          <ScheduleStep
+            meeting={meeting}
+            toNext={next}
+            schedulePresets={schedules!}
+            stepBack={stepBack}
+            onEdit={onMeetingEdited}
+          />
         )
       case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <AvailabilityStep toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
       case Steps.Advanced:
-        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return (
+          <AdvancedStep onSubmit={submitMeeting} stepBack={stepBack} onEdit={onMeetingEdited} />
+        )
     }
   }
 
