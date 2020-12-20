@@ -8,6 +8,10 @@ import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
+import Card from "react-bootstrap/Card"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Button from "react-bootstrap/Button"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -105,49 +109,37 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   }
 
   return (
-    <div className="container mx-auto p-4 mt-5">
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Schedule an Appointment</h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Select a timeslot of your preference
-          </p>
-        </div>
-        <div className="border-t border-gray-200">
-          <div className="grid grid-cols-full lg:grid-cols-3">
-            <div className="p-4 col-span-full lg:col-span-1 md:border-right md:border-r-2 md:border-gray-200">
-              <h1 className="text-xl font-medium">
-                {meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}
-              </h1>
+    <div className="container">
+      <div className="text-center mt-5">
+        <h3>Schedule an Appointment</h3>
+        <p className="pb-3">Select a timeslot of your preference</p>
+        <Card className="text-left p-3">
+          <Row className="pb-3">
+            <Col md={6} className="pb-5">
+              <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
               <p>{meeting.description}</p>
-            </div>
-            <div className="p-4 col-span-full lg:col-span-1">
               <DatePickerCalendar
                 date={selectedDay}
                 onDateChange={onChange}
                 locale={enUS}
                 modifiers={modifiers}
               />
-            </div>
-            <div className="flex p-4 col-span-full lg:col-span-1">
+            </Col>
+            <Col md={6}>
               <AvailableTimeSlotsSelection
                 slots={slots}
                 selectedDay={selectedDay}
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
               />
-            </div>
-          </div>
-          <div className="rounded-md shadow">
-            <a
-              href="#"
-              onClick={onSubmit}
-              className="w-1 m-4 flex float-right items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-            >
+            </Col>
+          </Row>
+          <div className="p-3 d-flex justify-content-end">
+            <Button variant="primary" onClick={onSubmit}>
               Submit
-            </a>
+            </Button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   )

@@ -19,13 +19,15 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
       props.selectedDay.getFullYear() === slot.start.getFullYear()
     ) {
       return (
-        <SingleTimeSlot
-          key={index}
-          start={getTimeString(slot.start)}
-          end={getTimeString(slot.end)}
-          selectedTimeSlot={props.selectedTimeSlot}
-          setSelectedTimeSlot={props.setSelectedTimeSlot}
-        />
+        <div className="w-full d-flex justify-content-center">
+          <SingleTimeSlot
+            key={index}
+            start={getTimeString(slot.start)}
+            end={getTimeString(slot.end)}
+            selectedTimeSlot={props.selectedTimeSlot}
+            setSelectedTimeSlot={props.setSelectedTimeSlot}
+          />
+        </div>
       )
     } else {
       return <div></div>
@@ -33,8 +35,8 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
   })
 
   return (
-    <div className="flex-col w-full">
-      <p>Please select a time slot.</p>
+    <div className="text-center">
+      <p className="mb-4">Please select a time slot.</p>
       {timeSlotTiles}
     </div>
   )
