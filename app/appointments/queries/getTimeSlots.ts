@@ -1,6 +1,7 @@
 import { getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
 import db from "db"
+import { Slot } from "../types"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
@@ -30,25 +31,29 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   })
   if (!meeting) return null
 
-  const calendar = await db.connectedCalendar.findFirst({
+  const calendars = await db.connectedCalendar.findMany({
     where: { ownerId: meeting.ownerId },
   })
-  if (!calendar) return null
+  if (!calendars) return null
 
-  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+  let takenTimeSlots: Slot[] = []
 
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  // Get taken slots for every calendar
+  await calendars.reduce(async (promise, calendar) => {
+    await promise
+    const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+    let newSlots = await getTakenTimeSlots(
+      {
+        url: calendar.caldavAddress,
+        auth: { username: calendar.username, password, digest: true },
+      },
+      meeting.startDate,
+      meeting.endDate
+    )
+    Array.prototype.push.apply(takenTimeSlots, newSlots)
+  }, Promise.resolve())
 
-  console.log(takenTimeSlots)
-
-  takenTimeSlots = takenTimeSlots.sort((a, b) => a.start.getTime() - b.start.getTime())
+  takenTimeSlots = takenTimeSlots.sort((a: Slot, b: Slot) => a.start.getTime() - b.start.getTime())
 
   // Build Array of DailySlots for every Day inbetween our dates
   const slots: DailySlot[] = []
@@ -116,7 +121,8 @@ function makeDateTime(time: string, date: Date): Date {
 }
 
 function noCollision(time, event, duration) {
-  return getTimePlusMinutes(time, duration) <= event.start
+  // Either we had an overlapping event and therefore check the endtime or we check if it is possible to schedule a meeting until next event start
+  return time > event.end || getTimePlusMinutes(time, duration) <= event.start
 }
 
 function datesAreOnSameDay(first, second) {
