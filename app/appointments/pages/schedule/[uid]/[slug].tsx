@@ -12,6 +12,8 @@ import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
+import EmailTemplate from "email-templates"
+import { Form, Modal } from "react-bootstrap"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -26,6 +28,8 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     end: string | null
   }>({ start: null, end: null })
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+  const [email, setEmail] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
     alert("No calendar connected :(")
@@ -48,7 +52,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     setSelectedDay(selectedDay)
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = () => {
     if (!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
       alert("No timeslot selected")
       return
@@ -74,7 +78,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         minutes: meeting.duration % 60,
       },
       title: meeting.name,
-      description: meeting.description ? meeting.description : "Description",
+      description: meeting.description ? meeting.description : "No Description set",
       method: "request",
       location: "Berlin",
       url: "www.kalle.app",
@@ -83,11 +87,11 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         email: "info@kalle.app",
       },
       owner: {
-        name: "Rohan Sawahn",
-        email: "rohan.sawahn@student.hpi.de",
+        name: email.split("@")[0],
+        email: email,
       },
     }
-    console.log(appointment)
+    setModalVisible(false)
     invoke(sendConfirmationMail, { appointment: appointment })
   }
 
@@ -109,39 +113,63 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   }
 
   return (
-    <div className="container">
-      <div className="text-center mt-5">
-        <h3>Schedule an Appointment</h3>
-        <p className="pb-3">Select a timeslot of your preference</p>
-        <Card className="text-left p-3">
-          <Row className="pb-3">
-            <Col md={6} className="pb-5">
-              <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
-              <p>{meeting.description}</p>
-              <DatePickerCalendar
-                date={selectedDay}
-                onDateChange={onChange}
-                locale={enUS}
-                modifiers={modifiers}
-              />
-            </Col>
-            <Col md={6}>
-              <AvailableTimeSlotsSelection
-                slots={slots}
-                selectedDay={selectedDay}
-                selectedTimeSlot={selectedTimeSlot}
-                setSelectedTimeSlot={setSelectedTimeSlot}
-              />
-            </Col>
-          </Row>
-          <div className="p-3 d-flex justify-content-end">
-            <Button variant="primary" onClick={onSubmit}>
-              Submit
-            </Button>
-          </div>
-        </Card>
+    <>
+      <div className="container">
+        <div className="text-center mt-5">
+          <h3>Schedule an Appointment</h3>
+          <p className="pb-3">Select a timeslot of your preference</p>
+          <Card className="text-left p-3">
+            <Row className="pb-3">
+              <Col md={6} className="pb-5">
+                <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
+                <p>{meeting.description}</p>
+                <DatePickerCalendar
+                  date={selectedDay}
+                  onDateChange={onChange}
+                  locale={enUS}
+                  modifiers={modifiers}
+                />
+              </Col>
+              <Col md={6}>
+                <AvailableTimeSlotsSelection
+                  slots={slots}
+                  selectedDay={selectedDay}
+                  selectedTimeSlot={selectedTimeSlot}
+                  setSelectedTimeSlot={setSelectedTimeSlot}
+                />
+              </Col>
+            </Row>
+            <div className="p-3 d-flex justify-content-end">
+              <Button variant="primary" onClick={() => setModalVisible(true)}>
+                Schedule!
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
+
+      <Modal show={modalVisible} onHide={() => setModalVisible(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter your Emailadress</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          You will receive a confirmation mail to this adress
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)}
+              />
+            </Form.Group>
+          </Form>
+          <Button variant="primary" onClick={() => onSubmit()}>
+            Submit!
+          </Button>
+        </Modal.Body>
+      </Modal>
+    </>
   )
 }
 
