@@ -11,6 +11,7 @@ import * as z from "zod"
 
 const initialCredentials = {
   name: "",
+  username: "",
   email: "",
   password: "",
 }
@@ -43,6 +44,7 @@ const SignupPage: BlitzPage = () => {
       try {
         await signup({
           name: credentials.name,
+          username: credentials.username,
           email: credentials.email,
           password: credentials.password,
         })
@@ -67,6 +69,10 @@ const SignupPage: BlitzPage = () => {
           <Form.Group controlId="formEmail">
             <Form.Label>Full name</Form.Label>
             <Form.Control onChange={(e) => setValue("name", e.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control onChange={(e) => setValue("username", e.target.value)} />
           </Form.Group>
           <Form.Group controlId="formEmail">
             <Form.Label>Email address</Form.Label>

@@ -15,17 +15,17 @@ import Button from "react-bootstrap/Button"
 
 interface SchedulerProps {
   meetingSlug: string
-  uid: string
+  username: string
 }
 
-const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
-  const [meeting] = useQuery(getMeeting, meetingSlug)
+const Scheduler = ({ meetingSlug, username }: SchedulerProps) => {
+  const [meeting] = useQuery(getMeeting, { slug: meetingSlug, username: username })
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
     start: string | null
     end: string | null
   }>({ start: null, end: null })
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerName)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
     alert("No calendar connected :(")
@@ -37,7 +37,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     throw new Error("Meeting is invalid!")
   }
 
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
   if (!slots) {
     alert("No free slots available :(")
     throw new Error("No free slots available")
@@ -87,7 +87,6 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
         email: "rohan.sawahn@student.hpi.de",
       },
     }
-    console.log(appointment)
     invoke(sendConfirmationMail, { appointment: appointment })
   }
 
@@ -147,12 +146,12 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
 
 const ScheduleAppointment: BlitzPage = () => {
   const slug = useParam("slug", "string")
-  const uid = useParam("uid", "string")
+  const username = useParam("username", "string")
 
-  if (slug && uid) {
+  if (slug && username) {
     return (
       <Suspense fallback="Loading...">
-        <Scheduler meetingSlug={slug} uid={uid} />
+        <Scheduler meetingSlug={slug} username={username} />
       </Suspense>
     )
   }

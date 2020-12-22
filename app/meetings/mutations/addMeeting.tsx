@@ -21,7 +21,7 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       startDate: meetingCreate.startDate,
       endDate: meetingCreate.endDate,
       owner: {
-        connect: { id: owner.id },
+        connect: { username: owner.username },
       },
     },
   })

@@ -68,8 +68,10 @@ const InviteCreationContent = () => {
     createMeetingMutation(meeting)
       .then((data) => {
         Router.push("/meetings")
-        const meetingLink = data?.ownerId + "/" + data?.link
-        alert("Meeting succesfully created. Your Meetinglink is: " + meetingLink)
+        const meetingLink = data?.ownerName + "/" + data?.link
+        alert(
+          "Meeting succesfully created. Your Meetinglink is: localhost:3000/schedule/" + meetingLink
+        )
       })
       .catch((error) => {
         alert(error)

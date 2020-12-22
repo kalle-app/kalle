@@ -16,7 +16,7 @@ const Meetings = (props: MeetingsProps) => {
       {props.meetings.map((meeting) => {
         const end = meeting.endDate.toString()
         const start = meeting.startDate.toString()
-        const href = "www.kalle.app/schedule/".concat(meeting.ownerId, "/", meeting.link)
+        const href = "www.kalle.app/schedule/".concat(meeting.ownerName, "/", meeting.link)
         return (
           <div className="my-5 text-left">
             <Card key={meeting.id + meeting.ownerId + meeting.name} className="p-3">

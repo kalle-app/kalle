@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -55,8 +55,8 @@ model Meeting {
   id  Int @id @default(autoincrement())
   name String
   link String
-  owner User @relation(fields: [ownerName], references: [username])
-  ownerName String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
   description String
   duration Int
   timezone Int

@@ -4,7 +4,7 @@ import db from "db"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
-  calendarOwner: string
+  ownerName: string
 }
 
 interface DailySlot {
@@ -24,14 +24,20 @@ const dailySchedule = [
   { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
 ]
 
-export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTimeSlotsArgs) {
+export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSlotsArgs) {
   const meeting = await db.meeting.findFirst({
-    where: { link: meetingSlug, ownerId: Number(calendarOwner) },
+    where: { link: meetingSlug, ownerName: ownerName },
   })
   if (!meeting) return null
 
+  const meetingOwner = await db.user.findFirst({
+    where: { username: ownerName },
+  })
+
+  if (!meetingOwner) return null
+
   const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meeting.ownerId },
+    where: { ownerId: meetingOwner.id },
   })
   if (!calendar) return null
 
