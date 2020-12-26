@@ -1,6 +1,10 @@
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCopy } from "@fortawesome/free-solid-svg-icons"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import { Button } from "react-bootstrap"
 
 type MeetingsProps = {
   meetings?: any[]
@@ -58,9 +62,14 @@ const Meetings = (props: MeetingsProps) => {
                   <p className="my-auto font-weight-bold">Link</p>
                 </Col>
                 <Col sm={8} className="my-auto">
-                  <a className="my-auto" href={href}>
-                    {href}
-                  </a>
+                  <CopyToClipboard text={href}>
+                    <span>
+                      {href}
+                      <Button variant="link">
+                        <FontAwesomeIcon icon={faCopy} />
+                      </Button>
+                    </span>
+                  </CopyToClipboard>
                 </Col>
               </Row>
             </Card>
