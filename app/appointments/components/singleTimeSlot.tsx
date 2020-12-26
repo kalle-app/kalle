@@ -1,5 +1,4 @@
 import Button from "react-bootstrap/Button"
-import Col from "react-bootstrap/Col"
 
 interface SlotProps {
   start: string

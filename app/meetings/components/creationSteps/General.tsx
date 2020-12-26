@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 import { Meeting } from "../../types"
 import Form from "react-bootstrap/Form"
-import Col from "react-bootstrap/Col"
 
 type GeneralProps = {
   toNext: () => void
