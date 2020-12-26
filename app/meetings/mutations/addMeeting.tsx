@@ -20,6 +20,7 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       timezone: meetingCreate.timezone,
       startDate: meetingCreate.startDate,
       endDate: meetingCreate.endDate,
+      location: meetingCreate.location,
       owner: {
         connect: { id: owner.id },
       },

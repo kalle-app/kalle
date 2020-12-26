@@ -118,6 +118,8 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
             <Col md={6} className="pb-5">
               <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
               <p>{meeting.description}</p>
+              <br></br>
+              <p>{meeting.location}</p>
               <DatePickerCalendar
                 date={selectedDay}
                 onDateChange={onChange}

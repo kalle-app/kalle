@@ -25,6 +25,7 @@ const initialMeeting: Meeting = {
   startDate: new Date(),
   endDate: new Date(),
   timeslots: [],
+  location: "",
   schedule: {
     monday: ["9:00", "17:00"],
     tuesday: ["9:00", "17:00"],

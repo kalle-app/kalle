@@ -39,6 +39,10 @@ const General = (props: GeneralProps) => {
             onChange={textChanged}
           />
         </Form.Group>
+        <Form.Group controlId="formLocation">
+          <Form.Label>Location</Form.Label>
+          <Form.Control name="location" value={props.meeting.location} onChange={textChanged} />
+        </Form.Group>
       </Form>
       <div className="p-3 d-flex justify-content-end">
         <Button href="/meetings" className="mx-1">

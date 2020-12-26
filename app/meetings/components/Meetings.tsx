@@ -31,6 +31,14 @@ const Meetings = (props: MeetingsProps) => {
               </Row>
               <Row>
                 <Col sm={4} className="my-auto">
+                  <p className="my-auto font-weight-bold">Location</p>
+                </Col>
+                <Col sm={8} className="my-auto pb-1">
+                  <p className="my-auto">{meeting.location}</p>
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={4} className="my-auto">
                   <p className="my-auto font-weight-bold">Duration</p>
                 </Col>
                 <Col sm={8} className="my-auto pb-1">

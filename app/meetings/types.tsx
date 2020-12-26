@@ -6,6 +6,7 @@ export interface Meeting {
   timezone: number
   startDate: Date
   endDate: Date
+  location: string
   schedule: {
     monday: string[]
     tuesday: string[]
