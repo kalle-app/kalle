@@ -1,15 +1,6 @@
 export interface Appointment {
-  start: {
-    year: number
-    month: number
-    day: number
-    hour: number
-    minute: number
-  }
-  duration: {
-    hours: number
-    minutes: number
-  }
+  start: Date
+  durationInMilliseconds: number
   title: string
   description: string
   method: string
