@@ -24,7 +24,6 @@ const initialMeeting: Meeting = {
   timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
-  timeslots: [],
   schedule: {
     monday: ["9:00", "17:00"],
     tuesday: ["9:00", "17:00"],
@@ -41,28 +40,6 @@ const InviteCreationContent = () => {
 
   const [meeting, setMeeting] = useState(initialMeeting)
   const [createMeeting] = useMutation(addMeetingMutation)
-
-  const onMeetingEdited = (key, value) => {
-    if (key === "schedule") {
-      const position = value.type === "start" ? 0 : 1
-      const newSchedule = meeting.schedule
-      newSchedule[value.day][position] = value.value
-      setMeeting({
-        ...meeting,
-        schedule: newSchedule,
-      })
-    } else if (key === "timeslots") {
-      setMeeting({
-        ...meeting,
-        timeslots: meeting.timeslots.concat(value),
-      })
-    } else {
-      setMeeting({
-        ...meeting,
-        [key]: value,
-      })
-    }
-  }
 
   const submitMeeting = async () => {
     try {
@@ -89,7 +66,9 @@ const InviteCreationContent = () => {
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
-                ...result,
+                name: result.name,
+                description: result.description,
+                link: result.link,
               }))
 
               next()
@@ -98,7 +77,19 @@ const InviteCreationContent = () => {
         )
       case Steps.Schedule:
         return (
-          <Schedule meeting={meeting} toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+          <Schedule
+            toNext={(result) => {
+              setMeeting((oldMeeting) => ({
+                ...oldMeeting,
+                startDate: result.startDate,
+                endDate: result.endDate,
+                schedule: result.schedule,
+                timezone: result.timezone,
+              }))
+              next()
+            }}
+            stepBack={stepBack}
+          />
         )
       case Steps.Availability:
         return <Availability toNext={next} stepBack={stepBack} />
