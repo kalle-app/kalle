@@ -2,7 +2,7 @@ import db from "db"
 import { Ctx } from "blitz"
 import passwordEncryptor from "../password-encryptor"
 
-type CalendarCreate = {
+interface CalendarCreate {
   name: string
   url: string
   type: string
@@ -11,13 +11,15 @@ type CalendarCreate = {
 }
 
 export default async function addConnectedCalendar(calendarCreate: CalendarCreate, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
+  ctx.session.authorize()
 
   const owner = await db.user.findFirst({
     where: { id: ctx.session.userId },
   })
 
-  if (!owner) return null
+  if (!owner) {
+    throw new Error("Invariant error: Owner does not exist")
+  }
 
   const encryptedPassword = await passwordEncryptor.encrypt(calendarCreate.password)
 
