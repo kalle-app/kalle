@@ -1,4 +1,4 @@
-import { formatAs24HourClockString } from "./availableTimeSlotsSelection"
+import { formatAs24HourClockString } from "./format"
 
 test("formatAs24HourClockString", () => {
   const offsetInHours = new Date().getTimezoneOffset() / 60

@@ -1,3 +1,4 @@
+import { formatAs24HourClockString } from "app/time-utils/format"
 import { Slot } from "../types"
 import SingleTimeSlot from "./singleTimeSlot"
 
@@ -6,14 +7,6 @@ interface AvailableSlotsProps {
   selectedDay: Date
   setSelectedTimeSlot: any
   selectedTimeSlot: any
-}
-
-function asTwoDigits(number: number) {
-  return ("0" + number).slice(-2)
-}
-
-export function formatAs24HourClockString(date: Date) {
-  return asTwoDigits(date.getHours()) + ":" + asTwoDigits(date.getMinutes())
 }
 
 const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
