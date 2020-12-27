@@ -17,8 +17,7 @@ const initialCalendar = {
 }
 
 interface AddCalendarProps {
-  state: boolean
-  showOverlay: React.Dispatch<React.SetStateAction<boolean>>
+  onClose(): void
 }
 
 const AddCalendar = (props: AddCalendarProps) => {
@@ -55,65 +54,58 @@ const AddCalendar = (props: AddCalendarProps) => {
     } catch (error) {
       alert("Something went wrong")
     }
-    props.showOverlay(false)
+
+    props.onClose()
   }
 
-  if (props.state) {
-    return (
-      <div className={styles.overlay}>
-        <div className={styles.content}>
-          <Card>
-            <div className="text-center px-4 pt-5">
-              <h5 className="font-weight-bold">Add Calendar</h5>
-            </div>
-            <Form className="p-4">
-              <Form.Group controlId="formName">
-                <Form.Label>Calendar name</Form.Label>
-                <Form.Control onChange={(e) => setValue("name", e.target.value)} />
-              </Form.Group>
-              <Form.Group controlId="formUrl">
-                <Form.Label>Calendar URL</Form.Label>
-                <Form.Control onChange={(e) => setValue("url", e.target.value)} />
-              </Form.Group>
-              <Form.Group controlId="formType">
-                <Form.Label>Type</Form.Label>
-                <Form.Control as="select" onChange={(e) => setValue("type", e.target.value)}>
-                  <option>CalDav</option>
-                  <option>Google Calendar</option>
-                  <option>Microsoft Outlook</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group controlId="formUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control onChange={(e) => setValue("username", e.target.value)} />
-              </Form.Group>
-              <Form.Group controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  onChange={(e) => setValue("password", e.target.value)}
-                />
-              </Form.Group>
-            </Form>
-            <div className="p-3 d-flex justify-content-end">
-              <Button
-                variant="outline-primary"
-                className="mx-1"
-                onClick={() => props.showOverlay(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="primary" className="mx-1" onClick={() => submit()}>
-                Add
-              </Button>
-            </div>
-          </Card>
-        </div>
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.content}>
+        <Card>
+          <div className="text-center px-4 pt-5">
+            <h5 className="font-weight-bold">Add Calendar</h5>
+          </div>
+          <Form className="p-4">
+            <Form.Group controlId="formName">
+              <Form.Label>Calendar name</Form.Label>
+              <Form.Control onChange={(e) => setValue("name", e.target.value)} />
+            </Form.Group>
+            <Form.Group controlId="formUrl">
+              <Form.Label>Calendar URL</Form.Label>
+              <Form.Control onChange={(e) => setValue("url", e.target.value)} />
+            </Form.Group>
+            <Form.Group controlId="formType">
+              <Form.Label>Type</Form.Label>
+              <Form.Control as="select" onChange={(e) => setValue("type", e.target.value)}>
+                <option>CalDav</option>
+                <option>Google Calendar</option>
+                <option>Microsoft Outlook</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control onChange={(e) => setValue("username", e.target.value)} />
+            </Form.Group>
+            <Form.Group controlId="formPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                onChange={(e) => setValue("password", e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+          <div className="p-3 d-flex justify-content-end">
+            <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" className="mx-1" onClick={() => submit()}>
+              Add
+            </Button>
+          </div>
+        </Card>
       </div>
-    )
-  } else {
-    return <></>
-  }
+    </div>
+  )
 }
 
 export default AddCalendar

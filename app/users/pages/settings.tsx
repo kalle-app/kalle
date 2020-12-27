@@ -7,11 +7,11 @@ import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
-import AddCalendar from "app/users/components/AddCalendar"
+import AddCalendarModal from "app/users/components/AddCalendar"
 
 const SettingsContent = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [state, showOverlay] = useState(false)
+  const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 
   return (
     <>
@@ -23,7 +23,7 @@ const SettingsContent = () => {
         <Suspense fallback="Loading ...">
           <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
         </Suspense>
-        <SectionFooter text="Add Calendar" action={() => showOverlay(true)} />
+        <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
       </Card>
       <Card className="mt-4">
         <SectionHeader
@@ -33,7 +33,8 @@ const SettingsContent = () => {
         <UserDataForm />
         <SectionFooter text="Update" action={() => alert("Test")} />
       </Card>
-      <AddCalendar state={state} showOverlay={showOverlay} />
+
+      {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
     </>
   )
 }
