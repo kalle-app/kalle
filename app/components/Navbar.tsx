@@ -3,7 +3,7 @@ import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
 import { useRouter, useMutation } from "blitz"
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
 const Navigation = () => {
   return useCurrentUser() ? <PrivateNavigation /> : <PublicNavigation />
