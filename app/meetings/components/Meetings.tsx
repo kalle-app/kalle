@@ -23,12 +23,13 @@ const Meetings = (props: MeetingsProps) => {
         const start = meeting.startDate.toString()
 
         const href = `/schedule/${meeting.ownerId}/${meeting.link}`
-        const hrefToDisplay = getOrigin() + "/" + href
+        const hrefToDisplay = getOrigin() + href
 
         return (
           <Card
             as="li"
             key={meeting.id + meeting.ownerId + meeting.name}
+            id={"" + meeting.id}
             className="p-3 my-5 text-left"
           >
             <h5 className="pb-3 font-weight-bold">{meeting.name}</h5>

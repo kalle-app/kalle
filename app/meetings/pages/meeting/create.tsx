@@ -5,7 +5,7 @@ import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
 import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
-import addMeeting from "../../mutations/addMeeting"
+import addMeetingMutation from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
 import Card from "react-bootstrap/Card"
 
@@ -38,9 +38,9 @@ const initialMeeting: Meeting = {
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
+
   const [meeting, setMeeting] = useState(initialMeeting)
-  const [createMeetingMutation] = useMutation(addMeeting)
+  const [createMeeting] = useMutation(addMeetingMutation)
 
   const onMeetingEdited = (key, value) => {
     if (key === "schedule") {
@@ -64,16 +64,21 @@ const InviteCreationContent = () => {
     }
   }
 
-  const submitMeeting = () => {
-    createMeetingMutation(meeting)
-      .then((data) => {
-        Router.push("/meetings")
-        const meetingLink = data?.ownerId + "/" + data?.link
-        alert("Meeting succesfully created. Your Meetinglink is: " + meetingLink)
-      })
-      .catch((error) => {
-        alert(error)
-      })
+  const submitMeeting = async () => {
+    try {
+      const data = await createMeeting(meeting)
+      Router.push(`/meetings#${data.id}`)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const next = () => {
+    setStep((oldStep) => oldStep + 1)
+  }
+
+  const stepBack = () => {
+    setStep((oldStep) => oldStep - 1)
   }
 
   const renderSwitch = () => {
@@ -102,19 +107,6 @@ const InviteCreationContent = () => {
     }
   }
 
-  const next = () => {
-    if (step !== stepOrder[stepOrder.length - 1]) {
-      const cur = stepOrder.indexOf(step)
-      setStep(stepOrder[cur + 1])
-    }
-  }
-
-  const stepBack = () => {
-    if (step !== stepOrder[0]) {
-      const cur = stepOrder.indexOf(step)
-      setStep(stepOrder[cur - 1])
-    }
-  }
   return <Card>{renderSwitch()}</Card>
 }
 
