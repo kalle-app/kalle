@@ -2,10 +2,21 @@ import { getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
 import db from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
+import { scheduleToTakenSlots, Schedule, Days, partialTime } from "../utils/scheduleToTakenSlots"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
   calendarOwner: string
+}
+
+const nineToFive = { start: partialTime(9, 0), end: partialTime(17, 0) }
+
+const mockNineToFiveSchedule: Schedule = {
+  [Days.monday]: nineToFive,
+  [Days.tuesday]: nineToFive,
+  [Days.wednesday]: nineToFive,
+  [Days.thursday]: nineToFive,
+  [Days.friday]: nineToFive,
 }
 
 export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTimeSlotsArgs) {
@@ -19,6 +30,8 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   })
   if (!calendar) return null
 
+  const schedule = mockNineToFiveSchedule // should be fetched from the database
+
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
 
   let takenTimeSlots = await getTakenTimeSlots(
@@ -30,12 +43,14 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     meeting.endDate
   )
 
+  const between = {
+    start: meeting.startDate,
+    end: meeting.endDate,
+  }
+
   return computeAvailableSlots({
-    between: {
-      start: meeting.startDate,
-      end: meeting.endDate,
-    },
+    between,
     durationInMilliseconds: meeting.duration * 60 * 1000,
-    takenSlots: takenTimeSlots,
+    takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
   })
 }
