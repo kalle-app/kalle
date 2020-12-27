@@ -1,6 +1,6 @@
-import { getEmailService } from "../../../email"
-import { createCalendarEvent } from "../helper/createCalendarEvent"
+import { getEmailService } from "../../email"
 import { Appointment } from "../types"
+import { createCalendarEvent } from "../utils/createCalendarEvent"
 
 export default async function sendConfirmationMail({ appointment }: { appointment: Appointment }) {
   await getEmailService().send({
