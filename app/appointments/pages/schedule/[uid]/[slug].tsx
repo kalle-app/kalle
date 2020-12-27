@@ -1,6 +1,5 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
-import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
 import { BlitzPage, useQuery, useParam, invoke } from "blitz"
 import React, { Suspense, useState } from "react"
 import { DatePickerCalendar } from "react-nice-dates"
@@ -21,12 +20,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
-
-  if (connectedCalendars.length === 0) {
-    return <p>No calendar connected :(</p>
-  }
 
   if (!meeting) {
     return <p>Meeting invalid :(</p>
