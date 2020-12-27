@@ -3,10 +3,7 @@ import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
 import { useRouter, useMutation } from "blitz"
-import Navbar from "react-bootstrap/Navbar"
-import Nav from "react-bootstrap/Nav"
-import Container from "react-bootstrap/Container"
-import NavDropdown from "react-bootstrap/NavDropdown"
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
 const Navigation = () => {
   return useCurrentUser() ? <PrivateNavigation /> : <PublicNavigation />
@@ -22,7 +19,7 @@ const PrivateNavigation = () => {
         <Nav.Link href="/meetings">Meetings</Nav.Link>
       </Nav>
       <Nav>
-        <NavDropdown alignRight title={currentUser?.email} id="basic-nav-dropdown">
+        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="basic-nav-dropdown">
           <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item
