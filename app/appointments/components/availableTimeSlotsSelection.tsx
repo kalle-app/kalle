@@ -8,11 +8,15 @@ interface AvailableSlotsProps {
   selectedTimeSlot: any
 }
 
-const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
-  const getTimeString = (date) => {
-    return ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
-  }
+function asTwoDigits(number: number) {
+  return ("0" + number).slice(-2)
+}
 
+export function formatAs24HourClockString(date: Date) {
+  return asTwoDigits(date.getHours()) + ":" + asTwoDigits(date.getMinutes())
+}
+
+const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
   const timeSlotTiles = props.slots.map((slot, index) => {
     if (
       props.selectedDay.getDate() === slot.start.getDate() &&
@@ -22,8 +26,8 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
         <div className="w-full d-flex justify-content-center">
           <SingleTimeSlot
             key={index}
-            start={getTimeString(slot.start)}
-            end={getTimeString(slot.end)}
+            start={formatAs24HourClockString(slot.start)}
+            end={formatAs24HourClockString(slot.end)}
             selectedTimeSlot={props.selectedTimeSlot}
             setSelectedTimeSlot={props.setSelectedTimeSlot}
           />
