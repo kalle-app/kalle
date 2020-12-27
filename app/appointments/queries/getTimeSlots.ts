@@ -1,4 +1,4 @@
-import { getTakenTimeSlots } from "app/caldav"
+import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
 import db from "db"
 
@@ -9,8 +9,8 @@ interface GetTimeSlotsArgs {
 
 interface DailySlot {
   date: Date
-  free: any[]
-  events: any[]
+  free: Date[]
+  events: ExternalEvent[]
 }
 
 const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]

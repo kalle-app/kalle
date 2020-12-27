@@ -8,10 +8,9 @@ import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
-import Card from "react-bootstrap/Card"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Button from "react-bootstrap/Button"
+import { Card, Row, Col, Button } from "react-bootstrap"
+import { TimeSlot } from "app/appointments/types"
+import { areDatesOnSameDay } from "app/time-utils/comparison"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -21,10 +20,7 @@ interface SchedulerProps {
 const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
-    start: string | null
-    end: string | null
-  }>({ start: null, end: null })
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
@@ -43,31 +39,28 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     throw new Error("No free slots available")
   }
 
-  const onChange = (selectedDay) => {
-    setSelectedTimeSlot({ start: null, end: null })
-    setSelectedDay(selectedDay)
+  const onDateChange = (selectedDay: Date | null) => {
+    setSelectedTimeSlot(undefined)
+    if (selectedDay) {
+      setSelectedDay(selectedDay)
+    }
   }
 
-  const onSubmit = (e: any) => {
-    if (!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+  const onSubmit = () => {
+    if (!selectedTimeSlot) {
       alert("No timeslot selected")
       return
     }
 
-    const hour = selectedTimeSlot.start.split(":")[0]
-    const minute = selectedTimeSlot.start.split(":")[1]
-    if (!hour || !minute) {
-      alert("Invalid Time give")
-      return
-    }
+    const start = selectedTimeSlot.start
 
     const appointment = {
       start: {
-        year: selectedDay.getFullYear(),
-        month: selectedDay.getMonth() + 1,
-        day: selectedDay.getDate(),
-        hour: Number(hour),
-        minute: Number(minute),
+        year: start.getFullYear(),
+        month: start.getMonth() + 1,
+        day: start.getDate(),
+        hour: start.getHours(),
+        minute: start.getMinutes(),
       },
       duration: {
         hours: Math.floor(meeting.duration / 60),
@@ -92,20 +85,11 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
   }
 
   const modifiers = {
-    disabled: (date) => !is_day_available(date),
+    disabled: (date: Date) => !is_day_available(date),
   }
 
-  const is_day_available = (date) => {
-    const sameDay = (slot) => datesAreOnSameDay(slot["start"], date)
-    return slots.some(sameDay)
-  }
-
-  const datesAreOnSameDay = (first, second) => {
-    return (
-      first.getFullYear() === second.getFullYear() &&
-      first.getMonth() === second.getMonth() &&
-      first.getDate() === second.getDate()
-    )
+  const is_day_available = (date: Date) => {
+    return slots.some((slot) => areDatesOnSameDay(slot.start, date))
   }
 
   return (
@@ -120,7 +104,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
               <p>{meeting.description}</p>
               <DatePickerCalendar
                 date={selectedDay}
-                onDateChange={onChange}
+                onDateChange={onDateChange}
                 locale={enUS}
                 modifiers={modifiers}
               />

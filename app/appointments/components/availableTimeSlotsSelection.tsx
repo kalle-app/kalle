@@ -1,40 +1,33 @@
-import { formatAs24HourClockString } from "app/time-utils/format"
-import { Slot } from "../types"
+import { areDatesOnSameDay } from "app/time-utils/comparison"
+import { TimeSlot } from "../types"
 import SingleTimeSlot from "./singleTimeSlot"
 
 interface AvailableSlotsProps {
-  slots: Slot[]
+  slots: TimeSlot[]
   selectedDay: Date
-  setSelectedTimeSlot: any
-  selectedTimeSlot: any
+  setSelectedTimeSlot(v: TimeSlot): void
+  selectedTimeSlot?: TimeSlot
 }
 
 const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
-  const timeSlotTiles = props.slots.map((slot, index) => {
-    if (
-      props.selectedDay.getDate() === slot.start.getDate() &&
-      props.selectedDay.getFullYear() === slot.start.getFullYear()
-    ) {
-      return (
-        <div className="w-full d-flex justify-content-center">
-          <SingleTimeSlot
-            key={index}
-            start={formatAs24HourClockString(slot.start)}
-            end={formatAs24HourClockString(slot.end)}
-            selectedTimeSlot={props.selectedTimeSlot}
-            setSelectedTimeSlot={props.setSelectedTimeSlot}
-          />
-        </div>
-      )
-    } else {
-      return <div></div>
-    }
-  })
+  const { slots, selectedDay } = props
+  const selectedSlots = slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay))
 
   return (
     <div className="text-center">
       <p className="mb-4">Please select a time slot.</p>
-      {timeSlotTiles}
+      <ul>
+        {selectedSlots.map((slot, index) => (
+          <li key={index} className="w-full d-flex justify-content-center">
+            <SingleTimeSlot
+              start={slot.start}
+              end={slot.end}
+              selectedTimeSlot={props.selectedTimeSlot}
+              setSelectedTimeSlot={props.setSelectedTimeSlot}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
