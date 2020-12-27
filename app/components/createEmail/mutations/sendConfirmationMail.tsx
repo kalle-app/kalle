@@ -1,4 +1,4 @@
-import { getEmailService } from "../helper/emailHelper"
+import { getEmailService } from "../../../email"
 import { createCalendarEvent } from "../helper/createCalendarEvent"
 import { Appointment } from "../types"
 

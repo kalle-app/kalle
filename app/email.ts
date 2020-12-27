@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 import Email from "email-templates"
-import { checkEnvVariables } from "../../../../utils/checkEnvVariables"
+import { checkEnvVariables } from "../utils/checkEnvVariables"
 import { singleton } from "utils/singleton"
 
 function checkIfSMTPEnvVariablesExist() {
