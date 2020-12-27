@@ -9,32 +9,41 @@ import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
 import AddCalendarModal from "app/users/components/AddCalendar"
 
-const SettingsContent = () => {
+const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 
   return (
-    <>
-      <Card>
-        <SectionHeader
-          title="My Calendars"
-          subtitle="Add Calendars that you want to connect to Kalle"
-        />
-        <Suspense fallback="Loading ...">
-          <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
-        </Suspense>
-        <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
-      </Card>
-      <Card className="mt-4">
-        <SectionHeader
-          title="Personal Information"
-          subtitle="Change your account information here"
-        />
-        <UserDataForm />
-        <SectionFooter text="Update" action={() => alert("Test")} />
-      </Card>
-
+    <Card>
       {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
+
+      <SectionHeader
+        title="My Calendars"
+        subtitle="Add Calendars that you want to connect to Kalle"
+      />
+      <Suspense fallback="Loading ...">
+        <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
+      </Suspense>
+      <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
+    </Card>
+  )
+}
+
+const PersonalInformation = () => {
+  return (
+    <Card className="mt-4">
+      <SectionHeader title="Personal Information" subtitle="Change your account information here" />
+      <UserDataForm />
+      <SectionFooter text="Update" action={() => alert("Test")} />
+    </Card>
+  )
+}
+
+const SettingsContent = () => {
+  return (
+    <>
+      <CalendarList />
+      <PersonalInformation />
     </>
   )
 }
