@@ -1,5 +1,6 @@
 import { TimeSlot } from "../types"
 import { subDays, addDays, getDay, startOfMinute, setMinutes, setHours, subMinutes } from "date-fns"
+import { partial } from "lodash"
 
 export enum Days {
   "sunday",
@@ -18,6 +19,11 @@ interface PartialTime {
 
 export function partialTime(hour: number, minute: number): PartialTime {
   return { hour, minute }
+}
+
+export function timeStringToPartialTime(timeString: string): PartialTime {
+  const timeSplit = timeString.split(":")
+  return partialTime(Number(timeSplit[0]), Number(timeSplit[1]))
 }
 
 export type Schedule = Partial<Record<Days, { start: PartialTime; end: PartialTime }>>

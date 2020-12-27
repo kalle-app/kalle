@@ -1,8 +1,14 @@
 import { getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
-import db from "db"
+import db, { DailySchedule } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
-import { scheduleToTakenSlots, Schedule, Days, partialTime } from "../utils/scheduleToTakenSlots"
+import {
+  scheduleToTakenSlots,
+  Schedule,
+  Days,
+  partialTime,
+  timeStringToPartialTime,
+} from "../utils/scheduleToTakenSlots"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
@@ -22,6 +28,7 @@ const mockNineToFiveSchedule: Schedule = {
 export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTimeSlotsArgs) {
   const meeting = await db.meeting.findFirst({
     where: { link: meetingSlug, ownerId: Number(calendarOwner) },
+    include: { schedule: true },
   })
   if (!meeting) return null
 
@@ -30,7 +37,13 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
   })
   if (!calendar) return null
 
-  const schedule = mockNineToFiveSchedule // should be fetched from the database
+  const schedule = meeting.schedule.reduce((res: Schedule, item: DailySchedule) => {
+    res[Days[item.day]] = {
+      start: timeStringToPartialTime(item.startTime),
+      end: timeStringToPartialTime(item.endTime),
+    }
+    return res
+  }, {})
 
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
 
