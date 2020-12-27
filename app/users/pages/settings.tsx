@@ -7,33 +7,43 @@ import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
-import AddCalendar from "app/users/components/AddCalendar"
+import AddCalendarModal from "app/users/components/AddCalendar"
 
-const SettingsContent = () => {
+const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [state, showOverlay] = useState(false)
+  const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 
   return (
+    <Card>
+      {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
+
+      <SectionHeader
+        title="My Calendars"
+        subtitle="Add Calendars that you want to connect to Kalle"
+      />
+      <Suspense fallback="Loading ...">
+        <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
+      </Suspense>
+      <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
+    </Card>
+  )
+}
+
+const PersonalInformation = () => {
+  return (
+    <Card className="mt-4">
+      <SectionHeader title="Personal Information" subtitle="Change your account information here" />
+      <UserDataForm />
+      <SectionFooter text="Update" action={() => alert("Test")} />
+    </Card>
+  )
+}
+
+const SettingsContent = () => {
+  return (
     <>
-      <Card>
-        <SectionHeader
-          title="My Calendars"
-          subtitle="Add Calendars that you want to connect to Kalle"
-        />
-        <Suspense fallback="Loading ...">
-          <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
-        </Suspense>
-        <SectionFooter text="Add Calendar" action={() => showOverlay(true)} />
-      </Card>
-      <Card className="mt-4">
-        <SectionHeader
-          title="Personal Information"
-          subtitle="Change your account information here"
-        />
-        <UserDataForm />
-        <SectionFooter text="Update" action={() => alert("Test")} />
-      </Card>
-      <AddCalendar state={state} showOverlay={showOverlay} />
+      <CalendarList />
+      <PersonalInformation />
     </>
   )
 }
