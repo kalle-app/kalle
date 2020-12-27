@@ -30,12 +30,12 @@ export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTi
     meeting.endDate
   )
 
-  return computeAvailableSlots(
-    {
+  return computeAvailableSlots({
+    between: {
       start: meeting.startDate,
       end: meeting.endDate,
     },
-    meeting.duration,
-    takenTimeSlots
-  )
+    durationInMilliseconds: meeting.duration * 60 * 1000,
+    takenSlots: takenTimeSlots,
+  })
 }

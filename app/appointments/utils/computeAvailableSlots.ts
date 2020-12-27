@@ -35,11 +35,20 @@ const dailySchedule = [
   { day: "friday", startTime: "9:00", endTime: "17:00", meetingId: 2 },
 ]
 
-export function computeAvailableSlots(
-  between: TimeSlot,
-  duration: number,
+interface ComputeAvailabilitySlotsArgs {
+  between: TimeSlot
+  durationInMilliseconds: number
   takenSlots: ExternalEvent[]
-): TimeSlot[] {
+}
+
+export function computeAvailableSlots({
+  between,
+  durationInMilliseconds,
+  takenSlots,
+}: ComputeAvailabilitySlotsArgs): TimeSlot[] {
+  const durationInMinutes = durationInMilliseconds / 1000 / 60
+  const duration = durationInMinutes
+
   takenSlots = takenSlots.sort((a, b) => a.start.getTime() - b.start.getTime())
 
   // Build Array of DailySlots for every Day inbetween our dates
