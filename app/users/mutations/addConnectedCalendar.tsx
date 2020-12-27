@@ -1,6 +1,7 @@
 import db from "db"
 import { Ctx } from "blitz"
 import passwordEncryptor from "../password-encryptor"
+import { verifyConnectionDetails } from "app/caldav"
 
 interface CalendarCreate {
   name: string
@@ -21,9 +22,19 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
     throw new Error("Invariant error: Owner does not exist")
   }
 
+  const { fail } = await verifyConnectionDetails(
+    calendarCreate.url,
+    calendarCreate.username,
+    calendarCreate.password
+  )
+
+  if (fail) {
+    return { fail }
+  }
+
   const encryptedPassword = await passwordEncryptor.encrypt(calendarCreate.password)
 
-  const calendar = await db.connectedCalendar.create({
+  await db.connectedCalendar.create({
     data: {
       name: calendarCreate.name,
       caldavAddress: calendarCreate.url,
@@ -37,5 +48,5 @@ export default async function addConnectedCalendar(calendarCreate: CalendarCreat
     },
   })
 
-  return calendar
+  return { fail: null }
 }

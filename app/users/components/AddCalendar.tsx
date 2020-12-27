@@ -1,6 +1,5 @@
 import addConnectedCalendarMutation from "../mutations/addConnectedCalendar"
-import { invalidateQuery, useMutation, invoke } from "blitz"
-import authenticateConnectedCalendar from "../queries/authenticateConnectedCalendar"
+import { invalidateQuery, useMutation } from "blitz"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
 import styles from "../styles/AddCalendar.module.css"
@@ -39,26 +38,22 @@ const AddCalendar = (props: AddCalendarProps) => {
                 return
               }
 
-              const response = await invoke(authenticateConnectedCalendar, {
-                url,
-                username,
-                password,
-              })
-              if (response.fail !== null) {
-                alert("Invalid Credentials")
-                return
-              }
-
-              await createCalendar({
+              const { fail } = await createCalendar({
                 name,
                 password,
                 type,
                 url,
                 username,
               })
-              await invalidateQuery(getConnectedCalendars)
 
-              props.onClose()
+              if (fail) {
+                alert("Couldn't connect successfully: " + fail)
+                return
+              } else {
+                await invalidateQuery(getConnectedCalendars)
+
+                props.onClose()
+              }
             }}
           >
             <Form.Group controlId="formName">
