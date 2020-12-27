@@ -14,7 +14,7 @@ export function createCalendarEvent(appointment: Appointment): string {
     start: [
       appointment.start.getFullYear(),
       appointment.start.getMonth() + 1,
-      appointment.start.getDay(),
+      appointment.start.getDate(),
       appointment.start.getHours(),
       appointment.start.getMinutes(),
     ],
