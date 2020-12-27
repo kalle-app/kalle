@@ -3,12 +3,8 @@ import Email from "email-templates"
 import { checkEnvVariables } from "../utils/checkEnvVariables"
 import { singleton } from "utils/singleton"
 
-function checkIfSMTPEnvVariablesExist() {
-  checkEnvVariables("SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE")
-}
-
 export const getEmailService = singleton(() => {
-  checkIfSMTPEnvVariablesExist()
+  checkEnvVariables("SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE")
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
