@@ -1,13 +1,12 @@
 import React from "react"
 import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Meeting } from "app/meetings/types"
 import Form from "react-bootstrap/Form"
 import Col from "react-bootstrap/Col"
-import Row from "react-bootstrap/Row"
 
 type ScheduleProps = {
   stepBack: () => void
