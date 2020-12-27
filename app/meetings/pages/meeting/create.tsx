@@ -79,15 +79,26 @@ const InviteCreationContent = () => {
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General meeting={meeting} toNext={next} onEdit={onMeetingEdited} />
+        return (
+          <General
+            toNext={(result) => {
+              setMeeting((oldMeeting) => ({
+                ...oldMeeting,
+                ...result,
+              }))
+
+              next()
+            }}
+          />
+        )
       case Steps.Schedule:
         return (
           <Schedule meeting={meeting} toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
         )
       case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <Availability toNext={next} stepBack={stepBack} />
       case Steps.Advanced:
-        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} />
     }
   }
 
