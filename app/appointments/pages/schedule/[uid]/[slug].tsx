@@ -17,26 +17,23 @@ interface SchedulerProps {
   uid: string
 }
 
-const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
+const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
 
-  if (!(connectedCalendars && connectedCalendars[0])) {
-    alert("No calendar connected :(")
-    throw new Error("No Calendar connected!")
+  if (connectedCalendars.length === 0) {
+    return <p>No calendar connected :(</p>
   }
 
   if (!meeting) {
-    alert("Meeting invalid :(")
-    throw new Error("Meeting is invalid!")
+    return <p>Meeting invalid :(</p>
   }
 
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
   if (!slots) {
-    alert("No free slots available :(")
-    throw new Error("No free slots available")
+    return <p>No free slots available :(</p>
   }
 
   const onDateChange = (selectedDay: Date | null) => {
@@ -54,42 +51,34 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
 
     const start = selectedTimeSlot.start
 
-    const appointment = {
-      start: {
-        year: start.getFullYear(),
-        month: start.getMonth() + 1,
-        day: start.getDate(),
-        hour: start.getHours(),
-        minute: start.getMinutes(),
+    invoke(sendConfirmationMail, {
+      appointment: {
+        start: {
+          year: start.getFullYear(),
+          month: start.getMonth() + 1,
+          day: start.getDate(),
+          hour: start.getHours(),
+          minute: start.getMinutes(),
+        },
+        duration: {
+          hours: Math.floor(meeting.duration / 60),
+          minutes: meeting.duration % 60,
+        },
+        title: meeting.name,
+        description: meeting.description ? meeting.description : "Description",
+        method: "request",
+        location: "Berlin",
+        url: "www.kalle.app",
+        organiser: {
+          name: "Kalle app",
+          email: "info@kalle.app",
+        },
+        owner: {
+          name: "Rohan Sawahn",
+          email: "rohan.sawahn@student.hpi.de",
+        },
       },
-      duration: {
-        hours: Math.floor(meeting.duration / 60),
-        minutes: meeting.duration % 60,
-      },
-      title: meeting.name,
-      description: meeting.description ? meeting.description : "Description",
-      method: "request",
-      location: "Berlin",
-      url: "www.kalle.app",
-      organiser: {
-        name: "Kalle app",
-        email: "info@kalle.app",
-      },
-      owner: {
-        name: "Rohan Sawahn",
-        email: "rohan.sawahn@student.hpi.de",
-      },
-    }
-    console.log(appointment)
-    invoke(sendConfirmationMail, { appointment: appointment })
-  }
-
-  const modifiers = {
-    disabled: (date: Date) => !is_day_available(date),
-  }
-
-  const is_day_available = (date: Date) => {
-    return slots.some((slot) => areDatesOnSameDay(slot.start, date))
+    })
   }
 
   return (
@@ -106,7 +95,14 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
                 date={selectedDay}
                 onDateChange={onDateChange}
                 locale={enUS}
-                modifiers={modifiers}
+                modifiers={{
+                  disabled: (date) => {
+                    const isDateAvailable = slots.some((slot) =>
+                      areDatesOnSameDay(slot.start, date)
+                    )
+                    return isDateAvailable
+                  },
+                }}
               />
             </Col>
             <Col md={6}>
@@ -133,15 +129,15 @@ const ScheduleAppointment: BlitzPage = () => {
   const slug = useParam("slug", "string")
   const uid = useParam("uid", "string")
 
-  if (slug && uid) {
-    return (
-      <Suspense fallback="Loading...">
-        <Scheduler meetingSlug={slug} uid={uid} />
-      </Suspense>
-    )
+  if (!slug || !uid) {
+    return <h3>Meeting not found</h3>
   }
 
-  return <h3>Meeting not found</h3>
+  return (
+    <Suspense fallback="Loading...">
+      <Scheduler meetingSlug={slug} uid={uid} />
+    </Suspense>
+  )
 }
 
 export default ScheduleAppointment
