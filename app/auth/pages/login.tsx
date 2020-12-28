@@ -43,11 +43,11 @@ const LoginPage: BlitzPage = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Log In</h2>
         <Form>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formPassword">
+          <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} />
           </Form.Group>
@@ -55,7 +55,7 @@ const LoginPage: BlitzPage = () => {
         </Form>
         <Row>
           <Col>
-            <Button variant="primary" onClick={processLogin}>
+            <Button variant="primary" onClick={processLogin} id="login">
               Log In
             </Button>
           </Col>
