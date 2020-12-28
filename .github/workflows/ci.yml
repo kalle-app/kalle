@@ -45,4 +45,4 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SESSION_SECRET_KEY: supersecretsessionsecretkey
+          SESSION_SECRET_KEY: supersecretsessionsecretkeywhichisatleast32byteslong
