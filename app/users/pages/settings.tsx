@@ -24,7 +24,11 @@ const CalendarList = () => {
       <Suspense fallback="Loading ...">
         <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
       </Suspense>
-      <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
+      <SectionFooter
+        id="add-calendar-button"
+        text="Add Calendar"
+        action={() => setShowAddCalendarModal(true)}
+      />
     </Card>
   )
 }

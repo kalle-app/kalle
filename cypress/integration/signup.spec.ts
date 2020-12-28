@@ -2,7 +2,7 @@ import { url } from "../support/url"
 import { johnDoe } from "../user-data"
 import * as uuid from "uuid"
 
-function filloutSignupFormWith(user: typeof johnDoe) {
+function filloutSignupFormWith(user: Pick<typeof johnDoe, "email" | "fullName" | "password">) {
   cy.get("#fullName").type(user.fullName)
   cy.get("#email").type(user.email)
   cy.get("#password").type(user.password)
@@ -13,7 +13,7 @@ describe("Signup Flow", () => {
   it("Can be reached over the home page", () => {
     cy.visit(url("/"))
     cy.contains("Sign up").click()
-    cy.url().should("contain", url("/signup"))
+    cy.url().should("equal", url("/signup"))
   })
 
   describe("when using a taken email", () => {
@@ -33,7 +33,7 @@ describe("Signup Flow", () => {
         fullName: "John Notabot",
         password: "mysupersecurepassword",
       })
-      cy.url().should("contain", url("/"))
+      cy.url().should("equal", url("/"))
       cy.get("#auth-dropdown").should("contain", email)
     })
   })

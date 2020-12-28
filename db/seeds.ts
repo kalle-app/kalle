@@ -13,6 +13,17 @@ export default async function seed() {
       name: johnDoe.fullName,
       email: johnDoe.email,
       hashedPassword: mockHashPassword(johnDoe.password),
+
+      calendars: {
+        create: {
+          caldavAddress: johnDoe.calendars.baikal.caldavAddress,
+          encryptedPassword: johnDoe.calendars.baikal.encryptedPassword,
+          name: johnDoe.calendars.baikal.name,
+          username: johnDoe.calendars.baikal.username,
+          status: "active",
+          type: "CalDav",
+        },
+      },
     },
   })
 }
