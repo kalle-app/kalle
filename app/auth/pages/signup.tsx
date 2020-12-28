@@ -49,15 +49,15 @@ const SignupPage: BlitzPage = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Sign Up</h2>
         <Form>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="fullName">
             <Form.Label>Full name</Form.Label>
             <Form.Control onChange={(e) => setName(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formPassword">
+          <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} />
           </Form.Group>
@@ -65,7 +65,7 @@ const SignupPage: BlitzPage = () => {
         </Form>
         <Row>
           <Col>
-            <Button variant="primary" onClick={processSignup}>
+            <Button id="signup" variant="primary" onClick={processSignup}>
               Sign Up
             </Button>
           </Col>

@@ -19,7 +19,7 @@ const PrivateNavigation = () => {
         <Nav.Link href="/meetings">Meetings</Nav.Link>
       </Nav>
       <Nav>
-        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="basic-nav-dropdown">
+        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="auth-dropdown">
           <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item
