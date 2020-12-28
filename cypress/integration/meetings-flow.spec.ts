@@ -2,7 +2,7 @@ import { loginAs } from "../login"
 import { url } from "../support/url"
 import * as uuid from "uuid"
 
-import { johnDoe } from "../user-data"
+import { johnDoe } from "../../db/seed-data"
 
 it("Meetings Flow", () => {
   const link = uuid.v4()

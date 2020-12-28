@@ -1,6 +1,6 @@
 import { loginAs } from "../login"
 import { url } from "../support/url"
-import { johnDoe } from "../user-data"
+import { johnDoe } from "../../db/seed-data"
 
 describe("Login Flow", () => {
   it("Can be reached over the home page", () => {

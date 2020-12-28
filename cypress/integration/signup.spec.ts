@@ -1,5 +1,5 @@
 import { url } from "../support/url"
-import { johnDoe } from "../user-data"
+import { johnDoe } from "../../db/seed-data"
 import * as uuid from "uuid"
 
 function filloutSignupFormWith(user: Pick<typeof johnDoe, "email" | "fullName" | "password">) {

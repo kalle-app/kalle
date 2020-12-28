@@ -1,5 +1,5 @@
 import { url } from "./support/url"
-import type { johnDoe } from "./user-data"
+import type { johnDoe } from "../db/seed-data"
 
 function filloutLoginFormWith(user: Pick<typeof johnDoe, "email" | "password">) {
   cy.get("#email").type(user.email)
