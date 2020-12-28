@@ -1,13 +1,13 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
-import { BlitzPage, useQuery, useParam, invoke } from "blitz"
+import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
 import React, { Suspense, useState } from "react"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
+import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
@@ -26,6 +26,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
     end: string | null
   }>({ start: null, end: null })
   const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
+  const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
 
   if (!(connectedCalendars && connectedCalendars[0])) {
     alert("No calendar connected :(")
@@ -61,34 +62,31 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
       return
     }
 
-    const appointment = {
-      start: {
-        year: selectedDay.getFullYear(),
-        month: selectedDay.getMonth() + 1,
-        day: selectedDay.getDate(),
-        hour: Number(hour),
-        minute: Number(minute),
+    sendConfirmationMail({
+      appointment: {
+        start: new Date(
+          selectedDay.getFullYear(),
+          selectedDay.getMonth() + 1,
+          selectedDay.getDate(),
+          Number(hour),
+          Number(minute)
+        ),
+        durationInMilliseconds: meeting.duration * 60 * 1000,
+        title: meeting.name,
+        description: meeting.description ? meeting.description : "Description",
+        method: "request",
+        location: "Berlin",
+        url: "www.kalle.app",
+        organiser: {
+          name: "Kalle app",
+          email: "info@kalle.app",
+        },
+        owner: {
+          name: "Rohan Sawahn",
+          email: "rohan.sawahn@student.hpi.de",
+        },
       },
-      duration: {
-        hours: Math.floor(meeting.duration / 60),
-        minutes: meeting.duration % 60,
-      },
-      title: meeting.name,
-      description: meeting.description ? meeting.description : "Description",
-      method: "request",
-      location: "Berlin",
-      url: "www.kalle.app",
-      organiser: {
-        name: "Kalle app",
-        email: "info@kalle.app",
-      },
-      owner: {
-        name: "Rohan Sawahn",
-        email: "rohan.sawahn@student.hpi.de",
-      },
-    }
-    console.log(appointment)
-    invoke(sendConfirmationMail, { appointment: appointment })
+    })
   }
 
   const modifiers = {
