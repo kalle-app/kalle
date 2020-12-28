@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
-import { Meeting } from "../../types"
 import { Form, Button } from "react-bootstrap"
+import { Link } from "blitz"
 
 interface GeneralFormResult {
   name: string
@@ -44,9 +44,9 @@ const General = (props: GeneralProps) => {
           <Form.Control as="textarea" rows={3} name="description" />
         </Form.Group>
         <div className="p-3 d-flex justify-content-end">
-          <Button href="/meetings" className="mx-1">
-            Cancel
-          </Button>
+          <Link href="/meetings">
+            <Button className="mx-1">Cancel</Button>
+          </Link>
           <Button type="submit">
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </Button>

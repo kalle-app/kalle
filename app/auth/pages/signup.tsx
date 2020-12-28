@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useRouter, BlitzPage, useMutation } from "blitz"
+import { useRouter, BlitzPage, useMutation, Link } from "blitz"
 import signupMutation from "app/auth/mutations/signup"
 import Layout from "app/layouts/Layout"
 import Form from "react-bootstrap/Form"
@@ -73,9 +73,9 @@ const SignupPage: BlitzPage = () => {
             <p className="my-auto d-flex justify-content-end">or</p>
           </Col>
           <Col className="d-flex justify-content-end">
-            <Button variant="outline-primary" href="/login">
-              Log In
-            </Button>
+            <Link href="/login">
+              <Button variant="outline-primary">Log In</Button>
+            </Link>
           </Col>
         </Row>
       </div>
