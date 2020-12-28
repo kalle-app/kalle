@@ -16,7 +16,7 @@ const Advanced = (props: AdvancedProps) => {
         <Button onClick={props.stepBack} type="submit" className="mx-1">
           <FontAwesomeIcon icon={faAngleDoubleLeft} />
         </Button>
-        <Button onClick={props.onSubmit} className="mx-1">
+        <Button onClick={props.onSubmit} id="submit" className="mx-1">
           Submit
         </Button>
       </div>

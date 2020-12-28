@@ -135,7 +135,7 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
             </Col>
           </Row>
           <div className="p-3 d-flex justify-content-end">
-            <Button variant="primary" onClick={onSubmit}>
+            <Button variant="primary" onClick={onSubmit} id="submit">
               Submit
             </Button>
           </div>
