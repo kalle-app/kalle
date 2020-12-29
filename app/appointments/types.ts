@@ -1,6 +1,6 @@
-export type Slot = {
-  start: any
-  end: any
+export interface TimeSlot {
+  start: Date
+  end: Date
 }
 
 export interface Appointment {

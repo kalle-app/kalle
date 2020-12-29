@@ -2,10 +2,7 @@ import React, { useState } from "react"
 import { useRouter, BlitzPage, useMutation } from "blitz"
 import loginMutation from "app/auth/mutations/login"
 import Layout from "app/layouts/Layout"
-import Form from "react-bootstrap/Form"
-import Button from "react-bootstrap/Button"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+import { Button, Row, Col, Form } from "react-bootstrap"
 import { LoginInput } from "../validations"
 
 const LoginPage: BlitzPage = () => {
