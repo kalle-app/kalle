@@ -6,23 +6,12 @@ import {
   scheduleToTakenSlots,
   Schedule,
   Days,
-  partialTime,
   timeStringToPartialTime,
 } from "../utils/scheduleToTakenSlots"
 
 interface GetTimeSlotsArgs {
   meetingSlug: string
   calendarOwner: string
-}
-
-const nineToFive = { start: partialTime(9, 0), end: partialTime(17, 0) }
-
-const mockNineToFiveSchedule: Schedule = {
-  [Days.monday]: nineToFive,
-  [Days.tuesday]: nineToFive,
-  [Days.wednesday]: nineToFive,
-  [Days.thursday]: nineToFive,
-  [Days.friday]: nineToFive,
 }
 
 export default async function getTimeSlots({ meetingSlug, calendarOwner }: GetTimeSlotsArgs) {

@@ -1,6 +1,5 @@
 import { TimeSlot } from "../types"
 import { subDays, addDays, getDay, startOfMinute, setMinutes, setHours, subMinutes } from "date-fns"
-import { partial } from "lodash"
 
 export enum Days {
   "sunday",
