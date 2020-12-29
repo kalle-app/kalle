@@ -1,15 +1,15 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
-import { BlitzPage, useQuery, useParam, invoke } from "blitz"
-import React, { Suspense, useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
+import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
 import { Card, Row, Col, Button } from "react-bootstrap"
-import { TimeSlot } from "app/appointments/types"
+import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -20,6 +20,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
   const [meeting] = useQuery(getMeeting, meetingSlug)
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
+  const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
+
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
 
   useEffect(() => {
@@ -66,19 +68,10 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
 
     const start = selectedTimeSlot.start
 
-    invoke(sendConfirmationMail, {
+    sendConfirmationMail({
       appointment: {
-        start: {
-          year: start.getFullYear(),
-          month: start.getMonth() + 1,
-          day: start.getDate(),
-          hour: start.getHours(),
-          minute: start.getMinutes(),
-        },
-        duration: {
-          hours: Math.floor(meeting.duration / 60),
-          minutes: meeting.duration % 60,
-        },
+        start,
+        durationInMilliseconds: meeting.duration * 60 * 1000,
         title: meeting.name,
         description: meeting.description ? meeting.description : "Description",
         method: "request",
