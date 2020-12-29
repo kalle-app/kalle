@@ -4,14 +4,16 @@ import SingleTimeSlot from "./singleTimeSlot"
 
 interface AvailableSlotsProps {
   slots: TimeSlot[]
-  selectedDay: Date
+  selectedDay?: Date
   setSelectedTimeSlot(v: TimeSlot): void
   selectedTimeSlot?: TimeSlot
 }
 
 const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
   const { slots, selectedDay } = props
-  const selectedSlots = slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay))
+  const selectedSlots = selectedDay
+    ? slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay))
+    : []
 
   return (
     <div className="text-center">

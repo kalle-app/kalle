@@ -1,7 +1,7 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import { BlitzPage, useQuery, useParam, invoke } from "blitz"
-import React, { Suspense, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
@@ -18,9 +18,26 @@ interface SchedulerProps {
 
 const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
-  const [selectedDay, setSelectedDay] = useState(new Date())
+  const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+
+  useEffect(() => {
+    if (selectedDay) {
+      return
+    }
+
+    if (!slots) {
+      return
+    }
+
+    const [firstSlot] = slots
+    if (!firstSlot) {
+      return
+    }
+
+    setSelectedDay(firstSlot.start)
+  }, [slots, setSelectedDay])
 
   if (!meeting) {
     return <p>Meeting invalid :(</p>
@@ -28,6 +45,10 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
 
   if (!slots) {
     return <p>No free slots available :(</p>
+  }
+
+  if (!selectedDay) {
+    return <p>Loading...</p>
   }
 
   const onDateChange = (selectedDay: Date | null) => {
