@@ -94,7 +94,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
                     const isDateAvailable = slots.some((slot) =>
                       areDatesOnSameDay(slot.start, date)
                     )
-                    return isDateAvailable
+                    return !isDateAvailable
                   },
                 }}
               />
