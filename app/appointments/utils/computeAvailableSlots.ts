@@ -1,12 +1,17 @@
 import { ExternalEvent } from "app/caldav"
 import { TimeSlot } from "../types"
 
-function collides(a: TimeSlot, b: TimeSlot): boolean {
-  if (a.start >= b.start) {
-    return collides(b, a)
+function orderedByStart(a: TimeSlot, b: TimeSlot) {
+  if (a.start > b.start) {
+    return [b, a]
   }
 
-  return a.end > b.start
+  return [a, b]
+}
+
+function collides(a: TimeSlot, b: TimeSlot): boolean {
+  const [first, second] = orderedByStart(a, b)
+  return first.end > second.start
 }
 
 interface ComputeAvailabilitySlotsArgs {
