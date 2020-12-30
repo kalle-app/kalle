@@ -1,9 +1,9 @@
-import { BlitzPage, Router, useMutation } from "blitz"
+import { BlitzPage, Router, useMutation, useQuery } from "blitz"
 import React, { ReactElement, Suspense, useState } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
-import Schedule from "../../components/creationSteps/Schedule"
+import ScheduleStep from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
@@ -11,6 +11,9 @@ import Card from "react-bootstrap/Card"
 import { Button, Modal } from "react-bootstrap"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
+import getSchedules from "app/meetings/queries/getSchedules"
+import { Schedule, DailySchedule } from "@prisma/client"
+import getScheduleNames from "app/meetings/queries/getScheduleNames"
 
 enum Steps {
   General,
@@ -28,15 +31,7 @@ const initialMeeting: Meeting = {
   startDate: new Date(),
   endDate: new Date(),
   location: "",
-  schedule: {
-    monday: ["9:00", "17:00"],
-    tuesday: ["9:00", "17:00"],
-    wednesday: ["9:00", "17:00"],
-    thursday: ["9:00", "17:00"],
-    friday: ["9:00", "17:00"],
-    saturday: ["", ""],
-    sunday: ["", ""],
-  },
+  scheduleId: 0,
 }
 
 interface SuccessModalProps {
@@ -77,6 +72,7 @@ const InviteCreationContent = () => {
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
+  const [schedulePresets] = useQuery(getScheduleNames, null)
 
   const submitMeeting = async () => {
     try {
@@ -117,13 +113,14 @@ const InviteCreationContent = () => {
         )
       case Steps.Schedule:
         return (
-          <Schedule
+          <ScheduleStep
+            schedulePresets={schedulePresets!}
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 startDate: result.startDate,
                 endDate: result.endDate,
-                schedule: result.schedule,
+                scheduleId: result.scheduleId,
                 timezone: result.timezone,
               }))
               next()

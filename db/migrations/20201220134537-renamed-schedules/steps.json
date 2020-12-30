@@ -3,15 +3,15 @@
   "steps": [
     {
       "tag": "CreateField",
-      "model": "User",
-      "field": "calendars",
-      "type": "ConnectedCalendar",
+      "model": "Schedule",
+      "field": "dailySchedules",
+      "type": "DailySchedule",
       "arity": "List"
     },
     {
       "tag": "DeleteField",
-      "model": "User",
-      "field": "connectedCalendars"
+      "model": "Schedule",
+      "field": "schedule"
     }
   ]
 }

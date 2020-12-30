@@ -62,8 +62,9 @@ model Meeting {
   timezone Int
   startDate DateTime
   endDate DateTime
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int
   location String
-  schedule DailySchedule[]
 }
 
 model DailySchedule {
@@ -71,7 +72,15 @@ model DailySchedule {
     day String
     startTime String
     endTime String
-    meeting Meeting @relation(fields: [meetingId], references: [id])
-    meetingId Int
+    schedule Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId Int
 }
 
+model Schedule {
+  id Int @id @default(autoincrement())
+  name String
+  dailySchedules DailySchedule[]
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+  

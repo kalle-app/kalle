@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url = "***"
 }
 
@@ -16,7 +16,7 @@ model User {
   id             Int       @default(autoincrement()) @id
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  name           String?
+  name           String
   email          String    @unique
   hashedPassword String?
   role           String    @default("user")
@@ -61,7 +61,8 @@ model Meeting {
   timezone Int
   startDate DateTime
   endDate DateTime
-  schedule DailySchedule[]
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int
 }
 
 model DailySchedule {
@@ -69,7 +70,15 @@ model DailySchedule {
     day String
     startTime String
     endTime String
-    meeting Meeting @relation(fields: [meetingId], references: [id])
-    meetingId Int
+    schedule Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId Int
 }
 
+model Schedule {
+  id Int @id @default(autoincrement())
+  name String
+  dailySchedules DailySchedule[]
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+  

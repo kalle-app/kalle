@@ -17,7 +17,7 @@ interface GetTimeSlotsArgs {
 export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSlotsArgs) {
   const meeting = await db.meeting.findFirst({
     where: { link: meetingSlug, ownerName: ownerName },
-    include: { schedule: true },
+    include: { schedule: { include: { dailySchedules: true } } },
   })
   if (!meeting) return null
 
@@ -32,7 +32,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
   })
   if (!calendar) return null
 
-  const schedule = meeting.schedule.reduce((res: Schedule, item: DailySchedule) => {
+  const schedule = meeting.schedule.dailySchedules.reduce((res: Schedule, item: DailySchedule) => {
     res[Days[item.day]] = {
       start: timeStringToPartialTime(item.startTime),
       end: timeStringToPartialTime(item.endTime),

@@ -1,5 +1,7 @@
 # Prisma Migrate lockfile v1
 
+20201220131846-added-dailyschedules
+20201220134537-renamed-schedules
 20201119070955-initial-migration
 20201119071155-init
 20201120205532-add-initial-tables
