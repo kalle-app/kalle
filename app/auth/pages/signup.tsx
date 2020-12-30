@@ -15,12 +15,14 @@ const SignupPage: BlitzPage = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("")
 
   const processSignup = async () => {
     const parseResult = SignupInput.safeParse({
       name,
       email,
       password,
+      username,
     })
 
     if (!parseResult.success) {
@@ -33,11 +35,14 @@ const SignupPage: BlitzPage = () => {
         name,
         email,
         password,
+        username,
       })
       router.push("/")
     } catch (error) {
       if (error.code === "P2002" && error.meta?.target?.includes("email")) {
         setMessage("This email is already being used")
+      } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
+        setMessage("This username is already being used")
       } else {
         setMessage("Sorry, we had an unexpected error. Please try again.")
       }
@@ -52,6 +57,10 @@ const SignupPage: BlitzPage = () => {
           <Form.Group controlId="formEmail">
             <Form.Label>Full name</Form.Label>
             <Form.Control onChange={(e) => setName(e.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control onChange={(e) => setUsername(e.target.value)} />
           </Form.Group>
           <Form.Group controlId="formEmail">
             <Form.Label>Email address</Form.Label>

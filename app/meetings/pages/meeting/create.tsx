@@ -81,7 +81,7 @@ const InviteCreationContent = () => {
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
-      const link = getOrigin() + "schedule/" + data?.ownerId + "/" + data?.link
+      const link = getOrigin() + "schedule/" + data?.ownerName + "/" + data?.link
       setMeetingLink(link)
       setShow(true)
     } catch (error) {

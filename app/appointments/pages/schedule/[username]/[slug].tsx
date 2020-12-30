@@ -13,16 +13,16 @@ import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirm
 
 interface SchedulerProps {
   meetingSlug: string
-  uid: string
+  username: string
 }
 
-const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }) => {
-  const [meeting] = useQuery(getMeeting, meetingSlug)
+const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, username }) => {
+  const [meeting] = useQuery(getMeeting, { username: username, slug: meetingSlug })
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
 
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
 
   useEffect(() => {
     if (selectedDay) {
@@ -78,7 +78,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
         location: "Berlin",
         url: "www.kalle.app",
         organiser: {
-          name: "Kalle app",
+          name: username,
           email: "info@kalle.app",
         },
         owner: {
@@ -136,15 +136,15 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
 
 const ScheduleAppointment: BlitzPage = () => {
   const slug = useParam("slug", "string")
-  const uid = useParam("uid", "string")
+  const username = useParam("username", "string")
 
-  if (!slug || !uid) {
+  if (!slug || !username) {
     return <h3>Meeting not found</h3>
   }
 
   return (
     <Suspense fallback="Loading...">
-      <Scheduler meetingSlug={slug} uid={uid} />
+      <Scheduler meetingSlug={slug} username={username} />
     </Suspense>
   )
 }
