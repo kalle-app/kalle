@@ -1,13 +1,10 @@
 import { Card, Row, Col } from "react-bootstrap"
 import type { Meeting } from "db"
 import { Link } from "blitz"
+import { getOrigin } from "utils/generalUtils"
 
 interface MeetingsProps {
   meetings: Meeting[]
-}
-
-function getOrigin() {
-  return "location" in window ? window.location.origin : "https://kalle.app"
 }
 
 const Meetings = (props: MeetingsProps) => {

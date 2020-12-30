@@ -1,5 +1,5 @@
 import { BlitzPage, Router, useMutation } from "blitz"
-import React, { Suspense, useState } from "react"
+import React, { ReactElement, Suspense, useState } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
@@ -8,6 +8,9 @@ import { Meeting } from "app/meetings/types"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
 import Card from "react-bootstrap/Card"
+import { Button, Modal } from "react-bootstrap"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import { getOrigin } from "utils/generalUtils"
 
 enum Steps {
   General,
@@ -36,16 +39,51 @@ const initialMeeting: Meeting = {
   },
 }
 
+interface SuccessModalProps {
+  show: boolean
+  setShow: (val: boolean) => void
+  meetingLink: string
+}
+
+const SuccessModal = (props: SuccessModalProps): ReactElement => {
+  const close = () => {
+    props.setShow(false)
+    Router.push(`/meetings`)
+  }
+  return (
+    <Modal show={props.show} onHide={() => close()}>
+      <Modal.Header closeButton>
+        <Modal.Title>Meeting successfully created!</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Your invitelink is: {props.meetingLink}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => close()}>
+          Close
+        </Button>
+        <CopyToClipboard text={props.meetingLink}>
+          <Button variant="primary" onClick={() => close()}>
+            Copy to Clipboard
+          </Button>
+        </CopyToClipboard>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
 
   const [meeting, setMeeting] = useState(initialMeeting)
+  const [meetingLink, setMeetingLink] = useState("")
+  const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
 
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
-      Router.push(`/meetings#${data.id}`)
+      const link = getOrigin() + "schedule/" + data?.ownerId + "/" + data?.link
+      setMeetingLink(link)
+      setShow(true)
     } catch (error) {
       alert(error)
     }
@@ -100,7 +138,12 @@ const InviteCreationContent = () => {
     }
   }
 
-  return <Card>{renderSwitch()}</Card>
+  return (
+    <>
+      <Card>{renderSwitch()}</Card>
+      <SuccessModal show={showSuccess} setShow={setShow} meetingLink={meetingLink} />
+    </>
+  )
 }
 
 const Create: BlitzPage = () => {
