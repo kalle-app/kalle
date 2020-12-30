@@ -12,7 +12,6 @@ import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
-import EmailTemplate from "email-templates"
 import { Form, Modal } from "react-bootstrap"
 
 interface SchedulerProps {
