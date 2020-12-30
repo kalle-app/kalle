@@ -1,12 +1,12 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
-import { Suspense, useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import { Card, Row, Col, Button } from "react-bootstrap"
+import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
@@ -21,6 +21,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
+  const [email, setEmail] = useState("")
+  const [modalVisible, setModalVisible] = useState(false)
 
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
 
@@ -66,6 +68,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       return
     }
 
+    if (!email) {
+      alert("Email not set")
+      return
+    }
+
     const start = selectedTimeSlot.start
 
     sendConfirmationMail({
@@ -82,55 +89,78 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
           email: "info@kalle.app",
         },
         owner: {
-          name: "Rohan Sawahn",
-          email: "rohan.sawahn@student.hpi.de",
+          name: email.split("@")[0],
+          email: email,
         },
       },
     })
   }
 
   return (
-    <div className="container">
-      <div className="text-center mt-5">
-        <h3>Schedule an Appointment</h3>
-        <p className="pb-3">Select a timeslot of your preference</p>
-        <Card className="text-left p-3">
-          <Row className="pb-3">
-            <Col md={6} className="pb-5">
-              <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
-              <p>Description: {meeting.description}</p>
-              <p>Location: {meeting.location}</p>
-              <DatePickerCalendar
-                date={selectedDay}
-                onDateChange={onDateChange}
-                locale={enUS}
-                modifiers={{
-                  disabled: (date) => {
-                    const isDateAvailable = slots.some((slot) =>
-                      areDatesOnSameDay(slot.start, date)
-                    )
-                    return !isDateAvailable
-                  },
-                }}
-              />
-            </Col>
-            <Col md={6}>
-              <AvailableTimeSlotsSelection
-                slots={slots}
-                selectedDay={selectedDay}
-                selectedTimeSlot={selectedTimeSlot}
-                setSelectedTimeSlot={setSelectedTimeSlot}
-              />
-            </Col>
-          </Row>
-          <div className="p-3 d-flex justify-content-end">
-            <Button variant="primary" onClick={onSubmit}>
-              Submit
-            </Button>
-          </div>
-        </Card>
+    <>
+      <div className="container">
+        <div className="text-center mt-5">
+          <h3>Schedule an Appointment</h3>
+          <p className="pb-3">Select a timeslot of your preference</p>
+          <Card className="text-left p-3">
+            <Row className="pb-3">
+              <Col md={6} className="pb-5">
+                <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
+                <p>Description: {meeting.description}</p>
+                <p>Location: {meeting.location}</p>
+                <DatePickerCalendar
+                  date={selectedDay}
+                  onDateChange={onDateChange}
+                  locale={enUS}
+                  modifiers={{
+                    disabled: (date) => {
+                      const isDateAvailable = slots.some((slot) =>
+                        areDatesOnSameDay(slot.start, date)
+                      )
+                      return !isDateAvailable
+                    },
+                  }}
+                />
+              </Col>
+              <Col md={6}>
+                <AvailableTimeSlotsSelection
+                  slots={slots}
+                  selectedDay={selectedDay}
+                  selectedTimeSlot={selectedTimeSlot}
+                  setSelectedTimeSlot={setSelectedTimeSlot}
+                />
+              </Col>
+            </Row>
+            <div className="p-3 d-flex justify-content-end">
+              <Button variant="primary" onClick={() => setModalVisible(true)}>
+                Schedule!
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
-    </div>
+      <Modal show={modalVisible} onHide={() => setModalVisible(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter your Emailadress</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          You will receive a confirmation mail to this adress
+          <Form>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)}
+              />
+            </Form.Group>
+          </Form>
+          <Button variant="primary" onClick={() => onSubmit()}>
+            Submit!
+          </Button>
+        </Modal.Body>
+      </Modal>
+    </>
   )
 }
 
