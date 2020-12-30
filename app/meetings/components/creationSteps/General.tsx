@@ -1,52 +1,56 @@
-import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
-import { Meeting } from "../../types"
-import Form from "react-bootstrap/Form"
+import { Form, Button } from "react-bootstrap"
+
+interface GeneralFormResult {
+  name: string
+  link: string
+  description: string
+}
 
 type GeneralProps = {
-  toNext: () => void
-  onEdit: (key: string, value: any) => void
-  meeting: Meeting
+  toNext: (result: GeneralFormResult) => void
 }
 
 const General = (props: GeneralProps) => {
-  const textChanged = (e: any) => {
-    props.onEdit(e.currentTarget.name, e.currentTarget.value)
-  }
-
   return (
     <div className="p-3">
       <h4>General Information</h4>
       <p className="pb-3">Add basic information about the meeting</p>
-      <Form className="m-3">
+      <Form
+        className="m-3"
+        onSubmit={(evt) => {
+          evt.preventDefault()
+
+          const formData = new FormData(evt.currentTarget)
+          props.toNext({
+            name: formData.get("name") as string,
+            description: formData.get("description") as string,
+            link: formData.get("link") as string,
+          })
+        }}
+      >
         <Form.Group controlId="formName">
           <Form.Label>Name</Form.Label>
-          <Form.Control name="name" value={props.meeting.name} onChange={textChanged} />
+          <Form.Control name="name" />
         </Form.Group>
-        <Form.Group controlId="formEmail">
+        <Form.Group controlId="formLink">
           <Form.Label>Invite Link</Form.Label>
-          <Form.Control name="link" value={props.meeting.link} onChange={textChanged} />
+          <Form.Control name="link" />
         </Form.Group>
         <Form.Group controlId="formDescription">
           <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="description"
-            value={props.meeting.description}
-            onChange={textChanged}
-          />
+          <Form.Control as="textarea" rows={3} name="description" />
         </Form.Group>
+        <div className="p-3 d-flex justify-content-end">
+          <Button href="/meetings" className="mx-1">
+            Cancel
+          </Button>
+          <Button type="submit">
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </Button>
+        </div>
       </Form>
-      <div className="p-3 d-flex justify-content-end">
-        <Button href="/meetings" className="mx-1">
-          Cancel
-        </Button>
-        <Button onClick={props.toNext} type="submit">
-          <FontAwesomeIcon icon={faAngleDoubleRight} />
-        </Button>
-      </div>
     </div>
   )
 }

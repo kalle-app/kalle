@@ -1,22 +1,29 @@
+import { areDatesEqual } from "app/time-utils/comparison"
+import { formatAs24HourClockString } from "app/time-utils/format"
 import Button from "react-bootstrap/Button"
+import { TimeSlot } from "../types"
 
-interface SlotProps {
-  start: string
-  end: string
-  setSelectedTimeSlot: any
-  selectedTimeSlot: any
+interface SingleTimeSlotProps {
+  start: Date
+  end: Date
+  setSelectedTimeSlot(v: TimeSlot): void
+  selectedTimeSlot?: TimeSlot
 }
 
-const SingleTimeSlot = (props: SlotProps) => {
+const SingleTimeSlot = (props: SingleTimeSlotProps) => {
+  const { start, end, setSelectedTimeSlot, selectedTimeSlot } = props
+
+  const isSelected = !!selectedTimeSlot?.start && areDatesEqual(selectedTimeSlot.start, start)
+
   return (
     <Button
       variant="outline-secondary"
-      className={"w-50 m-1 " + (props.selectedTimeSlot?.start === props.start ? "active" : "")}
-      onClick={(e) => {
-        props.setSelectedTimeSlot({ start: props.start, end: props.end })
+      className={"w-50 m-1 " + (isSelected ? "active" : "")}
+      onClick={() => {
+        setSelectedTimeSlot({ start, end })
       }}
     >
-      {props.start}-{props.end}
+      {formatAs24HourClockString(start)}-{formatAs24HourClockString(end)}
     </Button>
   )
 }

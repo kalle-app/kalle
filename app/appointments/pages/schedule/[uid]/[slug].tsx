@@ -1,111 +1,92 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
-import getConnectedCalendars from "app/appointments/queries/getConnectedCalendars"
-import { BlitzPage, useQuery, useParam, invoke } from "blitz"
-import React, { Suspense, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
+import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import sendConfirmationMail from "app/components/createEmail/queries/sendConfirmationMail"
-import Card from "react-bootstrap/Card"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Button from "react-bootstrap/Button"
+import { Card, Row, Col, Button } from "react-bootstrap"
+import type { TimeSlot } from "app/appointments/types"
+import { areDatesOnSameDay } from "app/time-utils/comparison"
+import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
 
 interface SchedulerProps {
   meetingSlug: string
   uid: string
 }
 
-const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
+const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }) => {
   const [meeting] = useQuery(getMeeting, meetingSlug)
-  const [selectedDay, setSelectedDay] = useState(new Date())
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
-    start: string | null
-    end: string | null
-  }>({ start: null, end: null })
-  const [connectedCalendars] = useQuery(getConnectedCalendars, meeting!.ownerId)
-
-  if (!(connectedCalendars && connectedCalendars[0])) {
-    alert("No calendar connected :(")
-    throw new Error("No Calendar connected!")
-  }
-
-  if (!meeting) {
-    alert("Meeting invalid :(")
-    throw new Error("Meeting is invalid!")
-  }
+  const [selectedDay, setSelectedDay] = useState<Date>()
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
+  const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
 
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, calendarOwner: uid })
+
+  useEffect(() => {
+    if (selectedDay) {
+      return
+    }
+
+    if (!slots) {
+      return
+    }
+
+    const [firstSlot] = slots
+    if (!firstSlot) {
+      return
+    }
+
+    setSelectedDay(firstSlot.start)
+  }, [slots, setSelectedDay])
+
+  if (!meeting) {
+    return <p>Meeting invalid :(</p>
+  }
+
   if (!slots) {
-    alert("No free slots available :(")
-    throw new Error("No free slots available")
+    return <p>No free slots available :(</p>
   }
 
-  const onChange = (selectedDay) => {
-    setSelectedTimeSlot({ start: null, end: null })
-    setSelectedDay(selectedDay)
+  if (!selectedDay) {
+    return <p>Loading...</p>
   }
 
-  const onSubmit = (e: any) => {
-    if (!selectedTimeSlot || !selectedTimeSlot.start || !selectedDay) {
+  const onDateChange = (selectedDay: Date | null) => {
+    setSelectedTimeSlot(undefined)
+    if (selectedDay) {
+      setSelectedDay(selectedDay)
+    }
+  }
+
+  const onSubmit = () => {
+    if (!selectedTimeSlot) {
       alert("No timeslot selected")
       return
     }
 
-    const hour = selectedTimeSlot.start.split(":")[0]
-    const minute = selectedTimeSlot.start.split(":")[1]
-    if (!hour || !minute) {
-      alert("Invalid Time give")
-      return
-    }
+    const start = selectedTimeSlot.start
 
-    const appointment = {
-      start: {
-        year: selectedDay.getFullYear(),
-        month: selectedDay.getMonth() + 1,
-        day: selectedDay.getDate(),
-        hour: Number(hour),
-        minute: Number(minute),
+    sendConfirmationMail({
+      appointment: {
+        start,
+        durationInMilliseconds: meeting.duration * 60 * 1000,
+        title: meeting.name,
+        description: meeting.description ? meeting.description : "Description",
+        method: "request",
+        location: "Berlin",
+        url: "www.kalle.app",
+        organiser: {
+          name: "Kalle app",
+          email: "info@kalle.app",
+        },
+        owner: {
+          name: "Rohan Sawahn",
+          email: "rohan.sawahn@student.hpi.de",
+        },
       },
-      duration: {
-        hours: Math.floor(meeting.duration / 60),
-        minutes: meeting.duration % 60,
-      },
-      title: meeting.name,
-      description: meeting.description ? meeting.description : "Description",
-      method: "request",
-      location: "Berlin",
-      url: "www.kalle.app",
-      organiser: {
-        name: "Kalle app",
-        email: "info@kalle.app",
-      },
-      owner: {
-        name: "Rohan Sawahn",
-        email: "rohan.sawahn@student.hpi.de",
-      },
-    }
-    console.log(appointment)
-    invoke(sendConfirmationMail, { appointment: appointment })
-  }
-
-  const modifiers = {
-    disabled: (date) => !is_day_available(date),
-  }
-
-  const is_day_available = (date) => {
-    const sameDay = (slot) => datesAreOnSameDay(slot["start"], date)
-    return slots.some(sameDay)
-  }
-
-  const datesAreOnSameDay = (first, second) => {
-    return (
-      first.getFullYear() === second.getFullYear() &&
-      first.getMonth() === second.getMonth() &&
-      first.getDate() === second.getDate()
-    )
+    })
   }
 
   return (
@@ -120,9 +101,16 @@ const Scheduler = ({ meetingSlug, uid }: SchedulerProps) => {
               <p>{meeting.description}</p>
               <DatePickerCalendar
                 date={selectedDay}
-                onDateChange={onChange}
+                onDateChange={onDateChange}
                 locale={enUS}
-                modifiers={modifiers}
+                modifiers={{
+                  disabled: (date) => {
+                    const isDateAvailable = slots.some((slot) =>
+                      areDatesOnSameDay(slot.start, date)
+                    )
+                    return !isDateAvailable
+                  },
+                }}
               />
             </Col>
             <Col md={6}>
@@ -149,15 +137,15 @@ const ScheduleAppointment: BlitzPage = () => {
   const slug = useParam("slug", "string")
   const uid = useParam("uid", "string")
 
-  if (slug && uid) {
-    return (
-      <Suspense fallback="Loading...">
-        <Scheduler meetingSlug={slug} uid={uid} />
-      </Suspense>
-    )
+  if (!slug || !uid) {
+    return <h3>Meeting not found</h3>
   }
 
-  return <h3>Meeting not found</h3>
+  return (
+    <Suspense fallback="Loading...">
+      <Scheduler meetingSlug={slug} uid={uid} />
+    </Suspense>
+  )
 }
 
 export default ScheduleAppointment

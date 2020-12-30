@@ -139,7 +139,7 @@ export async function verifyConnectionDetails(
   }
 }
 
-interface ExternalEvent {
+export interface ExternalEvent {
   title?: string
   start: Date
   end: Date

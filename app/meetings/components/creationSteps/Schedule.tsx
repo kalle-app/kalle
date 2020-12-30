@@ -1,79 +1,98 @@
-import React from "react"
 import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/meetings/types"
-import Form from "react-bootstrap/Form"
-import Col from "react-bootstrap/Col"
+import { Meeting, Weekdays } from "app/meetings/types"
+import { Form, Col } from "react-bootstrap"
+import { useState } from "react"
+
+interface ScheduleFormResult {
+  timezone: number
+  startDate: Date
+  endDate: Date
+  schedule: Meeting["schedule"]
+}
 
 type ScheduleProps = {
   stepBack: () => void
-  toNext: () => void
-  onEdit: (key: string, value: any) => void
-  meeting: Meeting
+  toNext: (result: ScheduleFormResult) => void
+}
+
+function pascalCase(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const nineToFive: [string, string] = ["09:00", "17:00"]
+
+const nineToFiveSchedule: Meeting["schedule"] = {
+  monday: nineToFive,
+  tuesday: nineToFive,
+  wednesday: nineToFive,
+  thursday: nineToFive,
+  friday: nineToFive,
 }
 
 const Schedule = (props: ScheduleProps) => {
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
+  const [timezone, setTimezone] = useState<number>(0)
+  const [schedule, setSchedule] = useState<ScheduleFormResult["schedule"]>(nineToFiveSchedule)
 
-  const handleTimezoneChange = (e: any) => {
-    props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
+  const setScheduleStart = (day: Weekdays, value: string) => {
+    setSchedule((oldSchedule) => {
+      return {
+        ...oldSchedule,
+        [day]: [value, oldSchedule[day]?.[1]],
+      }
+    })
   }
 
-  const handleSelection = (e: any) => {
-    props.onEdit(e.target.name, parseInt(e.target.value))
-  }
-
-  const addSchedule = (e: any, day: string, type: string) => {
-    props.onEdit("schedule", { day: day, value: e.currentTarget.value, type: type })
+  const setScheduleEnd = (day: Weekdays, value: string) => {
+    setSchedule((oldSchedule) => {
+      return {
+        ...oldSchedule,
+        [day]: [oldSchedule[day]?.[0], value],
+      }
+    })
   }
 
   return (
     <div className="p-3">
       <h4>Schedule</h4>
       <p className="pb-3">Adjust the schedule for your meeting</p>
-      <Form className="m-3">
-        <Form.Group controlId="formDuration">
+      <Form
+        className="m-3"
+        onSubmit={(evt) => {
+          evt.preventDefault()
+
+          if (!endDate || !startDate) {
+            return
+          }
+
+          props.toNext({
+            endDate,
+            startDate,
+            schedule,
+            timezone,
+          })
+        }}
+      >
+        <Form.Group controlId="duration">
           <Form.Label>Duration</Form.Label>
           <Form.Row>
-            <Form.Check
-              name="duration"
-              label="15 min"
-              type="radio"
-              value={15}
-              checked={props.meeting.duration === 15}
-              onChange={handleSelection}
-              className="mx-1"
-            />
-            <Form.Check
-              name="duration"
-              label="30 min"
-              type="radio"
-              value={30}
-              checked={props.meeting.duration === 30}
-              onChange={handleSelection}
-              className="mx-1"
-            />
-            <Form.Check
-              name="duration"
-              label="60 min"
-              type="radio"
-              value={60}
-              checked={props.meeting.duration === 60}
-              onChange={handleSelection}
-              className="mx-1"
-            />
+            <Form.Check label="15 min" type="radio" value={15} className="mx-1" />
+            <Form.Check label="30 min" type="radio" value={30} className="mx-1" />
+            <Form.Check label="60 min" type="radio" value={60} className="mx-1" />
           </Form.Row>
         </Form.Group>
-        <Form.Group controlId="formTimezone">
+        <Form.Group controlId="timezone">
           <Form.Label>Timezone</Form.Label>
           <Form.Control
             as="select"
             name="timezone"
-            value={props.meeting.timezone}
-            onChange={handleTimezoneChange}
+            value={timezone}
+            onChange={(evt) => setTimezone(+evt.target.value)}
           >
             <option value="-12">(GMT-12:00) International Date Line West</option>
             <option value="-11">(GMT-11:00) Midway Island, Samoa</option>
@@ -166,44 +185,44 @@ const Schedule = (props: ScheduleProps) => {
           <Form.Row>
             <DatePicker
               dateFormat="dd.MM.yyyy"
-              selected={props.meeting.startDate}
-              onChange={(date) => props.onEdit("startDate", date)}
+              onChange={setStartDate}
+              selected={startDate}
               selectsStart
-              startDate={props.meeting.startDate}
-              endDate={props.meeting.endDate}
+              startDate={startDate}
+              endDate={endDate}
               className="m-1"
             />
             <DatePicker
               dateFormat="dd.MM.yyyy"
-              selected={props.meeting.endDate}
-              onChange={(date) => props.onEdit("endDate", date)}
+              onChange={setEndDate}
+              selected={endDate}
               selectsEnd
-              startDate={props.meeting.startDate}
-              endDate={props.meeting.endDate}
-              minDate={props.meeting.startDate}
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
               className="m-1"
             />
           </Form.Row>
         </Form.Group>
         <Form.Group controlId="formDays">
-          {days.map((day) => {
+          {Weekdays.map((day) => {
             return (
               <Form.Row key={day}>
                 <Form.Group as={Col}>
-                  <Form.Label>{day.charAt(0).toUpperCase() + day.slice(1)}</Form.Label>
+                  <Form.Label>{pascalCase(day)}</Form.Label>
                   <Form.Control
-                    value={props.meeting.schedule[day][0]}
+                    value={schedule[day]?.[0] ?? ""}
                     onChange={(e) => {
-                      addSchedule(e, day, "start")
+                      setScheduleStart(day, e.target.value)
                     }}
                   />
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>&nbsp;</Form.Label>
                   <Form.Control
-                    value={props.meeting.schedule[day][1]}
+                    value={schedule[day]?.[1] ?? ""}
                     onChange={(e) => {
-                      addSchedule(e, day, "end")
+                      setScheduleEnd(day, e.target.value)
                     }}
                   />
                 </Form.Group>
@@ -211,15 +230,16 @@ const Schedule = (props: ScheduleProps) => {
             )
           })}
         </Form.Group>
+
+        <div className="p-3 d-flex justify-content-end">
+          <Button onClick={props.stepBack} type="submit" className="mx-1">
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </Button>
+          <Button type="submit" className="mx-1" disabled={!startDate || !endDate}>
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </Button>
+        </div>
       </Form>
-      <div className="p-3 d-flex justify-content-end">
-        <Button onClick={props.stepBack} type="submit" className="mx-1">
-          <FontAwesomeIcon icon={faAngleDoubleLeft} />
-        </Button>
-        <Button onClick={props.toNext} type="submit" className="mx-1">
-          <FontAwesomeIcon icon={faAngleDoubleRight} />
-        </Button>
-      </div>
     </div>
   )
 }

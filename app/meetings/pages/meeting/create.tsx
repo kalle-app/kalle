@@ -5,11 +5,12 @@ import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
 import Schedule from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
-import addMeeting from "../../mutations/addMeeting"
+import addMeetingMutation from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
 import Card from "react-bootstrap/Card"
 import { Button, Modal } from "react-bootstrap"
 import { CopyToClipboard } from "react-copy-to-clipboard"
+import { getOrigin } from "utils/generalUtils"
 
 enum Steps {
   General,
@@ -26,7 +27,6 @@ const initialMeeting: Meeting = {
   timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
-  timeslots: [],
   schedule: {
     monday: ["9:00", "17:00"],
     tuesday: ["9:00", "17:00"],
@@ -47,7 +47,7 @@ interface SuccessModalProps {
 const SuccessModal = (props: SuccessModalProps): ReactElement => {
   const close = () => {
     props.setShow(false)
-    Router.push("/meetings")
+    Router.push(`/meetings`)
   }
   return (
     <Modal show={props.show} onHide={() => close()}>
@@ -71,74 +71,71 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-  const stepOrder = [Steps.General, Steps.Schedule, Steps.Availability, Steps.Advanced]
+
   const [meeting, setMeeting] = useState(initialMeeting)
-  const [createMeetingMutation] = useMutation(addMeeting)
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
+  const [createMeeting] = useMutation(addMeetingMutation)
 
-  const onMeetingEdited = (key, value) => {
-    if (key === "schedule") {
-      const position = value.type === "start" ? 0 : 1
-      const newSchedule = meeting.schedule
-      newSchedule[value.day][position] = value.value
-      setMeeting({
-        ...meeting,
-        schedule: newSchedule,
-      })
-    } else if (key === "timeslots") {
-      setMeeting({
-        ...meeting,
-        timeslots: meeting.timeslots.concat(value),
-      })
-    } else {
-      setMeeting({
-        ...meeting,
-        [key]: value,
-      })
+  const submitMeeting = async () => {
+    try {
+      const data = await createMeeting(meeting)
+      const link = getOrigin() + "schedule/" + data?.ownerId + "/" + data?.link
+      setMeetingLink(link)
+      setShow(true)
+    } catch (error) {
+      alert(error)
     }
   }
 
-  const submitMeeting = () => {
-    createMeetingMutation(meeting)
-      .then((data) => {
-        const link = "localhost:3000/schedule/" + data?.ownerId + "/" + data?.link
-        setMeetingLink(link)
-        setShow(true)
-      })
-      .catch((error) => {
-        alert(error)
-      })
+  const next = () => {
+    setStep((oldStep) => oldStep + 1)
+  }
+
+  const stepBack = () => {
+    setStep((oldStep) => oldStep - 1)
   }
 
   const renderSwitch = () => {
     switch (step) {
       case Steps.General:
-        return <General meeting={meeting} toNext={next} onEdit={onMeetingEdited} />
+        return (
+          <General
+            toNext={(result) => {
+              setMeeting((oldMeeting) => ({
+                ...oldMeeting,
+                name: result.name,
+                description: result.description,
+                link: result.link,
+              }))
+
+              next()
+            }}
+          />
+        )
       case Steps.Schedule:
         return (
-          <Schedule meeting={meeting} toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+          <Schedule
+            toNext={(result) => {
+              setMeeting((oldMeeting) => ({
+                ...oldMeeting,
+                startDate: result.startDate,
+                endDate: result.endDate,
+                schedule: result.schedule,
+                timezone: result.timezone,
+              }))
+              next()
+            }}
+            stepBack={stepBack}
+          />
         )
       case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <Availability toNext={next} stepBack={stepBack} />
       case Steps.Advanced:
-        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} onEdit={onMeetingEdited} />
+        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} />
     }
   }
 
-  const next = () => {
-    if (step !== stepOrder[stepOrder.length - 1]) {
-      const cur = stepOrder.indexOf(step)
-      setStep(stepOrder[cur + 1])
-    }
-  }
-
-  const stepBack = () => {
-    if (step !== stepOrder[0]) {
-      const cur = stepOrder.indexOf(step)
-      setStep(stepOrder[cur - 1])
-    }
-  }
   return (
     <>
       <Card>{renderSwitch()}</Card>
