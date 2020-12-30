@@ -27,6 +27,7 @@ const initialMeeting: Meeting = {
   timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
+  location: "",
   schedule: {
     monday: ["9:00", "17:00"],
     tuesday: ["9:00", "17:00"],
@@ -105,6 +106,7 @@ const InviteCreationContent = () => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 name: result.name,
+                location: result.location,
                 description: result.description,
                 link: result.link,
               }))

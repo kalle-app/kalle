@@ -98,7 +98,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, uid }
           <Row className="pb-3">
             <Col md={6} className="pb-5">
               <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
-              <p>{meeting.description}</p>
+              <p>Description: {meeting.description}</p>
+              <p>Location: {meeting.location}</p>
               <DatePickerCalendar
                 date={selectedDay}
                 onDateChange={onDateChange}
