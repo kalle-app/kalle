@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -62,7 +62,6 @@ model Meeting {
   timezone Int
   startDate DateTime
   endDate DateTime
-  location String
   schedule DailySchedule[]
 }
 

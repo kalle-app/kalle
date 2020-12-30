@@ -3,13 +3,15 @@ import { Ctx } from "blitz"
 import { Meeting } from "app/meetings/types"
 
 export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
+  ctx.session.authorize()
 
   const owner = await db.user.findFirst({
     where: { id: ctx.session.userId },
   })
 
-  if (!owner) return null
+  if (!owner) {
+    throw new Error("Invariant failed: Owner does not exist.")
+  }
 
   const meeting = await db.meeting.create({
     data: {
@@ -20,8 +22,9 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       timezone: meetingCreate.timezone,
       startDate: meetingCreate.startDate,
       endDate: meetingCreate.endDate,
+      location: meetingCreate.location,
       owner: {
-        connect: { id: owner.id },
+        connect: { username: owner.username },
       },
     },
   })

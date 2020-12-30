@@ -2,54 +2,36 @@ import React, { useState } from "react"
 import { useRouter, BlitzPage, useMutation } from "blitz"
 import loginMutation from "app/auth/mutations/login"
 import Layout from "app/layouts/Layout"
-import Form from "react-bootstrap/Form"
-import Button from "react-bootstrap/Button"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import { LoginInput, LoginInputType } from "../validations"
-
-const initialCredentials = {
-  email: "",
-  password: "",
-}
+import { Button, Row, Col, Form } from "react-bootstrap"
+import { LoginInput } from "../validations"
 
 const LoginPage: BlitzPage = () => {
   const router = useRouter()
   const [login] = useMutation(loginMutation)
   const [message, setMessage] = useState("")
-  const [credentials, setCredentials] = useState(initialCredentials)
-
-  const setValue = (field: string, value: any) => {
-    setCredentials({
-      ...credentials,
-      [field]: value,
-    })
-  }
-
-  function checkCredentials(): string {
-    try {
-      LoginInput.parse(credentials)
-      return "valid"
-    } catch (error) {
-      return error["errors"][0]["message"]
-    }
-  }
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const processLogin = async () => {
-    const check = checkCredentials()
-    if (check === "valid") {
-      try {
-        await login({ email: credentials.email, password: credentials.password })
-        router.push("/")
-      } catch (error) {
-        if (error.name === "AuthenticationError") {
-          setMessage("Sorry, those credentials are invalid")
-        } else {
-          setMessage("Sorry, we had an unexpected error. Please try again.")
-        }
+    const parseResult = LoginInput.safeParse({
+      email,
+      password,
+    })
+
+    if (!parseResult.success) {
+      setMessage(parseResult.error.errors[0].message)
+      return
+    }
+
+    try {
+      await login({ email, password })
+      router.push("/")
+    } catch (error) {
+      if (error.name === "AuthenticationError") {
+        setMessage("Sorry, those credentials are invalid")
+      } else {
+        setMessage("Sorry, we had an unexpected error. Please try again.")
       }
-    } else {
-      setMessage(check)
     }
   }
 
@@ -60,11 +42,11 @@ const LoginPage: BlitzPage = () => {
         <Form>
           <Form.Group controlId="formEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" onChange={(e) => setValue("email", e.target.value)} />
+            <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
           <Form.Group controlId="formPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" onChange={(e) => setValue("password", e.target.value)} />
+            <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} />
           </Form.Group>
           <Form.Text className="text-danger mb-4">{message}</Form.Text>
         </Form>

@@ -3,3 +3,9 @@ export function checkEnvVariable(name: string) {
     throw new Error("EnvironmentVariable " + name + " is not set!")
   }
 }
+
+export function checkEnvVariables(...names: string[]) {
+  for (const name of names) {
+    checkEnvVariable(name)
+  }
+}
