@@ -17,6 +17,7 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   name           String
+  username       String    @unique
   email          String    @unique
   hashedPassword String?
   role           String    @default("user")
@@ -54,8 +55,8 @@ model Meeting {
   id  Int @id @default(autoincrement())
   name String
   link String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  owner User @relation(fields: [ownerName], references: [username])
+  ownerName String
   description String
   duration Int
   timezone Int
@@ -63,6 +64,7 @@ model Meeting {
   endDate DateTime
   schedule Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int
+  location String
 }
 
 model DailySchedule {

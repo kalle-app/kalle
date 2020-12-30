@@ -1,5 +1,4 @@
-import React from "react"
-import Button from "react-bootstrap/Button"
+import { Button } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import "react-datepicker/dist/react-datepicker.css"
@@ -7,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css"
 type AvailabilityProps = {
   stepBack: () => void
   toNext: () => void
-  onEdit: (key: string, value: any) => void
 }
 
 const AvailabilityStep = (props: AvailabilityProps) => {

@@ -1,3 +1,4 @@
+import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
 import React, { useState } from "react"
@@ -46,6 +47,7 @@ const AddSchedule = (props: AddScheduleProps) => {
     createScheduleMutation(schedule)
       .then((data) => {
         invalidateQuery(getSchedules)
+        invalidateQuery(getScheduleNames)
         props.setVisibility(false)
       })
       .catch((error) => {

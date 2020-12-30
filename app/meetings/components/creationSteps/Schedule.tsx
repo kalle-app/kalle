@@ -1,84 +1,73 @@
 import React, { useState } from "react"
 import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting } from "app/meetings/types"
-import Form from "react-bootstrap/Form"
-import { Schedule } from "@prisma/client"
-import { FormControl } from "react-bootstrap"
+import { Form, Col } from "react-bootstrap"
 import AddSchedule from "../schedules/AddScheduleModal"
+import { DailySchedule, Schedule } from "@prisma/client"
+
+interface ScheduleFormResult {
+  timezone: number
+  startDate: Date
+  endDate: Date
+  scheduleId: number
+}
 
 type ScheduleProps = {
   stepBack: () => void
-  toNext: () => void
-  onEdit: (key: string, value: any) => void
-  meeting: Meeting
+  toNext: (result: ScheduleFormResult) => void
   schedulePresets: Schedule[]
 }
 
 const ScheduleStep = (props: ScheduleProps) => {
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
+  const [timezone, setTimezone] = useState<number>(0)
+  const [scheduleId, setScheduleId] = useState<number>()
   const [modalVisible, setModalVisibility] = useState(false)
-
-  const handleTimezoneChange = (e: any) => {
-    props.onEdit(e.currentTarget.name, parseInt(e.currentTarget.value))
-  }
-
-  const handleSelection = (e: any) => {
-    props.onEdit(e.target.name, parseInt(e.target.value))
-  }
-
-  const setSchedule = (e: any) => {
-    console.log(e)
-    props.onEdit("scheduleId", parseInt(e.currentTarget.value))
-  }
 
   return (
     <div className="p-3">
       <h4>Schedule</h4>
       <p className="pb-3">Adjust the schedule for your meeting</p>
-      <Form className="m-3">
-        <Form.Group controlId="formDuration">
+      <Form
+        className="m-3"
+        onSubmit={(evt) => {
+          evt.preventDefault()
+
+          if (!endDate || !startDate) {
+            return
+          }
+
+          if (!scheduleId) {
+            return
+          }
+
+          props.toNext({
+            endDate,
+            startDate,
+            scheduleId,
+            timezone,
+          })
+        }}
+      >
+        <Form.Group controlId="duration">
           <Form.Label>Duration</Form.Label>
           <Form.Row>
-            <Form.Check
-              name="duration"
-              label="15 min"
-              type="radio"
-              value={15}
-              checked={props.meeting.duration === 15}
-              onChange={handleSelection}
-              className="mx-1"
-            />
-            <Form.Check
-              name="duration"
-              label="30 min"
-              type="radio"
-              value={30}
-              checked={props.meeting.duration === 30}
-              onChange={handleSelection}
-              className="mx-1"
-            />
-            <Form.Check
-              name="duration"
-              label="60 min"
-              type="radio"
-              value={60}
-              checked={props.meeting.duration === 60}
-              onChange={handleSelection}
-              className="mx-1"
-            />
+            <Form.Check label="15 min" type="radio" value={15} className="mx-1" />
+            <Form.Check label="30 min" type="radio" value={30} className="mx-1" />
+            <Form.Check label="60 min" type="radio" value={60} className="mx-1" />
           </Form.Row>
         </Form.Group>
-        <Form.Group controlId="formTimezone">
+        <Form.Group controlId="timezone">
           <Form.Label>Timezone</Form.Label>
           <Form.Control
             as="select"
             name="timezone"
-            value={props.meeting.timezone}
-            onChange={handleTimezoneChange}
+            value={timezone}
+            onChange={(evt) => setTimezone(+evt.target.value)}
           >
             <option value="-12">(GMT-12:00) International Date Line West</option>
             <option value="-11">(GMT-11:00) Midway Island, Samoa</option>
@@ -171,45 +160,52 @@ const ScheduleStep = (props: ScheduleProps) => {
           <Form.Row>
             <DatePicker
               dateFormat="dd.MM.yyyy"
-              selected={props.meeting.startDate}
-              onChange={(date) => props.onEdit("startDate", date)}
+              onChange={setStartDate}
+              selected={startDate}
               selectsStart
-              startDate={props.meeting.startDate}
-              endDate={props.meeting.endDate}
+              startDate={startDate}
+              endDate={endDate}
               className="m-1"
             />
             <DatePicker
               dateFormat="dd.MM.yyyy"
-              selected={props.meeting.endDate}
-              onChange={(date) => props.onEdit("endDate", date)}
+              onChange={setEndDate}
+              selected={endDate}
               selectsEnd
-              startDate={props.meeting.startDate}
-              endDate={props.meeting.endDate}
-              minDate={props.meeting.startDate}
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
               className="m-1"
             />
           </Form.Row>
         </Form.Group>
         <Form.Group controlId="select-schedule">
           <Form.Label>Select Schedule</Form.Label>
-          <Form.Control as="select" onChange={setSchedule}>
-            <option>Select a Schedule</option>
-            {props.schedulePresets.map((schedule: Schedule) => {
-              return <option value={schedule.id}>{schedule.name}</option>
-            })}
-          </Form.Control>
+          {props.schedulePresets.length == 0 ? (
+            <p>You dont have any Schedule presets, please add a Schedule first: </p>
+          ) : (
+            <Form.Control
+              as="select"
+              onChange={(e) => setScheduleId(Number(e.currentTarget.value))}
+            >
+              <option>Select a Schedule</option>
+              {props.schedulePresets.map((schedule: Schedule) => {
+                return <option value={schedule.id}>{schedule.name}</option>
+              })}
+            </Form.Control>
+          )}
         </Form.Group>
         <Button onClick={() => setModalVisibility(true)}>Add Schedule</Button>
+        <div className="p-3 d-flex justify-content-end">
+          <Button onClick={props.stepBack} type="submit" className="mx-1">
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </Button>
+          <Button type="submit" className="mx-1" disabled={!startDate || !endDate || !scheduleId}>
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </Button>
+        </div>
+        <AddSchedule show={modalVisible} setVisibility={setModalVisibility} />
       </Form>
-      <div className="p-3 d-flex justify-content-end">
-        <Button onClick={props.stepBack} type="submit" className="mx-1">
-          <FontAwesomeIcon icon={faAngleDoubleLeft} />
-        </Button>
-        <Button onClick={props.toNext} type="submit" className="mx-1">
-          <FontAwesomeIcon icon={faAngleDoubleRight} />
-        </Button>
-      </div>
-      <AddSchedule show={modalVisible} setVisibility={setModalVisibility} />
     </div>
   )
 }
