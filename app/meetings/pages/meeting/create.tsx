@@ -52,7 +52,7 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
   return (
     <Modal show={props.show} onHide={() => close()}>
       <Modal.Header closeButton>
-        <Modal.Title>Meeting successfully creted!</Modal.Title>
+        <Modal.Title>Meeting successfully created!</Modal.Title>
       </Modal.Header>
       <Modal.Body>Your invitelink is: {props.meetingLink}</Modal.Body>
       <Modal.Footer>
