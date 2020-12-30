@@ -41,6 +41,8 @@ const SignupPage: BlitzPage = () => {
     } catch (error) {
       if (error.code === "P2002" && error.meta?.target?.includes("email")) {
         setMessage("This email is already being used")
+      } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
+        setMessage("This username is already being used")
       } else {
         setMessage("Sorry, we had an unexpected error. Please try again.")
       }
