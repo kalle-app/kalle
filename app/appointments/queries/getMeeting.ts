@@ -7,7 +7,7 @@ interface MeetingLink {
 }
 
 export default async function getMeeting(link: MeetingLink, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
+  ctx.session.authorize()
 
   const meeting = await db.meeting.findFirst({
     where: {
