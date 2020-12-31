@@ -1,7 +1,7 @@
 import Layout from "app/layouts/Layout"
 import { BlitzPage, Link, useQuery } from "blitz"
 import React, { Suspense } from "react"
-import getMeetings from "../../meetings/queries/getMeetings"
+import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
 

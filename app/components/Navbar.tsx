@@ -22,9 +22,8 @@ const PrivateNavigation = () => {
       </Nav>
       <Nav>
         <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="auth-dropdown">
-          <Link href="/settings" passHref>
-            <NavDropdown.Item>Settings</NavDropdown.Item>
-          </Link>
+          <NavDropdown.Item href="/schedules">Schedules</NavDropdown.Item>
+          <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
           <NavDropdown.Item
             onClick={async () => {

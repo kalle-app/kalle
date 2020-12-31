@@ -1,6 +1,7 @@
 export const johnDoe = {
   email: "john.doe@kalle.app",
   fullName: "John Doe",
+  username: "john.doe",
   password: "supersecurepassword",
 
   calendars: {

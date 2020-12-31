@@ -1,0 +1,17 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Schedule",
+      "field": "dailySchedules",
+      "type": "DailySchedule",
+      "arity": "List"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Schedule",
+      "field": "schedule"
+    }
+  ]
+}

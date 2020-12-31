@@ -2,61 +2,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Meeting, Weekdays } from "app/meetings/types"
-import { Form, Col, ButtonGroup, Button, ToggleButtonGroup, ToggleButton } from "react-bootstrap"
+import { Form, ButtonGroup, Button, ToggleButton } from "react-bootstrap"
 import { useState } from "react"
+import type { Schedule } from "db"
+import AddSchedule from "../schedules/AddScheduleModal"
 
 interface ScheduleFormResult {
   timezone: number
   startDate: Date
   endDate: Date
-  schedule: Meeting["schedule"]
+  scheduleId: number
   duration: number
 }
 
 type ScheduleProps = {
   stepBack: () => void
   toNext: (result: ScheduleFormResult) => void
+  schedulePresets: Schedule[]
 }
 
-function pascalCase(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
-const nineToFive: [string, string] = ["09:00", "17:00"]
-
-const nineToFiveSchedule: Meeting["schedule"] = {
-  monday: nineToFive,
-  tuesday: nineToFive,
-  wednesday: nineToFive,
-  thursday: nineToFive,
-  friday: nineToFive,
-}
-
-const Schedule = (props: ScheduleProps) => {
+const ScheduleStep = (props: ScheduleProps) => {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [timezone, setTimezone] = useState<number>(0)
   const [duration, setDuration] = useState(30)
-  const [schedule, setSchedule] = useState<ScheduleFormResult["schedule"]>(nineToFiveSchedule)
-
-  const setScheduleStart = (day: Weekdays, value: string) => {
-    setSchedule((oldSchedule) => {
-      return {
-        ...oldSchedule,
-        [day]: [value, oldSchedule[day]?.[1]],
-      }
-    })
-  }
-
-  const setScheduleEnd = (day: Weekdays, value: string) => {
-    setSchedule((oldSchedule) => {
-      return {
-        ...oldSchedule,
-        [day]: [oldSchedule[day]?.[0], value],
-      }
-    })
-  }
+  const [scheduleId, setScheduleId] = useState<number>()
+  const [modalVisible, setModalVisibility] = useState(false)
 
   return (
     <div className="p-3">
@@ -71,10 +42,14 @@ const Schedule = (props: ScheduleProps) => {
             return
           }
 
+          if (!scheduleId) {
+            return
+          }
+
           props.toNext({
             endDate,
             startDate,
-            schedule,
+            scheduleId,
             timezone,
             duration,
           })
@@ -218,44 +193,40 @@ const Schedule = (props: ScheduleProps) => {
             />
           </Form.Row>
         </Form.Group>
-        <Form.Group controlId="formDays">
-          {Weekdays.map((day) => {
-            return (
-              <Form.Row key={day}>
-                <Form.Group as={Col}>
-                  <Form.Label>{pascalCase(day)}</Form.Label>
-                  <Form.Control
-                    value={schedule[day]?.[0] ?? ""}
-                    onChange={(e) => {
-                      setScheduleStart(day, e.target.value)
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>&nbsp;</Form.Label>
-                  <Form.Control
-                    value={schedule[day]?.[1] ?? ""}
-                    onChange={(e) => {
-                      setScheduleEnd(day, e.target.value)
-                    }}
-                  />
-                </Form.Group>
-              </Form.Row>
-            )
-          })}
+        <Form.Group controlId="select-schedule">
+          <Form.Label>Select Schedule</Form.Label>
+          {props.schedulePresets.length == 0 ? (
+            <p>You dont have any Schedule presets, please add a Schedule first: </p>
+          ) : (
+            <Form.Control
+              as="select"
+              onChange={(e) => setScheduleId(Number(e.currentTarget.value))}
+            >
+              <option>Select a Schedule</option>
+              {props.schedulePresets.map((schedule: Schedule) => {
+                return <option value={schedule.id}>{schedule.name}</option>
+              })}
+            </Form.Control>
+          )}
         </Form.Group>
-
+        <Button onClick={() => setModalVisibility(true)}>Add Schedule</Button>
         <div className="p-3 d-flex justify-content-end">
           <Button onClick={props.stepBack} className="mx-1">
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
           </Button>
-          <Button type="submit" id="submit" className="mx-1" disabled={!startDate || !endDate}>
+          <Button
+            type="submit"
+            id="submit"
+            className="mx-1"
+            disabled={!startDate || !endDate || !scheduleId}
+          >
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </Button>
         </div>
+        <AddSchedule show={modalVisible} setVisibility={setModalVisibility} />
       </Form>
     </div>
   )
 }
 
-export default Schedule
+export default ScheduleStep

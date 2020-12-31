@@ -20,5 +20,6 @@ export interface Meeting {
   timezone: number
   startDate: Date
   endDate: Date
-  schedule: Partial<Record<Weekdays, TimeInterval>>
+  location: string
+  scheduleId: number
 }

@@ -2,6 +2,7 @@ import * as z from "zod"
 
 export const SignupInput = z.object({
   name: z.string().min(1, { message: "Please enter a name" }),
+  username: z.string().min(3, { message: "Username has to be at least 2 characters" }),
   email: z.string().email({ message: "Please enter valid email address" }),
   password: z
     .string()

@@ -1,13 +1,17 @@
-import { BlitzPage, Router, useMutation } from "blitz"
-import React, { Suspense, useState } from "react"
+import { BlitzPage, Router, useMutation, useQuery } from "blitz"
+import React, { ReactElement, Suspense, useState } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
-import Schedule from "../../components/creationSteps/Schedule"
+import ScheduleStep from "../../components/creationSteps/Schedule"
 import { Meeting } from "app/meetings/types"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Layout from "app/layouts/Layout"
 import Card from "react-bootstrap/Card"
+import { Button, Modal } from "react-bootstrap"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import { getOrigin } from "utils/generalUtils"
+import getScheduleNames from "app/meetings/queries/getScheduleNames"
 
 enum Steps {
   General,
@@ -24,27 +28,56 @@ const initialMeeting: Meeting = {
   timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
-  schedule: {
-    monday: ["9:00", "17:00"],
-    tuesday: ["9:00", "17:00"],
-    wednesday: ["9:00", "17:00"],
-    thursday: ["9:00", "17:00"],
-    friday: ["9:00", "17:00"],
-    saturday: ["", ""],
-    sunday: ["", ""],
-  },
+  location: "",
+  scheduleId: 0,
+}
+
+interface SuccessModalProps {
+  show: boolean
+  setShow: (val: boolean) => void
+  meetingLink: string
+}
+
+const SuccessModal = (props: SuccessModalProps): ReactElement => {
+  const close = () => {
+    props.setShow(false)
+    Router.push(`/meetings`)
+  }
+  return (
+    <Modal show={props.show} onHide={() => close()}>
+      <Modal.Header closeButton>
+        <Modal.Title>Meeting successfully created!</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Your invitelink is: {props.meetingLink}</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => close()}>
+          Close
+        </Button>
+        <CopyToClipboard text={props.meetingLink}>
+          <Button variant="primary" onClick={() => close()}>
+            Copy to Clipboard
+          </Button>
+        </CopyToClipboard>
+      </Modal.Footer>
+    </Modal>
+  )
 }
 
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
 
   const [meeting, setMeeting] = useState(initialMeeting)
+  const [meetingLink, setMeetingLink] = useState("")
+  const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
+  const [schedulePresets] = useQuery(getScheduleNames, null)
 
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
-      Router.push(`/meetings#${data.id}`)
+      const link = getOrigin() + "schedule/" + data?.ownerName + "/" + data?.link
+      setMeetingLink(link)
+      setShow(true)
     } catch (error) {
       alert(error)
     }
@@ -67,6 +100,7 @@ const InviteCreationContent = () => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 name: result.name,
+                location: result.location,
                 description: result.description,
                 link: result.link,
               }))
@@ -77,13 +111,14 @@ const InviteCreationContent = () => {
         )
       case Steps.Schedule:
         return (
-          <Schedule
+          <ScheduleStep
+            schedulePresets={schedulePresets!}
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 startDate: result.startDate,
                 endDate: result.endDate,
-                schedule: result.schedule,
+                scheduleId: result.scheduleId,
                 timezone: result.timezone,
               }))
               next()
@@ -98,7 +133,12 @@ const InviteCreationContent = () => {
     }
   }
 
-  return <Card>{renderSwitch()}</Card>
+  return (
+    <>
+      <Card>{renderSwitch()}</Card>
+      <SuccessModal show={showSuccess} setShow={setShow} meetingLink={meetingLink} />
+    </>
+  )
 }
 
 const Create: BlitzPage = () => {

@@ -11,6 +11,7 @@ export default async function seed() {
   await db.user.create({
     data: {
       name: johnDoe.fullName,
+      username: johnDoe.username,
       email: johnDoe.email,
       hashedPassword: mockHashPassword(johnDoe.password),
 

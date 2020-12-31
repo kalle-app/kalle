@@ -6,6 +6,7 @@ import { Link } from "blitz"
 interface GeneralFormResult {
   name: string
   link: string
+  location: string
   description: string
 }
 
@@ -28,6 +29,7 @@ const General = (props: GeneralProps) => {
             name: formData.get("name") as string,
             description: formData.get("description") as string,
             link: formData.get("link") as string,
+            location: formData.get("location") as string,
           })
         }}
       >
@@ -42,6 +44,10 @@ const General = (props: GeneralProps) => {
         <Form.Group controlId="description">
           <Form.Label>Description</Form.Label>
           <Form.Control as="textarea" rows={3} name="description" />
+        </Form.Group>
+        <Form.Group controlId="forLocation">
+          <Form.Label>Location</Form.Label>
+          <Form.Control name="location" />
         </Form.Group>
         <div className="p-3 d-flex justify-content-end">
           <Link href="/meetings">

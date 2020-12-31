@@ -1,11 +1,19 @@
 import db from "db"
 import { Ctx } from "blitz"
 
-export default async function getMeeting(link: string, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
+interface MeetingLink {
+  username: string
+  slug: string
+}
+
+export default async function getMeeting(link: MeetingLink, ctx: Ctx) {
+  ctx.session.authorize()
 
   const meeting = await db.meeting.findFirst({
-    where: { link: link },
+    where: {
+      link: link.slug,
+      ownerName: link.username,
+    },
   })
 
   return meeting
