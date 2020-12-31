@@ -62,11 +62,11 @@ const AddSchedule = (props: AddScheduleProps) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="formName">
+          <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control name="name" value={schedule.name} onChange={nameChanged} />
           </Form.Group>
-          <Form.Group controlId="formDays">
+          <Form.Group controlId="days">
             {days.map((day) => {
               return (
                 <Form.Row key={day}>

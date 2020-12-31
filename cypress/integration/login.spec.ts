@@ -1,4 +1,4 @@
-import { loginAs } from "../login"
+import { filloutLoginFormWith, loginAs } from "../login"
 import { url } from "../support/url"
 import { johnDoe } from "../../db/seed-data"
 
@@ -18,10 +18,12 @@ describe("Login Flow", () => {
 
   describe("when using invalid credentials", () => {
     it('shows "Sorry, those credentials are invalid"', () => {
-      loginAs({
+      filloutLoginFormWith({
         email: johnDoe.email,
         password: "wrongpassword",
       })
+
+      cy.url().should("equal", url("/login"))
       cy.contains("Sorry, those credentials are invalid")
     })
   })

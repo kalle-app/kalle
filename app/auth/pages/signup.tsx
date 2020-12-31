@@ -58,11 +58,11 @@ const SignupPage: BlitzPage = () => {
             <Form.Label>Full name</Form.Label>
             <Form.Control onChange={(e) => setName(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formUsername">
+          <Form.Group controlId="username">
             <Form.Label>Username</Form.Label>
             <Form.Control onChange={(e) => setUsername(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>

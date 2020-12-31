@@ -209,7 +209,9 @@ const ScheduleStep = (props: ScheduleProps) => {
             </Form.Control>
           )}
         </Form.Group>
-        <Button onClick={() => setModalVisibility(true)}>Add Schedule</Button>
+        <Button id="add-schedule" onClick={() => setModalVisibility(true)}>
+          Add Schedule
+        </Button>
         <div className="p-3 d-flex justify-content-end">
           <Button onClick={props.stepBack} className="mx-1">
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
