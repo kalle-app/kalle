@@ -20,8 +20,8 @@ it("Meetings Flow", () => {
 
   cy.get("#duration-30").click()
 
-  cy.get("#range-start").type("20-11-2020")
-  cy.get("#range-end").type("27-11-2020")
+  cy.get("#range-start").type("20.11.2020")
+  cy.get("#range-end").type("27.11.2020")
 
   cy.contains("Add Schedule").click()
 
@@ -41,7 +41,7 @@ it("Meetings Flow", () => {
 
   cy.visit(url(`/schedule/${johnDoe.username}/${link}`))
 
-  cy.contains("22").click()
+  cy.contains("23").click()
   cy.contains("10:30-10:45").click()
 
   cy.contains("Schedule!").click()
@@ -60,7 +60,7 @@ it("Meetings Flow", () => {
     cy.log(newestMail)
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
-      "New appointment: My Test Meeting - 10:30, 22.12.2020 mit john.doe"
+      "New appointment: My Test Meeting - 10:30, 23.11.2020 mit john.doe"
     )
     expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
   })
