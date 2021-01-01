@@ -25,11 +25,13 @@ it("Meetings Flow", () => {
 
   cy.contains("Add Schedule").click()
 
-  cy.get("#name").type("9-to-5")
+  const scheduleName = uuid.v4()
+
+  cy.get("#name").type(scheduleName)
 
   cy.contains("Save Schedule").click()
 
-  cy.get("#select-schedule").select("9-to-5")
+  cy.get("#select-schedule").select(scheduleName)
 
   cy.get("#submit").click()
   cy.get("#submit").click()
