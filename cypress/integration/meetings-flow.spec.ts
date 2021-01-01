@@ -24,9 +24,10 @@ it("Meetings Flow", () => {
   cy.get("#range-end").type("27-11-2020")
 
   cy.contains("Add Schedule").click()
-  cy.contains("Save Schedule").click()
 
   cy.get("#name").type("9-to-5")
+
+  cy.contains("Save Schedule").click()
 
   cy.get("#select-schedule").select("9-to-5")
 

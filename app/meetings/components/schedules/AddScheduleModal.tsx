@@ -45,9 +45,9 @@ const AddSchedule = (props: AddScheduleProps) => {
 
   const submit = () => {
     createScheduleMutation(schedule)
-      .then((data) => {
-        invalidateQuery(getSchedules)
-        invalidateQuery(getScheduleNames)
+      .then(async (data) => {
+        await invalidateQuery(getSchedules)
+        await invalidateQuery(getScheduleNames)
         props.setVisibility(false)
       })
       .catch((error) => {
