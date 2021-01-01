@@ -39,9 +39,10 @@ jobs:
           install: false
           record: true
           env: host=localhost,port=3000
-          build: npx blitz db migrate
+          build: npx blitz db seed
           start: npx blitz start --production --port 3000
           wait-on: "http://localhost:3000"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SESSION_SECRET_KEY: supersecretsessionsecretkeywhichisatleast32byteslong

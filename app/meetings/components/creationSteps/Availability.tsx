@@ -17,7 +17,7 @@ const AvailabilityStep = (props: AvailabilityProps) => {
         <Button onClick={props.stepBack} type="submit" className="mx-1">
           <FontAwesomeIcon icon={faAngleDoubleLeft} />
         </Button>
-        <Button onClick={props.toNext} type="submit" className="mx-1">
+        <Button onClick={props.toNext} type="submit" id="submit" className="mx-1">
           <FontAwesomeIcon icon={faAngleDoubleRight} />
         </Button>
       </div>

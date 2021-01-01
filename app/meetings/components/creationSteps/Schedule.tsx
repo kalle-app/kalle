@@ -1,18 +1,18 @@
-import React, { useState } from "react"
-import Button from "react-bootstrap/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Form, Col } from "react-bootstrap"
+import { Form, ButtonGroup, Button, ToggleButton } from "react-bootstrap"
+import { useState } from "react"
+import type { Schedule } from "db"
 import AddSchedule from "../schedules/AddScheduleModal"
-import { DailySchedule, Schedule } from "@prisma/client"
 
 interface ScheduleFormResult {
   timezone: number
   startDate: Date
   endDate: Date
   scheduleId: number
+  duration: number
 }
 
 type ScheduleProps = {
@@ -25,6 +25,7 @@ const ScheduleStep = (props: ScheduleProps) => {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [timezone, setTimezone] = useState<number>(0)
+  const [duration, setDuration] = useState(30)
   const [scheduleId, setScheduleId] = useState<number>()
   const [modalVisible, setModalVisibility] = useState(false)
 
@@ -50,16 +51,27 @@ const ScheduleStep = (props: ScheduleProps) => {
             startDate,
             scheduleId,
             timezone,
+            duration,
           })
         }}
       >
         <Form.Group controlId="duration">
           <Form.Label>Duration</Form.Label>
-          <Form.Row>
-            <Form.Check label="15 min" type="radio" value={15} className="mx-1" />
-            <Form.Check label="30 min" type="radio" value={30} className="mx-1" />
-            <Form.Check label="60 min" type="radio" value={60} className="mx-1" />
-          </Form.Row>
+          <ButtonGroup toggle>
+            {[15, 30, 60].map((d) => (
+              <ToggleButton
+                key={d}
+                type="radio"
+                name="radio"
+                id={"duration-" + d}
+                onClick={() => setDuration(d)}
+                value={d}
+                checked={duration === d}
+              >
+                {d} min
+              </ToggleButton>
+            ))}
+          </ButtonGroup>
         </Form.Group>
         <Form.Group controlId="timezone">
           <Form.Label>Timezone</Form.Label>
@@ -166,6 +178,7 @@ const ScheduleStep = (props: ScheduleProps) => {
               startDate={startDate}
               endDate={endDate}
               className="m-1"
+              id="range-start"
             />
             <DatePicker
               dateFormat="dd.MM.yyyy"
@@ -176,6 +189,7 @@ const ScheduleStep = (props: ScheduleProps) => {
               endDate={endDate}
               minDate={startDate}
               className="m-1"
+              id="range-end"
             />
           </Form.Row>
         </Form.Group>
@@ -195,12 +209,19 @@ const ScheduleStep = (props: ScheduleProps) => {
             </Form.Control>
           )}
         </Form.Group>
-        <Button onClick={() => setModalVisibility(true)}>Add Schedule</Button>
+        <Button id="add-schedule" onClick={() => setModalVisibility(true)}>
+          Add Schedule
+        </Button>
         <div className="p-3 d-flex justify-content-end">
-          <Button onClick={props.stepBack} type="submit" className="mx-1">
+          <Button onClick={props.stepBack} className="mx-1">
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
           </Button>
-          <Button type="submit" className="mx-1" disabled={!startDate || !endDate || !scheduleId}>
+          <Button
+            type="submit"
+            id="submit"
+            className="mx-1"
+            disabled={!startDate || !endDate || !scheduleId}
+          >
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </Button>
         </div>

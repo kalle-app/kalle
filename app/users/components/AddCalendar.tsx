@@ -22,6 +22,7 @@ const AddCalendar = (props: AddCalendarProps) => {
           </div>
           <Form
             className="p-4"
+            id="add-calendar"
             onSubmit={async (evt) => {
               evt.preventDefault()
 
@@ -56,15 +57,15 @@ const AddCalendar = (props: AddCalendarProps) => {
               }
             }}
           >
-            <Form.Group controlId="formName">
+            <Form.Group controlId="name">
               <Form.Label>Calendar name</Form.Label>
               <Form.Control name="name" />
             </Form.Group>
-            <Form.Group controlId="formUrl">
+            <Form.Group controlId="url">
               <Form.Label>Calendar URL</Form.Label>
               <Form.Control name="url" type="url" />
             </Form.Group>
-            <Form.Group controlId="formType">
+            <Form.Group controlId="type">
               <Form.Label>Type</Form.Label>
               <Form.Control as="select" name="type">
                 <option>CalDav</option>
@@ -72,11 +73,11 @@ const AddCalendar = (props: AddCalendarProps) => {
                 <option>Microsoft Outlook</option>
               </Form.Control>
             </Form.Group>
-            <Form.Group controlId="formUsername">
+            <Form.Group controlId="username">
               <Form.Label>Username</Form.Label>
               <Form.Control name="username" />
             </Form.Group>
-            <Form.Group controlId="formPassword">
+            <Form.Group controlId="password">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" name="password" />
             </Form.Group>

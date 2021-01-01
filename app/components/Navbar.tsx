@@ -2,7 +2,7 @@ import React from "react"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
-import { useRouter, useMutation } from "blitz"
+import { useRouter, useMutation, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
 const Navigation = () => {
@@ -16,10 +16,12 @@ const PrivateNavigation = () => {
   return (
     <>
       <Nav className="mr-auto">
-        <Nav.Link href="/meetings">Meetings</Nav.Link>
+        <Link href="/meetings" passHref>
+          <Nav.Link>Meetings</Nav.Link>
+        </Link>
       </Nav>
       <Nav>
-        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="basic-nav-dropdown">
+        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="auth-dropdown">
           <NavDropdown.Item href="/schedules">Schedules</NavDropdown.Item>
           <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
@@ -42,7 +44,9 @@ const PublicNavigation = () => {
     <>
       <Nav className="mr-auto"></Nav>
       <Nav>
-        <Nav.Link href="/login">Log In</Nav.Link>
+        <Link href="/login" passHref>
+          <Nav.Link>Log In</Nav.Link>
+        </Link>
       </Nav>
     </>
   )
@@ -52,16 +56,18 @@ const NavBar = () => {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="/">
-          <img
-            alt="logo"
-            src="/logo.png"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />{" "}
-          Kalle
-        </Navbar.Brand>
+        <Link href="/" passHref>
+          <Navbar.Brand>
+            <img
+              alt="logo"
+              src="/logo.png"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{" "}
+            Kalle
+          </Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Suspense fallback={<PublicNavigation />}>

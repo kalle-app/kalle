@@ -1,5 +1,5 @@
 import Layout from "app/layouts/Layout"
-import { BlitzPage, useQuery } from "blitz"
+import { BlitzPage, Link, useQuery } from "blitz"
 import React, { Suspense } from "react"
 import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
@@ -19,9 +19,11 @@ const MainContent = () => {
       <Suspense fallback="Loading...">
         <MeetingsContent />
       </Suspense>
-      <Button href="/meeting/create" variant="primary" className="m-3">
-        Create new Meeting
-      </Button>
+      <Link href="/meeting/create">
+        <Button variant="primary" className="m-3">
+          Create new Meeting
+        </Button>
+      </Link>
     </div>
   )
 }

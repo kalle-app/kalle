@@ -11,8 +11,6 @@ import Card from "react-bootstrap/Card"
 import { Button, Modal } from "react-bootstrap"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
-import getSchedules from "app/meetings/queries/getSchedules"
-import { Schedule, DailySchedule } from "@prisma/client"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 
 enum Steps {
@@ -77,7 +75,7 @@ const InviteCreationContent = () => {
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
-      const link = getOrigin() + "schedule/" + data?.ownerName + "/" + data?.link
+      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
       setMeetingLink(link)
       setShow(true)
     } catch (error) {

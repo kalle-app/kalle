@@ -155,7 +155,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
               />
             </Form.Group>
           </Form>
-          <Button variant="primary" onClick={() => onSubmit()}>
+          <Button variant="primary" onClick={() => onSubmit()} id="submit">
             Submit!
           </Button>
         </Modal.Body>
