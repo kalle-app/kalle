@@ -54,10 +54,6 @@ const AddCalendar = (props: AddCalendarProps) => {
               }
             }}
           >
-            <Form.Group controlId="formName">
-              <Form.Label>Calendar name</Form.Label>
-              <Form.Control name="name" placeholder="Enter a name you'd like for your calendar" />
-            </Form.Group>
             <Form.Group controlId="formType">
               <Form.Label>Type</Form.Label>
               <Form.Control
@@ -81,9 +77,11 @@ const AddCalendar = (props: AddCalendarProps) => {
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel
               </Button>
-              <Button variant="primary" className="mx-1" type="submit">
-                Add
-              </Button>
+              {calendarType == "caldav" && (
+                <Button variant="primary" className="mx-1" type="submit">
+                  Add
+                </Button>
+              )}
             </div>
           </Form>
         </Card>
@@ -95,6 +93,10 @@ const AddCalendar = (props: AddCalendarProps) => {
 const CalDavFormBody = () => {
   return (
     <>
+      <Form.Group controlId="formName">
+        <Form.Label>Calendar name</Form.Label>
+        <Form.Control name="name" placeholder="Enter a name you'd like for your calendar" />
+      </Form.Group>
       <Form.Group controlId="formUrl">
         <Form.Label>Calendar URL</Form.Label>
         <Form.Control name="url" type="url" />
