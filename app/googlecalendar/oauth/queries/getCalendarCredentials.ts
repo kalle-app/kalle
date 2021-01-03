@@ -1,7 +1,7 @@
 import db from "db"
 import { Ctx } from "blitz"
 
-export default async function getCalendarCredentials(ctx: Ctx) {
+export default async function getCalendarCredentials(_ = null, ctx: Ctx) {
   console.log(ctx.session.userId)
   if (!ctx.session?.userId) return null
 

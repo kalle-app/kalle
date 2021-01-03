@@ -6,7 +6,6 @@ import googlequery from "../../mutations/googlequery"
 import getCalendarCredentials from "../queries/getCalendarCredentials"
 import { Button, Row, Col, Form } from "react-bootstrap"
 
-
 function TestFun() {
   const now = new Date()
   const future = new Date(2021, 2)
@@ -14,17 +13,21 @@ function TestFun() {
   const [url] = useQuery(createConnection, undefined)
   return (
     <>
-    <Button variant="primary" href={url}>Click Me</Button>
-      <button onClick={() => invoke(getCalendarCredentials, null)}>Click me</button>
-      <button onClick={() =>  's'}>GDHAsWGD</button>
-      <button onClick={async () => {
-        try{
-        await query({start: now, end: future})}
-        catch (err) {
-          console.log(err)
-        }
-      }
-        }>TestCalendar</button>
+      <Button variant="primary" href={url}>
+        createConnection
+      </Button>
+      <button onClick={() => invoke(getCalendarCredentials, null)}>getCalendarCredentials</button>
+      <button
+        onClick={async () => {
+          try {
+            await query({ start: now, end: future })
+          } catch (err) {
+            console.log(err)
+          }
+        }}
+      >
+        googlequery
+      </button>
     </>
   )
 }

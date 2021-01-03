@@ -1,12 +1,12 @@
-import { ConnectedCalendar } from "@prisma/client"
+import { CalendarCredentials } from "@prisma/client"
 import { Link } from "blitz"
 import { Button, Table } from "react-bootstrap"
 
-interface ConnectedCalendarsProps {
-  calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
+interface CalendarCredentialsProps {
+  calendars: CalendarCredentials[]
 }
 
-const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
+const ConnectedCalendars = (props: CalendarCredentialsProps) => {
   return (
     <Table>
       <thead>

@@ -8,9 +8,12 @@ import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
 import AddCalendarModal from "app/users/components/AddCalendar"
+import getCalendarCredentials from "app/googlecalendar/oauth/queries/getCalendarCredentials"
 
 const CalendarList = () => {
+  // TODO: use CalendarCredentials for CalDav as well
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
+  const [calendarCredentials] = useQuery(getCalendarCredentials, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 
   return (
@@ -22,7 +25,7 @@ const CalendarList = () => {
         subtitle="Add Calendars that you want to connect to Kalle"
       />
       <Suspense fallback="Loading ...">
-        <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
+        <ConnectedCalendars calendars={calendarCredentials ? calendarCredentials : []} />
       </Suspense>
       <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
     </Card>
