@@ -44,11 +44,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }, [slots, setSelectedDay])
 
   if (!meeting) {
-    return <p>Meeting invalid :(</p>
+    return <h2 className="text-center m-5">Meeting invalid :(</h2>
   }
 
   if (!slots) {
-    return <p>No free slots available :(</p>
+    return <h2 className="text-center m-5">No free slots available :(</h2>
   }
 
   if (!selectedDay) {
