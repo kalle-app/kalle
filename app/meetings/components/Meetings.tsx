@@ -1,13 +1,26 @@
-import { Card, Row, Col } from "react-bootstrap"
+import { Card, Row, Col, Button } from "react-bootstrap"
 import type { Meeting } from "db"
-import { Link } from "blitz"
+import { Link, useMutation } from "blitz"
 import { getOrigin } from "utils/generalUtils"
+import deleteMeetingMutation from "../mutations/deleteMeeting"
 
 interface MeetingsProps {
   meetings: Meeting[]
 }
 
 const Meetings = (props: MeetingsProps) => {
+  const [deleteMeeting] = useMutation(deleteMeetingMutation)
+
+  const submitDeletion = async (meetingId: number) => {
+    try {
+      const meeting = await deleteMeeting(meetingId)
+      const index = meetings.findIndex((meeting) => meeting.id === meetingId)
+      meetings.splice(index, 1)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
   const { meetings } = props
   if (meetings.length < 1) {
     return <p>No Meetings available</p>
@@ -80,6 +93,16 @@ const Meetings = (props: MeetingsProps) => {
                 </Link>
               </Col>
             </Row>
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="outline-primary"
+                onClick={() => {
+                  submitDeletion(meeting.id)
+                }}
+              >
+                Delete
+              </Button>
+            </div>
           </Card>
         )
       })}
