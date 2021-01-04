@@ -4,9 +4,14 @@ import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
 import { useRouter, useMutation, useSession, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
+import Skeleton from "react-loading-skeleton"
 
 const Navigation = () => {
-  return useSession() ? <PrivateNavigation /> : <PublicNavigation />
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateNavigation /> : <PublicNavigation />
+  }
+  return <div></div>
 }
 
 const PrivateNavigation = () => {
@@ -70,7 +75,7 @@ const NavBar = () => {
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Suspense fallback={<div></div>}>
+          <Suspense fallback={<Skeleton />}>
             <Navigation />
           </Suspense>
         </Navbar.Collapse>

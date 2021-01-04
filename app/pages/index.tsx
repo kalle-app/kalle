@@ -5,7 +5,11 @@ import Button from "react-bootstrap/Button"
 import { Suspense } from "react"
 
 const Content = () => {
-  return useSession() ? <PrivateContent /> : <PublicContent />
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateContent /> : <PublicContent />
+  }
+  return <div></div>
 }
 
 const PublicContent = () => {
