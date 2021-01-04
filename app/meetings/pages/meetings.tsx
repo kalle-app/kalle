@@ -4,6 +4,7 @@ import React, { Suspense } from "react"
 import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
+import Skeleton from "react-loading-skeleton"
 
 const MeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -16,7 +17,7 @@ const MainContent = () => {
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
-      <Suspense fallback="Loading...">
+      <Suspense fallback={<Skeleton count={5} />}>
         <MeetingsContent />
       </Suspense>
       <Link href="/meeting/create">

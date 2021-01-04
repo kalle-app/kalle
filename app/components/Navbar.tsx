@@ -4,7 +4,6 @@ import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
 import { useRouter, useMutation, useSession, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
-import Skeleton from "react-loading-skeleton"
 
 const Navigation = () => {
   const session = useSession()
@@ -75,7 +74,7 @@ const NavBar = () => {
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Suspense fallback={<Skeleton />}>
+          <Suspense fallback={<div></div>}>
             <Navigation />
           </Suspense>
         </Navbar.Collapse>

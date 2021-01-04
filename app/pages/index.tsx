@@ -3,13 +3,14 @@ import { useSession, BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
 import Button from "react-bootstrap/Button"
 import { Suspense } from "react"
+import Skeleton from "react-loading-skeleton"
 
 const Content = () => {
   const session = useSession()
   if (!session.isLoading) {
     return session.userId ? <PrivateContent /> : <PublicContent />
   }
-  return <div></div>
+  return <Skeleton count={5} />
 }
 
 const PublicContent = () => {
@@ -40,7 +41,7 @@ const PrivateContent = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={5} />}>
       <Content />
     </Suspense>
   )
