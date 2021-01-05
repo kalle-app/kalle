@@ -1,11 +1,16 @@
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import { BlitzPage, Link } from "blitz"
+import { useSession, BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
 import Button from "react-bootstrap/Button"
 import { Suspense } from "react"
+import Skeleton from "react-loading-skeleton"
 
 const Content = () => {
-  return useCurrentUser() ? <PrivateContent /> : <PublicContent />
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateContent /> : <PublicContent />
+  }
+  return <Skeleton count={10} />
 }
 
 const PublicContent = () => {
@@ -36,7 +41,7 @@ const PrivateContent = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <Suspense fallback={<PublicContent />}>
+    <Suspense fallback={<Skeleton count={10} />}>
       <Content />
     </Suspense>
   )

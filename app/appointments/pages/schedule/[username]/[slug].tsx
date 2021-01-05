@@ -10,6 +10,7 @@ import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
+import Skeleton from "react-loading-skeleton"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -52,7 +53,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }
 
   if (!selectedDay) {
-    return <p>Loading...</p>
+    return <Skeleton count={10} />
   }
 
   const onDateChange = (selectedDay: Date | null) => {
@@ -169,11 +170,11 @@ const ScheduleAppointment: BlitzPage = () => {
   const username = useParam("username", "string")
 
   if (!slug || !username) {
-    return <h3>Meeting not found</h3>
+    return <Skeleton count={10} />
   }
 
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <Scheduler meetingSlug={slug} username={username} />
     </Suspense>
   )

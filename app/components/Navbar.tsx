@@ -2,11 +2,15 @@ import React from "react"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
-import { useRouter, useMutation, Link } from "blitz"
+import { useRouter, useMutation, useSession, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
 const Navigation = () => {
-  return useCurrentUser() ? <PrivateNavigation /> : <PublicNavigation />
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateNavigation /> : <PublicNavigation />
+  }
+  return <div></div>
 }
 
 const PrivateNavigation = () => {
@@ -70,7 +74,7 @@ const NavBar = () => {
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Suspense fallback={<PublicNavigation />}>
+          <Suspense fallback={<div></div>}>
             <Navigation />
           </Suspense>
         </Navbar.Collapse>
