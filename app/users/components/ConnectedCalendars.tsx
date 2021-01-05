@@ -20,9 +20,9 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
       <tbody>
         {props.calendars.map((calendarEntry) => (
           <tr key={calendarEntry.id}>
-            <td>{calendarEntry.name}</td>
-            <td>{calendarEntry.type}</td>
-            <td>{calendarEntry.status}</td>
+            <td className="align-middle">{calendarEntry.name}</td>
+            <td className="align-middle">{calendarEntry.type}</td>
+            <td className="align-middle">{calendarEntry.status}</td>
             <td>
               <Link href="/tobeimplemented">
                 <Button variant="link">Edit</Button>
