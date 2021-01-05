@@ -12,6 +12,7 @@ import { Button, Modal } from "react-bootstrap"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
+import Skeleton from "react-loading-skeleton"
 
 enum Steps {
   General,
@@ -143,7 +144,7 @@ const InviteCreationContent = () => {
 
 const Create: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <InviteCreationContent />
     </Suspense>
   )

@@ -17,9 +17,7 @@ const MainContent = () => {
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
-      <Suspense fallback={<Skeleton count={5} />}>
-        <MeetingsContent />
-      </Suspense>
+      <MeetingsContent />
       <Link href="/meeting/create">
         <Button variant="primary" className="m-3">
           Create new Meeting
@@ -31,7 +29,7 @@ const MainContent = () => {
 
 const MyMeetings: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />
     </Suspense>
   )

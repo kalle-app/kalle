@@ -10,7 +10,7 @@ const Content = () => {
   if (!session.isLoading) {
     return session.userId ? <PrivateContent /> : <PublicContent />
   }
-  return <Skeleton count={5} />
+  return <Skeleton count={10} />
 }
 
 const PublicContent = () => {
@@ -41,7 +41,7 @@ const PrivateContent = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <Suspense fallback={<Skeleton count={5} />}>
+    <Suspense fallback={<Skeleton count={10} />}>
       <Content />
     </Suspense>
   )

@@ -6,6 +6,7 @@ import AddSchedule from "../components/schedules/AddScheduleModal"
 import SectionHeader from "app/users/components/SectionHeader"
 import SectionFooter from "app/users/components/SectionFooter"
 import AllSchedules from "../components/schedules/AllSchedules"
+import Skeleton from "react-loading-skeleton"
 
 const MainContent = () => {
   const [modalVisible, showOverlay] = useState(false)
@@ -13,9 +14,7 @@ const MainContent = () => {
     <>
       <Card>
         <SectionHeader title="My Schedules" subtitle="View and Add new Schedule Presets" />
-        <Suspense fallback="Loading ...">
-          <AllSchedules />
-        </Suspense>
+        <AllSchedules />
         <SectionFooter text="Add Schedule" action={() => showOverlay(true)} />
       </Card>
       <AddSchedule show={modalVisible} setVisibility={showOverlay} />
@@ -25,7 +24,7 @@ const MainContent = () => {
 
 const Schedules: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />
     </Suspense>
   )

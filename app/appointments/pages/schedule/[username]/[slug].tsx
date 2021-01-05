@@ -10,6 +10,7 @@ import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
+import Skeleton from "react-loading-skeleton"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -173,7 +174,7 @@ const ScheduleAppointment: BlitzPage = () => {
   }
 
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <Scheduler meetingSlug={slug} username={username} />
     </Suspense>
   )
