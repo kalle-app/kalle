@@ -11,6 +11,7 @@ import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
 import Skeleton from "react-loading-skeleton"
+import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -22,6 +23,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
+  const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
 
@@ -75,6 +77,12 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
 
     const start = selectedTimeSlot.start
+
+    bookAppointment({
+      meetingId: meeting.id,
+      inviteeEmail: email,
+      date: start,
+    })
 
     sendConfirmationMail({
       appointment: {

@@ -267,3 +267,17 @@ export async function getTakenTimeSlots(
 
   return await icsFreeBusyToInternalFreeBusy(response.data.toString())
 }
+
+interface EventDetails {
+  name: string
+  timezone: number
+  start: Date
+  end: Date
+  location: string
+  description: string
+}
+
+export async function createEvent(
+  calendar: CalendarConnectionDetails,
+  eventDetails: EventDetails
+) {}

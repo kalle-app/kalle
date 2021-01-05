@@ -12,8 +12,6 @@ const MeetingsContent = () => {
 }
 
 const MainContent = () => {
-  // display all meetings I invited to as cards here
-  // Customer can click on a meeting and info will be displayed
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
