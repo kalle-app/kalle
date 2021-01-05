@@ -53,7 +53,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }
 
   if (!selectedDay) {
-    return <p>Loading...</p>
+    return <Skeleton count={10} />
   }
 
   const onDateChange = (selectedDay: Date | null) => {
@@ -170,7 +170,7 @@ const ScheduleAppointment: BlitzPage = () => {
   const username = useParam("username", "string")
 
   if (!slug || !username) {
-    return <h3>Meeting not found</h3>
+    return <Skeleton count={10} />
   }
 
   return (
