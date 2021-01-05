@@ -277,7 +277,12 @@ interface EventDetails {
   description: string
 }
 
-export async function createEvent(
-  calendar: CalendarConnectionDetails,
-  eventDetails: EventDetails
-) {}
+export async function createEvent(calendar: CalendarConnectionDetails, eventDetails: EventDetails) {
+  const response = await makeRequestTo(calendar, {
+    headers: {
+      Depth: 1,
+    },
+    method: "PUT",
+    data: ``.trim(),
+  })
+}
