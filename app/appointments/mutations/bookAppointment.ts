@@ -1,5 +1,7 @@
+import { createEvent } from "app/caldav"
 import { Ctx } from "blitz"
 import db from "db"
+import passwordEncryptor from "app/users/password-encryptor"
 
 interface BookingDetails {
   meetingId: number
@@ -27,6 +29,24 @@ export default async function bookAppointmentMutation(bookingDetails: BookingDet
       inviteeEmail: bookingDetails.inviteeEmail,
       date: bookingDetails.date,
     },
+  })
+
+  const meetingOwner = await db.user.findFirst({
+    where: { username: meeting.ownerName },
+  })
+
+  if (!meetingOwner) return null
+
+  const calendar = await db.connectedCalendar.findFirst({
+    where: { ownerId: meetingOwner.id },
+  })
+  if (!calendar) return null
+
+  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+
+  createEvent({
+    url: calendar.caldavAddress,
+    auth: { username: calendar.username, password, digest: true },
   })
 
   return booking

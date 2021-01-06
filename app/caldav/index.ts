@@ -277,12 +277,37 @@ interface EventDetails {
   description: string
 }
 
-export async function createEvent(calendar: CalendarConnectionDetails, eventDetails: EventDetails) {
-  const response = await makeRequestTo(calendar, {
+export async function createEvent(calendar: CalendarConnectionDetails) {
+  const authString = `${calendar.auth.username}:${calendar.auth.password}`
+  console.log(calendar)
+  const res = await urllib.request<Buffer>(calendar.url + "/test1234.ics", {
+    ...(calendar.auth.digest ? { digestAuth: authString } : { auth: authString }),
+    method: "PUT" as any,
     headers: {
       Depth: 1,
-    },
-    method: "PUT",
-    data: ``.trim(),
+    } as any,
+    data: `
+    BEGIN:VCALENDAR
+    VERSION:2.0
+    PRODID:-//ZContent.net//Zap Calendar 1.0//EN
+    CALSCALE:GREGORIAN
+    METHOD:PUBLISH
+    BEGIN:VEVENT
+    SUMMARY:Abraham Lincoln
+    UID:c7614cff-3549-4a00-9152-d25cc1ff077d
+    SEQUENCE:0
+    STATUS:CONFIRMED
+    TRANSP:TRANSPARENT
+    RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=2;BYMONTHDAY=12
+    DTSTART:20080212
+    DTEND:20080213
+    DTSTAMP:20150421T141403
+    CATEGORIES:U.S. Presidents,Civil War People
+    LOCATION:Hodgenville\, Kentucky
+    GEO:37.5739497;-85.7399606
+    DESCRIPTION:Born February 12
+    END:VEVENT
+    END:VCALENDAR`,
   })
+  console.log("a", res.data.toString())
 }
