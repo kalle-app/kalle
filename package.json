@@ -47,6 +47,7 @@
     "hbs": "4.1.1",
     "ics": "2.26.1",
     "lodash": "4.17.20",
+    "moment": "2.29.1",
     "node-fetch": "2.6.1",
     "node-ical": "0.12.3",
     "nodemailer": "6.4.16",
@@ -63,6 +64,7 @@
     "secure-e2ee": "0.2.0",
     "secure-password": "4.0.0",
     "urllib": "2.36.1",
+    "uuid": "8.3.2",
     "zod": "1.11.10"
   },
   "devDependencies": {

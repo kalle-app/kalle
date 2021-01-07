@@ -2,6 +2,7 @@ import { createEvent } from "app/caldav"
 import { Ctx } from "blitz"
 import db from "db"
 import passwordEncryptor from "app/users/password-encryptor"
+import moment from "moment"
 
 interface BookingDetails {
   meetingId: number
@@ -10,7 +11,6 @@ interface BookingDetails {
 }
 
 export default async function bookAppointmentMutation(bookingDetails: BookingDetails, ctx: Ctx) {
-  console.log("ok")
   ctx.session.authorize()
 
   const meeting = await db.meeting.findFirst({
@@ -44,10 +44,22 @@ export default async function bookAppointmentMutation(bookingDetails: BookingDet
 
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
 
-  createEvent({
-    url: calendar.caldavAddress,
-    auth: { username: calendar.username, password, digest: true },
-  })
+  console.log(bookingDetails.date)
+
+  createEvent(
+    {
+      url: calendar.caldavAddress,
+      auth: { username: calendar.username, password, digest: true },
+    },
+    {
+      name: meeting.name,
+      timezone: meeting.timezone,
+      start: bookingDetails.date,
+      end: moment(bookingDetails.date).add(meeting.duration, "m").toDate(),
+      location: meeting.location,
+      description: meeting.description,
+    }
+  )
 
   return booking
 }

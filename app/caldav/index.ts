@@ -1,6 +1,8 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
+import { convertToICSDate } from "../time-utils/format"
+import { v4 as uuidv4 } from "uuid"
 
 function ensureProtocolIsSpecified(url: string) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -25,15 +27,22 @@ async function makeRequestTo(
     data,
     method,
     headers,
-  }: { method: string; data: string; headers: Record<string, string | number> }
+    urlExtension = "",
+  }: {
+    method: string
+    data: string
+    headers: Record<string, string | number>
+    urlExtension?: string
+  }
 ) {
   const authString = `${calendar.auth.username}:${calendar.auth.password}`
-  return await urllib.request<Buffer>(calendar.url, {
+  const res = await urllib.request<Buffer>(calendar.url + "/" + urlExtension, {
     ...(calendar.auth.digest ? { digestAuth: authString } : { auth: authString }),
     method: method as any,
     headers: headers as any,
     data,
   })
+  return res
 }
 
 interface ConnectionDetailsVerificationFailure {
@@ -277,37 +286,31 @@ interface EventDetails {
   description: string
 }
 
-export async function createEvent(calendar: CalendarConnectionDetails) {
-  const authString = `${calendar.auth.username}:${calendar.auth.password}`
-  console.log(calendar)
-  const res = await urllib.request<Buffer>(calendar.url + "/test1234.ics", {
-    ...(calendar.auth.digest ? { digestAuth: authString } : { auth: authString }),
-    method: "PUT" as any,
+export async function createEvent(calendar: CalendarConnectionDetails, eventDetails: EventDetails) {
+  const dateNow = new Date()
+  const uid = uuidv4()
+  const data = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MailClient.VObject/8.0.3385.0
+BEGIN:VEVENT
+UID:${uid}
+DTSTART;TZID=Europe/Berlin:${convertToICSDate(eventDetails.start)}
+DTEND;TZID=Europe/Berlin:${convertToICSDate(eventDetails.end)}
+TRANSP:OPAQUE
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+LAST-MODIFIED:${convertToICSDate(dateNow)}
+DTSTAMP:${convertToICSDate(dateNow)}
+CREATED:${convertToICSDate(dateNow)}
+SUMMARY:${eventDetails.description}
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR`.trim()
+  const response = await makeRequestTo(calendar, {
+    data: data,
+    method: "PUT",
+    urlExtension: uid + ".ics",
     headers: {
       Depth: 1,
-    } as any,
-    data: `
-    BEGIN:VCALENDAR
-    VERSION:2.0
-    PRODID:-//ZContent.net//Zap Calendar 1.0//EN
-    CALSCALE:GREGORIAN
-    METHOD:PUBLISH
-    BEGIN:VEVENT
-    SUMMARY:Abraham Lincoln
-    UID:c7614cff-3549-4a00-9152-d25cc1ff077d
-    SEQUENCE:0
-    STATUS:CONFIRMED
-    TRANSP:TRANSPARENT
-    RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=2;BYMONTHDAY=12
-    DTSTART:20080212
-    DTEND:20080213
-    DTSTAMP:20150421T141403
-    CATEGORIES:U.S. Presidents,Civil War People
-    LOCATION:Hodgenville\, Kentucky
-    GEO:37.5739497;-85.7399606
-    DESCRIPTION:Born February 12
-    END:VEVENT
-    END:VCALENDAR`,
+    },
   })
-  console.log("a", res.data.toString())
 }
