@@ -1,6 +1,7 @@
-import { getTakenTimeSlots, getEvents, verifyConnectionDetails } from "./"
+import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
+import moment from "moment"
 
 describe("caldav stuff", () => {
   let baseUrl: string
@@ -176,6 +177,22 @@ describe("caldav stuff", () => {
         },
       ]
       expect(result).toEqual(expected)
+    })
+  })
+
+  describe("create event", () => {
+    it("basic event", async () => {
+      const date = new Date()
+      const result = await createEvent(getBaikalJohnDoeConnection(), {
+        name: "DummyEvent",
+        timezone: 0,
+        start: date,
+        end: moment(date).add(30, "m").toDate(),
+        location: "Frankfurt",
+        description: "A description",
+      })
+      const expected = []
+      expect(result.res.statusMessage).toEqual("Created")
     })
   })
 })

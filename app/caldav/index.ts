@@ -301,6 +301,7 @@ X-MICROSOFT-CDO-BUSYSTATUS:BUSY
 LAST-MODIFIED:${convertToICSDate(dateNow)}
 DTSTAMP:${convertToICSDate(dateNow)}
 CREATED:${convertToICSDate(dateNow)}
+LOCATION:${eventDetails.location}
 SUMMARY:${eventDetails.description}
 CLASS:PUBLIC
 END:VEVENT
@@ -313,4 +314,5 @@ END:VCALENDAR`.trim()
       Depth: 1,
     },
   })
+  return response
 }
