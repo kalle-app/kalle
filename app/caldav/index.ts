@@ -164,6 +164,7 @@ function isEvent(component: ical.CalendarComponent): component is ical.VEvent {
 
 async function icsEventsToInternalEvents(ics: string): Promise<ExternalEvent[]> {
   const parsed = await ical.async.parseICS(ics)
+  console.log(parsed)
   const icsEvents = Object.values(parsed).filter(isEvent)
   const internalEvents = icsEvents.flatMap((ev): ExternalEvent[] => {
     if (ev.transparency === "TRANSPARENT") {
@@ -292,6 +293,24 @@ export async function createEvent(calendar: CalendarConnectionDetails, eventDeta
   const data = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//MailClient.VObject/8.0.3385.0
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+X-EM-DISPLAYNAME:(UTC+01:00) Amsterdam\, Berlin\, Bern\, Rom\, Stockholm\, Wien
+BEGIN:STANDARD
+TZNAME:Mitteleuropäische Zeit
+DTSTART:00010101T030000
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+END:STANDARD
+BEGIN:DAYLIGHT
+TZNAME:Mitteleuropäische Sommerzeit
+DTSTART:00010101T020000
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+END:DAYLIGHT
+END:VTIMEZONE
 BEGIN:VEVENT
 UID:${uid}
 DTSTART;TZID=Europe/Berlin:${convertToICSDate(eventDetails.start)}
