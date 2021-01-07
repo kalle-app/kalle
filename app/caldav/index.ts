@@ -164,7 +164,6 @@ function isEvent(component: ical.CalendarComponent): component is ical.VEvent {
 
 async function icsEventsToInternalEvents(ics: string): Promise<ExternalEvent[]> {
   const parsed = await ical.async.parseICS(ics)
-  console.log(parsed)
   const icsEvents = Object.values(parsed).filter(isEvent)
   const internalEvents = icsEvents.flatMap((ev): ExternalEvent[] => {
     if (ev.transparency === "TRANSPARENT") {
@@ -321,10 +320,10 @@ LAST-MODIFIED:${convertToICSDate(dateNow)}
 DTSTAMP:${convertToICSDate(dateNow)}
 CREATED:${convertToICSDate(dateNow)}
 LOCATION:${eventDetails.location}
-SUMMARY:${eventDetails.description}
+SUMMARY:${eventDetails.name}
 CLASS:PUBLIC
 END:VEVENT
-END:VCALENDAR`.trim()
+END:VCALENDAR\r\n`
   const response = await makeRequestTo(calendar, {
     data: data,
     method: "PUT",

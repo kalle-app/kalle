@@ -193,18 +193,21 @@ describe("caldav stuff", () => {
       })
       expect(result.res.statusMessage).toEqual("Created")
 
-      /*const events = await getEvents(
+      const events = await getEvents(
         getBaikalJohnDoeConnection(),
         date,
         moment(date).add(30, "m").toDate()
       )
+
+      date.setSeconds(0)
+      date.setMilliseconds(0)
 
       const expected = {
         title: "DummyEvent",
         start: date,
         end: moment(date).add(30, "m").toDate(),
       }
-      expect(events).toContain(expected) */
+      expect(events).toContainEqual(expected)
     })
   })
 })
