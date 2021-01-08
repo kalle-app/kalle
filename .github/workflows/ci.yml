@@ -33,13 +33,16 @@ jobs:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
       - name: Start services for E2E test
         run: docker-compose up -d
+      - name: Migrate Database
+        run: npx prisma migrate deploy --preview-feature
+      - name: Seed Database
+        run: npm run db:seed
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
           install: false
           record: true
           env: host=localhost,port=3000
-          build: npx prisma migrate deploy --preview-feature && npm run db:seed
           start: npx blitz start --production --port 3000
           wait-on: "http://localhost:3000"
         env:
