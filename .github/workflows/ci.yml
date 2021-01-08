@@ -33,6 +33,8 @@ jobs:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
       - name: Start services for E2E test
         run: docker-compose up -d
+      - name: Wait for Postgres to startup
+        run: sleep 5s
       - name: Migrate Database
         run: npx prisma migrate deploy --preview-feature
       - name: Seed Database
