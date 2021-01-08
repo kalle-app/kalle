@@ -39,7 +39,7 @@
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
     "@prisma/client": "2.13.0",
-    "blitz": "0.25.0",
+    "blitz": "0.28.0",
     "bootstrap": "4.5.3",
     "email-templates": "8.0.0",
     "final-form": "4.20.1",
