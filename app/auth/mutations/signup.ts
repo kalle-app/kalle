@@ -8,18 +8,29 @@ export default async function signup(input: SignupInputType, ctx: Ctx) {
   const { name, username, email, password } = SignupInput.parse(input)
 
   const hashedPassword = await hashPassword(password)
-  const user = await db.user.create({
-    data: {
-      name: name,
-      username: username,
-      email: email.toLowerCase(),
-      hashedPassword,
-      role: "user",
-    },
-    select: { id: true, name: true, email: true, role: true },
-  })
 
-  await ctx.session!.create({ userId: user.id, roles: [user.role] })
+  try {
+    const user = await db.user.create({
+      data: {
+        name: name,
+        username: username,
+        email: email.toLowerCase(),
+        hashedPassword,
+        role: "user",
+      },
+      select: { id: true, name: true, email: true, role: true },
+    })
 
-  return user
+    await ctx.session!.create({ userId: user.id, roles: [user.role] })
+
+    return user
+  } catch (error) {
+    if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+      throw new Error("email_already_used")
+    } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
+      throw new Error("username_already_used")
+    } else {
+      throw error
+    }
+  }
 }
