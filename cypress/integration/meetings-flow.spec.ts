@@ -59,6 +59,8 @@ it("Meetings Flow", () => {
 
     cy.log(newestMail)
 
+    expect(newestMail).to.exist
+
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
       "New appointment: My Test Meeting - 10:30, 23.11.2020 mit john.doe"
     )

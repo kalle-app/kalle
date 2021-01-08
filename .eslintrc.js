@@ -17,4 +17,12 @@ module.exports = {
     "jsx-a11y/anchor-is-valid": "off", //Doesn't play well with Blitz/Next <Link> usage
     "jsx-a11y/no-onchange": "warn",
   },
+  overrides: [
+    {
+      files: ["*.test.[jt]s", "*.spec.[jt]s"],
+      rules: {
+        "@typescript-eslint/no-unused-expressions": "off",
+      },
+    },
+  ],
 }
