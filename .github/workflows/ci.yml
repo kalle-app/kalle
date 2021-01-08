@@ -39,7 +39,7 @@ jobs:
           install: false
           record: true
           env: host=localhost,port=3000
-          build: npm run db:seed
+          build: npx prisma migrate reset --preview-feature && npm run db:seed
           start: npx blitz start --production --port 3000
           wait-on: "http://localhost:3000"
         env:
