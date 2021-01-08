@@ -187,7 +187,5 @@ migration ..20201220131846-added-dailyschedules
 +  owner User @relation(fields: [ownerId], references: [id])
 +  ownerId Int
 +}
-+  
++
 ```
-
-

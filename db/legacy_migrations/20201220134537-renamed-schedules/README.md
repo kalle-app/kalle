@@ -35,5 +35,3 @@ migration 20201220131846-added-dailyschedules..20201220134537-renamed-schedules
    ownerId Int
  }
 ```
-
-
