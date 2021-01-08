@@ -2,7 +2,13 @@ module.exports = {
   env: {
     es2020: true,
   },
-  extends: ["react-app", "plugin:jsx-a11y/recommended"],
+  extends: [
+    "react-app",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
+    "prettier/react",
+    "prettier/babel",
+  ],
   plugins: ["jsx-a11y"],
   rules: {
     "import/no-anonymous-default-export": "error",

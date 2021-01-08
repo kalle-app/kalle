@@ -1,41 +1,35 @@
-import { Slot } from "../types"
+import { areDatesOnSameDay } from "app/time-utils/comparison"
+import { TimeSlot } from "../types"
 import SingleTimeSlot from "./singleTimeSlot"
 
 interface AvailableSlotsProps {
-  slots: Slot[]
-  selectedDay: Date
-  setSelectedTimeSlot: any
-  selectedTimeSlot: any
+  slots: TimeSlot[]
+  selectedDay?: Date
+  setSelectedTimeSlot(v: TimeSlot): void
+  selectedTimeSlot?: TimeSlot
 }
 
 const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
-  const getTimeString = (date) => {
-    return ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
-  }
-
-  const timeSlotTiles = props.slots.map((slot, index) => {
-    if (
-      props.selectedDay.getDate() === slot.start.getDate() &&
-      props.selectedDay.getFullYear() === slot.start.getFullYear()
-    ) {
-      return (
-        <SingleTimeSlot
-          key={index}
-          start={getTimeString(slot.start)}
-          end={getTimeString(slot.end)}
-          selectedTimeSlot={props.selectedTimeSlot}
-          setSelectedTimeSlot={props.setSelectedTimeSlot}
-        />
-      )
-    } else {
-      return <div></div>
-    }
-  })
+  const { slots, selectedDay } = props
+  const selectedSlots = selectedDay
+    ? slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay))
+    : []
 
   return (
-    <div className="flex-col w-full">
-      <p>Please select a time slot.</p>
-      {timeSlotTiles}
+    <div className="text-center">
+      <p className="mb-4">Please select a time slot.</p>
+      <ul>
+        {selectedSlots.map((slot, index) => (
+          <li key={index} className="w-full d-flex justify-content-center">
+            <SingleTimeSlot
+              start={slot.start}
+              end={slot.end}
+              selectedTimeSlot={props.selectedTimeSlot}
+              setSelectedTimeSlot={props.setSelectedTimeSlot}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

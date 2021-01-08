@@ -3,7 +3,7 @@ CREATE TABLE "User" (
 "id" SERIAL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "hashedPassword" TEXT,
     "role" TEXT NOT NULL DEFAULT E'user',
@@ -33,7 +33,7 @@ CREATE TABLE "ConnectedCalendar" (
     "name" TEXT NOT NULL,
     "caldavAddress" TEXT NOT NULL,
     "username" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "encryptedPassword" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
     "status" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -52,6 +52,7 @@ CREATE TABLE "Meeting" (
     "timezone" INTEGER NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "endDate" TIMESTAMP(3) NOT NULL,
+    "location" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );

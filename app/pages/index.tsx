@@ -1,17 +1,49 @@
-import { BlitzPage, Link } from "blitz"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
+import { useSession, BlitzPage, Link } from "blitz"
 import Layout from "app/layouts/Layout"
-import { PrimaryLink } from "app/components/Links"
+import Button from "react-bootstrap/Button"
+import { Suspense } from "react"
+import Skeleton from "react-loading-skeleton"
+
+const Content = () => {
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateContent /> : <PublicContent />
+  }
+  return <Skeleton count={10} />
+}
+
+const PublicContent = () => {
+  return (
+    <main className="text-center">
+      <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
+      <Link href="/signup">
+        <Button variant="primary" className="m-1" size="lg">
+          Sign up
+        </Button>
+      </Link>
+    </main>
+  )
+}
+
+const PrivateContent = () => {
+  return (
+    <main className="text-center">
+      <h2 className="p-4">Welcome to Kalle!</h2>
+      <Link href="/settings">
+        <Button variant="primary" className="m-1" size="lg">
+          Connect a Calendar!
+        </Button>
+      </Link>
+    </main>
+  )
+}
 
 const Home: BlitzPage = () => {
   return (
-    <div className="container flex flex-col items-center">
-      <h1 className="flex-grow-0 mt-20 mb-10 text-4xl font-serif">
-        Haven't used Kalle to manage your Meetings?
-      </h1>
-      <Link href="/signup">
-        <PrimaryLink className="flex-grow-0 text-2xl">Sign up</PrimaryLink>
-      </Link>
-    </div>
+    <Suspense fallback={<Skeleton count={10} />}>
+      <Content />
+    </Suspense>
   )
 }
 

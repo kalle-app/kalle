@@ -9,7 +9,13 @@ module.exports = {
   testEnvironment: "jest-environment-jsdom-fourteen",
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
-  testPathIgnorePatterns: ["/node_modules/", "/.blitz/", "/.next/", "<rootDir>/db/migrations"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.blitz/",
+    "/.next/",
+    "<rootDir>/db/migrations",
+    "/cypress/",
+  ],
   transformIgnorePatterns: ["[/\\\\]node_modules[/\\\\].+\\.(ts|tsx)$"],
   transform: {
     "^.+\\.(ts|tsx)$": "babel-jest",
@@ -24,6 +30,7 @@ module.exports = {
     "\\.(gif|ttf|eot|svg|png|jpg|jpeg)$": "<rootDir>/test/__mocks__/fileMock.js",
   },
   watchPlugins: ["jest-watch-typeahead/filename", "jest-watch-typeahead/testname"],
+  watchPathIgnorePatterns: ["node_modules"],
   // Coverage output
   coverageDirectory: ".coverage",
   collectCoverageFrom: ["**/*.{js,jsx,ts,tsx}", "!**/*.d.ts", "!**/node_modules/**"],

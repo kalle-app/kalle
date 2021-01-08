@@ -16,7 +16,8 @@ model User {
   id             Int       @default(autoincrement()) @id
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  name           String?
+  name           String
+  username       String    @unique
   email          String    @unique
   hashedPassword String?
   role           String    @default("user")
@@ -47,7 +48,7 @@ model ConnectedCalendar {
   name String
   caldavAddress String
   username String
-  password String
+  encryptedPassword String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   status ConnectedCalendarStatus
@@ -58,14 +59,16 @@ model Meeting {
   id  Int @id @default(autoincrement())
   name String
   link String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  owner User @relation(fields: [ownerName], references: [username])
+  ownerName String
   description String
   duration Int
   timezone Int
   startDate DateTime
   endDate DateTime
-  schedule DailySchedule[]
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int
+  location String
 }
 
 model DailySchedule {
@@ -73,7 +76,15 @@ model DailySchedule {
     day String
     startTime String
     endTime String
-    meeting Meeting @relation(fields: [meetingId], references: [id])
-    meetingId Int
+    schedule Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId Int
 }
 
+model Schedule {
+  id Int @id @default(autoincrement())
+  name String
+  dailySchedules DailySchedule[]
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+  

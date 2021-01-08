@@ -17,3 +17,9 @@ services:
     volumes:
       - ./test/baikal/Specific:/var/www/baikal/Specific
       - ./test/baikal/config:/var/www/baikal/config
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025

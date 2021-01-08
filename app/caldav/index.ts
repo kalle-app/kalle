@@ -1,7 +1,6 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
-import { callbackPromise } from "nodemailer/lib/shared"
 
 function ensureProtocolIsSpecified(url: string) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -140,7 +139,7 @@ export async function verifyConnectionDetails(
   }
 }
 
-interface ExternalEvent {
+export interface ExternalEvent {
   title?: string
   start: Date
   end: Date
