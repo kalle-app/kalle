@@ -1,4 +1,7 @@
+import {useQuery, invoke} from "blitz"
+import getConnectedCalendars from "./getConnectedCalendars"
 import { getTakenTimeSlots } from "app/caldav"
+import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
 import passwordEncryptor from "app/users/password-encryptor"
 import db, { DailySchedule } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
@@ -27,9 +30,11 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
   if (!meetingOwner) return null
 
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meetingOwner.id },
-  })
+  // const calendar = await db.connectedCalendar.findFirst({
+  //   where: { ownerId: meetingOwner.id },
+  // })
+
+  const [calendar] = await getConnectedCalendars(meetingOwner.id);
   if (!calendar) return null
 
   const schedule = meeting.schedule.dailySchedules.reduce((res: Schedule, item: DailySchedule) => {
@@ -39,17 +44,21 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     }
     return res
   }, {})
+  console.log(meeting.startDate);
+  let takenTimeSlots = await getFreeBusySchedule({start: meeting.startDate, end: meeting.endDate}, meetingOwner.id)
+  console.log("tts: ", takenTimeSlots)
+  //mappen
 
-  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
-
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  //const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+  //let takenTimeSlots = invoke(getFreeBusySchedule())
+  // let takenTimeSlots = await getTakenTimeSlots(
+  //   {
+  //     url: calendar.caldavAddress,
+  //     auth: { username: calendar.username, password, digest: true },
+  //   },
+  //   meeting.startDate,
+  //   meeting.endDate
+  // )
 
   const between = {
     start: meeting.startDate,

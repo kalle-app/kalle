@@ -1,26 +1,15 @@
 import { google } from "googleapis"
 import { Ctx, useQuery } from "blitz"
-import { GoogleClient } from "../helpers/GoogleClient"
-import getCalendarCredentials from "../oauth/queries/getCalendarCredentials"
-import { invoke } from "blitz"
+import GoogleClient from "./GoogleClient"
 interface DateRange {
     start: Date,
     end: Date
 }
 
-export default async function googlequery({start, end}: DateRange, ctx: Ctx) {
-    console.log(ctx)
+export default async function googlequery({start, end}: DateRange) {
+
     const auth = GoogleClient.Connection;
     const calendar = google.calendar({version: 'v3', auth});
-    //const [query] = useQuery(getCalendarCredentials, null)
-    //console.log("query: ", query)
-    const credentials:any = await invoke(getCalendarCredentials, ctx)
-    console.log("FInish")
-    console.log(credentials)
-    GoogleClient.Connection.setCredentials({
-        refresh_token: credentials[0].credentials.refresh_token
-    });
-    
     const calendars = await calendar.calendarList.list({
         "minAccessRole": "owner"
       })  

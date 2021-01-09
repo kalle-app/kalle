@@ -1,7 +1,7 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
+import { BlitzPage, useQuery, useParam, useMutation, invoke } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
@@ -9,7 +9,9 @@ import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import createCalendarEvent from "../../../../googlecalendar/queries/createCalendarEvent"
 import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
+import getUserByName from "../../../../users/queries/getUserByName"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -23,6 +25,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
+  const [user] = useQuery(getUserByName, username)
 
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
 
@@ -74,25 +77,28 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
 
     const start = selectedTimeSlot.start
-
-    sendConfirmationMail({
-      appointment: {
-        start,
-        durationInMilliseconds: meeting.duration * 60 * 1000,
-        title: meeting.name,
-        description: meeting.description ? meeting.description : "Description",
-        method: "request",
-        location: "Berlin",
-        url: "www.kalle.app",
-        organiser: {
-          name: username,
-          email: "info@kalle.app",
-        },
-        owner: {
-          name: email.split("@")[0],
-          email: email,
-        },
+    const appointment = {
+      start,
+      durationInMilliseconds: meeting.duration * 60 * 1000,
+      title: meeting.name,
+      description: meeting.description ? meeting.description : "Description",
+      method: "request",
+      location: "Berlin",
+      url: "www.kalle.app",
+      organiser: {
+        name: username,
+        email: "info@kalle.app",
       },
+      owner: {
+        name: email.split("@")[0],
+        email: email,
+      },
+    }
+    if (!user) return null
+    invoke(createCalendarEvent, {appointment: appointment, userId: user.id}).then(()=>console.log("BLABLA"))
+    
+    sendConfirmationMail({
+      appointment: appointment,
     })
   }
 

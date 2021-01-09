@@ -1,6 +1,6 @@
 import { google } from "googleapis"
 
-export class GoogleClient {
+export default class GoogleClient {
   private static _connection: any
   private constructor() {}
 
@@ -15,5 +15,9 @@ export class GoogleClient {
         "http://127.0.0.1:3000/oauth2Callback"
       ))
     )
+  }
+
+  public static Calendar() {
+    //return google.calendar({version: 'v3', ()});
   }
 }

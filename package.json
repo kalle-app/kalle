@@ -42,6 +42,7 @@
     "@prisma/client": "2.12.0",
     "blitz": "0.25.0",
     "bootstrap": "4.5.3",
+    "child_process": "1.0.2",
     "email-templates": "8.0.0",
     "final-form": "4.20.1",
     "googleapis": "66.0.0",
