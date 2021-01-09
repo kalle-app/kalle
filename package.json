@@ -49,6 +49,7 @@
     "lodash": "4.17.20",
     "node-fetch": "2.6.1",
     "node-ical": "0.12.3",
+    "node-sass": "4.14.1",
     "nodemailer": "6.4.16",
     "pug": "3.0.0",
     "react": "0.0.0-experimental-7f28234f8",

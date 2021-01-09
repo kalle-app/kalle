@@ -58,7 +58,7 @@ const PublicNavigation = () => {
 
 const NavBar = () => {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar style={{ boxShadow: "5px 5px 5px rgba(218, 71, 31, 0.3)" }} bg="white" expand="lg">
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>
@@ -69,7 +69,7 @@ const NavBar = () => {
               height="30"
               className="d-inline-block align-top"
             />{" "}
-            Kalle
+            kalle.app
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
