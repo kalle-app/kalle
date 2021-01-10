@@ -9,6 +9,8 @@ import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
 import AddCalendarModal from "app/users/components/AddCalendar"
 import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
@@ -52,6 +54,10 @@ const SettingsContent = () => {
 }
 
 const Settings: BlitzPage = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <SettingsContent />

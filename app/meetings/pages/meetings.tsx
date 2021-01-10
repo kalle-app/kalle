@@ -5,6 +5,8 @@ import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const MeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -28,6 +30,9 @@ const MainContent = () => {
 }
 
 const MyMeetings: BlitzPage = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />

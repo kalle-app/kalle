@@ -13,6 +13,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 enum Steps {
   General,
@@ -143,6 +145,9 @@ const InviteCreationContent = () => {
 }
 
 const Create: BlitzPage = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <InviteCreationContent />
