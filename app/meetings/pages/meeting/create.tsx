@@ -13,6 +13,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 enum Steps {
   General,
@@ -72,6 +74,10 @@ const InviteCreationContent = () => {
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
+
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
 
   const submitMeeting = async () => {
     try {
