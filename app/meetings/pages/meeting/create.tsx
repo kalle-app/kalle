@@ -75,6 +75,10 @@ const InviteCreationContent = () => {
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
 
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
@@ -145,9 +149,6 @@ const InviteCreationContent = () => {
 }
 
 const Create: BlitzPage = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <InviteCreationContent />

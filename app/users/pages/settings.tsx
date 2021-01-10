@@ -45,6 +45,10 @@ const PersonalInformation = () => {
 }
 
 const SettingsContent = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   return (
     <>
       <CalendarList />
@@ -54,10 +58,6 @@ const SettingsContent = () => {
 }
 
 const Settings: BlitzPage = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
-
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <SettingsContent />

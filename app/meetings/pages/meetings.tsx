@@ -14,6 +14,10 @@ const MeetingsContent = () => {
 }
 
 const MainContent = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   // display all meetings I invited to as cards here
   // Customer can click on a meeting and info will be displayed
   return (
@@ -30,9 +34,6 @@ const MainContent = () => {
 }
 
 const MyMeetings: BlitzPage = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />

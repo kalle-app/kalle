@@ -12,6 +12,10 @@ import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const MainContent = () => {
   const [modalVisible, showOverlay] = useState(false)
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   return (
     <>
       <Card>
@@ -25,9 +29,6 @@ const MainContent = () => {
 }
 
 const Schedules: BlitzPage = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />
