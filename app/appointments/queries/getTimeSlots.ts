@@ -1,6 +1,6 @@
-import { getTakenTimeSlots } from "app/caldav"
+import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
-import db, { DailySchedule } from "db"
+import db, { ConnectedCalendar, DailySchedule } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
   scheduleToTakenSlots,
@@ -27,11 +27,6 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
   if (!meetingOwner) return null
 
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meetingOwner.id },
-  })
-  if (!calendar) return null
-
   const schedule = meeting.schedule.dailySchedules.reduce((res: Schedule, item: DailySchedule) => {
     res[Days[item.day]] = {
       start: timeStringToPartialTime(item.startTime),
@@ -40,16 +35,27 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     return res
   }, {})
 
-  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+  const calendars = await db.connectedCalendar.findMany({
+    where: { ownerId: meetingOwner.id },
+  })
 
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  if (!calendars || calendars.length < 1) return null
+
+  let takenTimeSlots: ExternalEvent[] = []
+
+  calendars.forEach(async (calendar: ConnectedCalendar) => {
+    const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+    const newSlots = await getTakenTimeSlots(
+      {
+        url: calendar.caldavAddress,
+        auth: { username: calendar.username, password, digest: true },
+      },
+      meeting.startDate,
+      meeting.endDate
+    )
+
+    takenTimeSlots.push(...newSlots)
+  })
 
   const between = {
     start: meeting.startDate,
