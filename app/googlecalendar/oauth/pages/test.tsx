@@ -10,7 +10,7 @@ import createCalendarEvent from "../../queries/createCalendarEvent"
 
 function TestFun() {
   const now = new Date()
-  const future = new Date(2021, 2)
+  const future = new Date(2021, 0, 26)
   const [url] = useQuery(createConnection, undefined)
   return (
     <>
@@ -30,7 +30,7 @@ function TestFun() {
 
         sgooglequery
       </button>
-      <Button onClick= {() => invoke(getFreeBusySchedule, { start: now, end: future })}>dGet Free Busy </Button>
+      <Button onClick= {async () => console.log(await invoke(getFreeBusySchedule, { start: now, end: future, userId:1 }))}>dGet Free Busy </Button>
       <Button onClick= {() => invoke(createCalendarEvent, null)}>post event  </Button>
     </>
   )
