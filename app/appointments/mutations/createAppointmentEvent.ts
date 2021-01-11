@@ -50,7 +50,7 @@ export default async function createAppointmentEventMutation(
 
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
 
-  createEvent(
+  const calDavResponse = await createEvent(
     {
       url: calendar.caldavAddress,
       auth: { username: calendar.username, password, digest: true },
@@ -64,6 +64,10 @@ export default async function createAppointmentEventMutation(
       description: meeting.description,
     }
   )
+
+  if (calDavResponse != "Created") {
+    throw new Error("An error occured: Event could not be added to calendar :(")
+  }
 
   return booking
 }

@@ -313,5 +313,5 @@ END:VCALENDAR\r\n`
       Depth: 1,
     },
   })
-  return response
+  return response.res.statusMessage
 }
