@@ -1,7 +1,6 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
-import { convertToICSDate } from "../time-utils/format"
 import { v4 as uuidv4 } from "uuid"
 
 function ensureProtocolIsSpecified(url: string) {
@@ -294,13 +293,13 @@ VERSION:2.0
 PRODID:-//MailClient.VObject/8.0.3385.0
 BEGIN:VEVENT
 UID:${uid}
-DTSTART;TZID=Europe/Berlin:${convertToICSDate(eventDetails.start)}
-DTEND;TZID=Europe/Berlin:${convertToICSDate(eventDetails.end)}
+DTSTART;TZID=Europe/Berlin:${formatDateString(eventDetails.start)}
+DTEND;TZID=Europe/Berlin:${formatDateString(eventDetails.end)}
 TRANSP:OPAQUE
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
-LAST-MODIFIED:${convertToICSDate(dateNow)}
-DTSTAMP:${convertToICSDate(dateNow)}
-CREATED:${convertToICSDate(dateNow)}
+LAST-MODIFIED:${formatDateString(dateNow)}
+DTSTAMP:${formatDateString(dateNow)}
+CREATED:${formatDateString(dateNow)}
 LOCATION:${eventDetails.location}
 SUMMARY:${eventDetails.name}
 CLASS:PUBLIC

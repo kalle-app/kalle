@@ -199,7 +199,6 @@ describe("caldav stuff", () => {
         moment(date).add(30, "m").toDate()
       )
 
-      date.setSeconds(0)
       date.setMilliseconds(0)
 
       const expected = {
