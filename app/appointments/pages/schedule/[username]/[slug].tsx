@@ -9,7 +9,6 @@ import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
-import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
 import Skeleton from "react-loading-skeleton"
 import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 
@@ -22,7 +21,6 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [meeting] = useQuery(getMeeting, { username: username, slug: meetingSlug })
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
-  const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
@@ -65,7 +63,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!selectedTimeSlot) {
       alert("No timeslot selected")
       return
@@ -76,32 +74,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       return
     }
 
-    const start = selectedTimeSlot.start
-
-    bookAppointment({
-      meetingId: meeting.id,
+    await bookAppointment({
+      meeting: meeting,
+      meetingOwnerName: username,
       inviteeEmail: email,
-      date: start,
-    })
-
-    sendConfirmationMail({
-      appointment: {
-        start,
-        durationInMilliseconds: meeting.duration * 60 * 1000,
-        title: meeting.name,
-        description: meeting.description ? meeting.description : "Description",
-        method: "request",
-        location: "Berlin",
-        url: "www.kalle.app",
-        organiser: {
-          name: username,
-          email: "info@kalle.app",
-        },
-        owner: {
-          name: email.split("@")[0],
-          email: email,
-        },
-      },
+      startDate: selectedTimeSlot.start,
     })
   }
 

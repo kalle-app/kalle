@@ -1,7 +1,7 @@
 import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
-import moment from "moment"
+import { addMinutes } from "date-fns"
 
 describe("caldav stuff", () => {
   let baseUrl: string
@@ -187,24 +187,20 @@ describe("caldav stuff", () => {
         name: "DummyEvent",
         timezone: 0,
         start: date,
-        end: moment(date).add(30, "m").toDate(),
+        end: addMinutes(date, 30),
         location: "Frankfurt",
         description: "A description",
       })
       expect(result.res.statusMessage).toEqual("Created")
 
-      const events = await getEvents(
-        getBaikalJohnDoeConnection(),
-        date,
-        moment(date).add(30, "m").toDate()
-      )
+      const events = await getEvents(getBaikalJohnDoeConnection(), date, addMinutes(date, 30))
 
       date.setMilliseconds(0)
 
       const expected = {
         title: "DummyEvent",
         start: date,
-        end: moment(date).add(30, "m").toDate(),
+        end: addMinutes(date, 30),
       }
       expect(events).toContainEqual(expected)
     })
