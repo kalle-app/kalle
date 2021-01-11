@@ -15,10 +15,24 @@ export default async function bookAppointmentMutation(bookingDetails: BookingDet
 
   const meeting = await db.meeting.findFirst({
     where: { id: bookingDetails.meetingId },
+    include: {
+      owner: {
+        include: { calendars: true },
+      },
+    },
   })
 
   if (!meeting) {
     throw new Error("An error occured: Meeting does not exist.")
+  }
+
+  if (!meeting.owner) {
+    throw new Error("An error occured: Meetingowner does not exist")
+  }
+
+  const calendar = meeting?.owner.calendars[0]
+  if (!calendar) {
+    throw new Error("An error occured: Calendar does not exist")
   }
 
   const booking = await db.booking.create({
@@ -31,20 +45,7 @@ export default async function bookAppointmentMutation(bookingDetails: BookingDet
     },
   })
 
-  const meetingOwner = await db.user.findFirst({
-    where: { username: meeting.ownerName },
-  })
-
-  if (!meetingOwner) return null
-
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meetingOwner.id },
-  })
-  if (!calendar) return null
-
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
-
-  console.log(bookingDetails.date)
 
   createEvent(
     {

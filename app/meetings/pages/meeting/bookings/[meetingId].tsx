@@ -12,7 +12,6 @@ interface BookingsProps {
 
 const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) => {
   const [bookings] = useQuery(getBookings, meetingId)
-  console.log(bookings)
   if (!bookings || bookings.length < 1) {
     return <p>No Bookings yet</p>
   }
