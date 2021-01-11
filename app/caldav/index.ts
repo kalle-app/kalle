@@ -1,7 +1,6 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
-import { convertToICSDate } from "../time-utils/format"
 import { v4 as uuidv4 } from "uuid"
 
 function ensureProtocolIsSpecified(url: string) {
@@ -154,7 +153,7 @@ export interface ExternalEvent {
   end: Date
 }
 
-function formatDateString(date: Date) {
+function formatDateAsICS(date: Date) {
   return date.toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z"
 }
 
@@ -200,8 +199,8 @@ export async function getEvents(calendar: CalendarConnectionDetails, start: Date
           <c:comp-filter name="VCALENDAR">
             <c:comp-filter name="VEVENT">
               <c:time-range
-                start="${formatDateString(start)}"
-                end="${formatDateString(end)}"
+                start="${formatDateAsICS(start)}"
+                end="${formatDateAsICS(end)}"
               />
             </c:comp-filter>
           </c:comp-filter>
@@ -268,8 +267,8 @@ export async function getTakenTimeSlots(
       <?xml version="1.0"?>
       <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
         <c:time-range
-          start="${formatDateString(start)}"
-          end="${formatDateString(end)}"
+          start="${formatDateAsICS(start)}"
+          end="${formatDateAsICS(end)}"
         />
       </c:free-busy-query>`.trim(),
   })
@@ -294,13 +293,13 @@ VERSION:2.0
 PRODID:-//MailClient.VObject/8.0.3385.0
 BEGIN:VEVENT
 UID:${uid}
-DTSTART;TZID=Europe/Berlin:${convertToICSDate(eventDetails.start)}
-DTEND;TZID=Europe/Berlin:${convertToICSDate(eventDetails.end)}
+DTSTART;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.start)}
+DTEND;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.end)}
 TRANSP:OPAQUE
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
-LAST-MODIFIED:${convertToICSDate(dateNow)}
-DTSTAMP:${convertToICSDate(dateNow)}
-CREATED:${convertToICSDate(dateNow)}
+LAST-MODIFIED:${formatDateAsICS(dateNow)}
+DTSTAMP:${formatDateAsICS(dateNow)}
+CREATED:${formatDateAsICS(dateNow)}
 LOCATION:${eventDetails.location}
 SUMMARY:${eventDetails.name}
 CLASS:PUBLIC

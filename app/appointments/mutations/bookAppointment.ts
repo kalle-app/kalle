@@ -53,7 +53,7 @@ export default async function bookAppointmentMutation(bookingDetails: BookingDet
       auth: { username: calendar.username, password, digest: true },
     },
     {
-      name: meeting.name + "with" + bookingDetails.inviteeEmail,
+      name: `${meeting.name} with ${bookingDetails.inviteeEmail}`,
       timezone: meeting.timezone,
       start: bookingDetails.date,
       end: moment(bookingDetails.date).add(meeting.duration, "m").toDate(),
