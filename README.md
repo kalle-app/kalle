@@ -4,7 +4,7 @@
 
 ## Overview
 
-Kalle is a **Appointment scheduling tool** that allows you took schedule an appointment with customers, collegues or friends within seconds. We support self hosted CalDav based calendars and solutions such as authenticating your google-calendar.
+Kalle is a **Appointment scheduling tool** that allows you to schedule an appointment with customers, collegues or friends within seconds. We support self hosted CalDav based calendars and solutions such as authenticating your google-calendar.
 
 Kalle is a modern webapp that is built with [Blitz.js](https://github.com/blitz-js/blitz) a fullstack react framework, made to boost productivity.
 A hosted version can be found at [**Kalle.app**](https://www.kalle.app/)
