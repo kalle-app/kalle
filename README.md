@@ -50,6 +50,8 @@ A hosted version can be found at [**Kalle.app**](https://www.kalle.app/)
 
 Follow these steps for a development environment:
 
+Make sure you have [Docker](https://docs.docker.com/get-docker/) installed on your system and have got the appropiate rights set. Then run the following command:
+
 ```
 npm install
 ```
