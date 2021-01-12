@@ -17,7 +17,6 @@ const MainContent = () => {
   if (!useCurrentUser()) {
     return <AuthError />
   }
-  
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
