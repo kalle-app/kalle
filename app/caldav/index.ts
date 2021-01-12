@@ -313,5 +313,5 @@ END:VCALENDAR\r\n`
       Depth: 1,
     },
   })
-  return response.res.statusMessage
+  return response.res.statusMessage === "Created" ? "success" : "failure"
 }
