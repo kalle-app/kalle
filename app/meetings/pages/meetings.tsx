@@ -5,6 +5,8 @@ import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const MeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -12,6 +14,10 @@ const MeetingsContent = () => {
 }
 
 const MainContent = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+  
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
