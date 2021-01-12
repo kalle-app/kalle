@@ -1,6 +1,7 @@
 import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
+import { v4 as uuidv4 } from "uuid"
 
 function ensureProtocolIsSpecified(url: string) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -25,15 +26,22 @@ async function makeRequestTo(
     data,
     method,
     headers,
-  }: { method: string; data: string; headers: Record<string, string | number> }
+    urlExtension = "",
+  }: {
+    method: string
+    data: string
+    headers: Record<string, string | number>
+    urlExtension?: string
+  }
 ) {
   const authString = `${calendar.auth.username}:${calendar.auth.password}`
-  return await urllib.request<Buffer>(calendar.url, {
+  const res = await urllib.request<Buffer>(calendar.url + "/" + urlExtension, {
     ...(calendar.auth.digest ? { digestAuth: authString } : { auth: authString }),
     method: method as any,
     headers: headers as any,
     data,
   })
+  return res
 }
 
 interface ConnectionDetailsVerificationFailure {
@@ -145,7 +153,7 @@ export interface ExternalEvent {
   end: Date
 }
 
-function formatDateString(date: Date) {
+function formatDateAsICS(date: Date) {
   return date.toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z"
 }
 
@@ -191,8 +199,8 @@ export async function getEvents(calendar: CalendarConnectionDetails, start: Date
           <c:comp-filter name="VCALENDAR">
             <c:comp-filter name="VEVENT">
               <c:time-range
-                start="${formatDateString(start)}"
-                end="${formatDateString(end)}"
+                start="${formatDateAsICS(start)}"
+                end="${formatDateAsICS(end)}"
               />
             </c:comp-filter>
           </c:comp-filter>
@@ -259,11 +267,51 @@ export async function getTakenTimeSlots(
       <?xml version="1.0"?>
       <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
         <c:time-range
-          start="${formatDateString(start)}"
-          end="${formatDateString(end)}"
+          start="${formatDateAsICS(start)}"
+          end="${formatDateAsICS(end)}"
         />
       </c:free-busy-query>`.trim(),
   })
 
   return await icsFreeBusyToInternalFreeBusy(response.data.toString())
+}
+
+interface EventDetails {
+  name: string
+  timezone: number
+  start: Date
+  end: Date
+  location: string
+  description: string
+}
+
+export async function createEvent(calendar: CalendarConnectionDetails, eventDetails: EventDetails) {
+  const dateNow = new Date()
+  const uid = uuidv4()
+  const data = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MailClient.VObject/8.0.3385.0
+BEGIN:VEVENT
+UID:${uid}
+DTSTART;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.start)}
+DTEND;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.end)}
+TRANSP:OPAQUE
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+LAST-MODIFIED:${formatDateAsICS(dateNow)}
+DTSTAMP:${formatDateAsICS(dateNow)}
+CREATED:${formatDateAsICS(dateNow)}
+LOCATION:${eventDetails.location}
+SUMMARY:${eventDetails.name}
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR\r\n`
+  const response = await makeRequestTo(calendar, {
+    data: data,
+    method: "PUT",
+    urlExtension: uid + ".ics",
+    headers: {
+      Depth: 1,
+    },
+  })
+  return response.res.statusMessage === "Created" ? "success" : "failure"
 }

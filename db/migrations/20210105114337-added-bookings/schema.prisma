@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -65,7 +65,6 @@ model Meeting {
   schedule Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int
   location String
-  bookings Booking[]
 }
 
 model DailySchedule {
