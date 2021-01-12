@@ -191,7 +191,7 @@ describe("caldav stuff", () => {
         location: "Frankfurt",
         description: "A description",
       })
-      expect(result).toEqual("Created")
+      expect(result).toEqual("success")
 
       const events = await getEvents(getBaikalJohnDoeConnection(), date, addMinutes(date, 30))
 
