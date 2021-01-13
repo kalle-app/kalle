@@ -50,7 +50,7 @@ it("Meetings Flow", () => {
 
   cy.contains("Submit!").click()
 
-  cy.wait(500)
+  cy.wait(1000)
 
   cy.request("http://localhost:8025/api/v2/messages").then((response) => {
     const {
