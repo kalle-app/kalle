@@ -39,6 +39,8 @@ jobs:
         run: npx prisma migrate deploy --preview-feature
       - name: Seed Database
         run: npm run db:seed
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
