@@ -39,22 +39,13 @@ model Session {
   privateData        String?
 }
 
-model CalendarCredentials {
-  id  Int @id @default(autoincrement())
-  name String
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  status String
-  type String
-  credentials Json
-}
-
 model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
-  caldavAddress String
-  username String
-  encryptedPassword String
+  caldavAddress String?
+  username String?
+  encryptedPassword String?
+  refreshToken String?
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   status String

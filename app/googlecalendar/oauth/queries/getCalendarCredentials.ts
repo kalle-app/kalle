@@ -1,7 +1,7 @@
 import db from "db"
 
 export default async function getCalendarCredentials(userId: number) {
-  const calendars = await db.calendarCredentials.findMany({
+  const calendars = await db.connectedCalendar.findMany({
     where: { ownerId: userId },
   })
   return calendars

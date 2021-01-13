@@ -2,7 +2,6 @@ import { BlitzPage, invoke, useQuery } from "blitz"
 import { Suspense } from "react"
 import Layout from "app/layouts/Layout"
 import createConnection from "../queries/createConnection"
-import googlequery from "../../helpers/googlequery"
 import getCalendarCredentials from "../queries/getCalendarCredentials"
 import { Button, Row, Col, Form } from "react-bootstrap"
 import getFreeBusySchedule from "../../queries/getFreeBusySchedule"
@@ -27,11 +26,16 @@ function TestFun() {
           }
         }}
       >
-
         sgooglequery
       </button>
-      <Button onClick= {async () => console.log(await invoke(getFreeBusySchedule, { start: now, end: future, userId:1 }))}>dGet Free Busy </Button>
-      <Button onClick= {() => invoke(createCalendarEvent, null)}>post event  </Button>
+      <Button
+        onClick={async () =>
+          console.log(await invoke(getFreeBusySchedule, { start: now, end: future, userId: 1 }))
+        }
+      >
+        dGet Free Busy{" "}
+      </Button>
+      <Button onClick={() => invoke(createCalendarEvent, null)}>post event </Button>
     </>
   )
 }

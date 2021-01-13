@@ -6,6 +6,7 @@ export default async function createCalendarCredentials(
   { name, status, type, credentials }: GoogleCalenderCredentials,
   ctx: Ctx
 ) {
+  console.log("GOT HERE")
   if (!ctx.session?.userId) return null
 
   const owner = await db.user.findFirst({
@@ -14,7 +15,7 @@ export default async function createCalendarCredentials(
 
   if (!owner) return null
 
-  const createdCalendarCredentials = await db.calendarCredentials.create({
+  const createdCalendarCredentials = await db.connectedCalendar.create({
     data: {
       name: name,
       owner: {
@@ -22,7 +23,7 @@ export default async function createCalendarCredentials(
       },
       status: status,
       type: type,
-      credentials: credentials,
+      refreshToken: credentials.refresh_token,
     },
   })
 

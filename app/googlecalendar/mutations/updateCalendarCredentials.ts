@@ -4,15 +4,15 @@ import { Ctx } from "blitz"
 
 export default async function updateCredentials(input: GoogleCalenderCredentials, ctx: Ctx) {
   const user = ctx.session?.userId
-  if (!user) return null;
-  
-  db.calendarCredentials.update({
+  if (!user) return null
+
+  db.connectedCalendar.update({
     data: {
-        credentials: input.credentials
+      refreshToken: input.credentials.refresh_token,
     },
     where: {
-        id: user
-    }
-})
+      id: user,
+    },
+  })
   return user
 }
