@@ -82,6 +82,16 @@ CREATE TABLE "Schedule" (
     PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Booking" (
+"id" SERIAL,
+    "meetingId" INTEGER NOT NULL,
+    "inviteeEmail" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User.username_unique" ON "User"("username");
 
@@ -108,3 +118,6 @@ ALTER TABLE "DailySchedule" ADD FOREIGN KEY("scheduleId")REFERENCES "Schedule"("
 
 -- AddForeignKey
 ALTER TABLE "Schedule" ADD FOREIGN KEY("ownerId")REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Booking" ADD FOREIGN KEY("meetingId")REFERENCES "Meeting"("id") ON DELETE CASCADE ON UPDATE CASCADE;
