@@ -9,7 +9,7 @@ Kalle is a **Appointment scheduling tool** that allows you to schedule an appoin
 Kalle is a modern webapp that is built with [Blitz.js](https://github.com/blitz-js/blitz) a fullstack react framework, made to boost productivity.
 A hosted version can be found at [**Kalle.app**](https://www.kalle.app/)
 
-*This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner Institute*
+_This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner Institute_
 
 ## Features
 
@@ -69,8 +69,9 @@ SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
 SMTP_HOST="Insert HOST_Name of SMTP-Server"
 MODE="DEVELOPMENT"
 ```
+
 When mode !== development mails will be sent!
 
 ### Running the Application
 
-Running ```npm run start``` will startup a server which can be reached over the specified url :)
+Running `npm run start` will startup a server which can be reached over the specified url :)
