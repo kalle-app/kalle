@@ -1,0 +1,16 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteModel",
+      "model": "CalendarCredentials"
+    },
+    {
+      "tag": "CreateField",
+      "model": "ConnectedCalendar",
+      "field": "refreshToken",
+      "type": "String",
+      "arity": "Required"
+    }
+  ]
+}
