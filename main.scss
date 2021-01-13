@@ -1,0 +1,19 @@
+/*! `Custom` Bootstrap 4 theme */
+
+@import url(https://fonts.googleapis.com/css?family=Quicksand:200,300,400,700);
+$headings-font-family: Quicksand;
+$enable-grid-classes: false;
+$primary: #ff550b;
+$secondary: #303030;
+$success: #015668;
+$danger: #ff304f;
+$info: #0f81c7;
+$warning: #0de2ea;
+$light: #e8e8e8;
+$dark: #000000;
+$enable-gradients: false;
+$spacer: 1rem;
+$border-width: 1px;
+$btn-border-radius: 0.25rem;
+@import "node_modules/bootstrap/scss/bootstrap";
+// Add SASS theme customizations here..
