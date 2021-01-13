@@ -51,3 +51,9 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SESSION_SECRET_KEY: supersecretsessionsecretkeywhichisatleast32byteslong
+          SMTP_HOST: localhost
+          SMTP_PORT: 1025
+          SMTP_USER: ignored
+          SMTP_PASSWORD: ignored
+          EMAIL_FROM: local-dev@kalle.app
+          MODE: test
