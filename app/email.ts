@@ -21,7 +21,7 @@ export const getEmailService = singleton(() => {
       from: process.env.EMAIL_FROM,
     },
     transport: transporter,
-    send: process.env.MODE !== "development",
+    preview: false,
     views: {
       options: {
         extension: "hbs",
