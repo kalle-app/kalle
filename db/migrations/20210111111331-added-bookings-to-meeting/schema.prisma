@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -39,10 +39,6 @@ model Session {
   privateData        String?
 }
 
-enum ConnectedCalendarStatus {
-  active
-}
-
 model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
@@ -51,7 +47,7 @@ model ConnectedCalendar {
   encryptedPassword String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
-  status ConnectedCalendarStatus
+  status String
   type String
 }
 

@@ -94,8 +94,12 @@ const Meetings = (props: MeetingsProps) => {
               </Col>
             </Row>
             <div className="d-flex justify-content-end">
+              <Link href={"/meeting/bookings/" + meeting.id}>
+                <Button variant="outline-primary">View Bookings</Button>
+              </Link>
               <Button
-                variant="outline-primary"
+                className="ml-3"
+                variant="outline-danger"
                 onClick={() => {
                   submitDeletion(meeting.id)
                 }}
