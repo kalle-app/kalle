@@ -4,8 +4,8 @@ export default async function getConnectedCalendars(userId: number) {
   // const calendars = await db.connectedCalendar.findMany({
   //   where: { ownerId: calendarOwner.id },
   // })
-  const calendars = await db.calendarCredentials.findMany({
-    where: { ownerId: userId }
+  const calendars = await db.connectedCalendar.findMany({
+    where: { ownerId: userId },
   })
 
   return calendars

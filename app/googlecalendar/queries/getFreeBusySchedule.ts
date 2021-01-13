@@ -2,6 +2,10 @@ import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 import GoogleClient from "../helpers/GoogleClient"
 import { google } from "googleapis"
 
+interface DateTimeString {
+  start: string
+  end: string
+}
 interface DateTime {
   start: Date
   end: Date
@@ -40,13 +44,14 @@ export default async function getFreeBusySchedule({ start, end, userId }: Props)
     .query({
       requestBody: body,
     })
-    .then((res: any) => {
-      var final_array: DateTime[] = []
+    .then((res) => {
+      var rawFreeBusy: DateTimeString[] = []
+      console.log(res.data.calendars)
       for (var key in res.data.calendars) {
-        final_array.push(...res.data.calendars[key].busy)
+        res.data.calendars[key].busy?.forEach((el: DateTimeString) => rawFreeBusy.push(el))
       }
+      const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
 
-      const result: DateTimeUnix[] = mergeArr(convertToUnix(final_array))
       return convertToTimeStamp(result)
     })
     .catch((_) => {
@@ -95,8 +100,8 @@ function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   })
 }
 
-function convertToUnix(arr: DateTime[]): DateTimeUnix[] {
-  return arr.map((el: DateTime) => {
+function convertToUnix(arr: DateTimeString[]): DateTimeUnix[] {
+  return arr.map((el: DateTimeString) => {
     return {
       start: new Date(el.start).getTime() / 1000,
       end: new Date(el.end).getTime() / 1000,

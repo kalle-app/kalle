@@ -1,10 +1,8 @@
 import { google } from "googleapis"
 
 export default class GoogleClient {
-  private static _connection: any
+  private static _connection
   private constructor() {}
-
-  testFunction(): void {}
 
   public static get Connection() {
     return (
@@ -15,9 +13,5 @@ export default class GoogleClient {
         "http://localhost:3000/oauth2Callback"
       ))
     )
-  }
-
-  public static Calendar() {
-    //return google.calendar({version: 'v3', ()});
   }
 }

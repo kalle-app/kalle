@@ -1,6 +1,14 @@
 import db from "db"
-import { GoogleCalenderCredentials } from "app/googlecalendar/validations"
 import { Ctx } from "blitz"
+interface GoogleCalenderCredentials {
+  name: string
+  status: string
+  type: string
+  credentials: {
+    access_token: string
+    refresh_token: string
+  }
+}
 
 export default async function createCalendarCredentials(
   { name, status, type, credentials }: GoogleCalenderCredentials,
@@ -15,7 +23,7 @@ export default async function createCalendarCredentials(
 
   if (!owner) return null
 
-  const createdCalendarCredentials = await db.connectedCalendar.create({
+  return await db.connectedCalendar.create({
     data: {
       name: name,
       owner: {
@@ -26,6 +34,4 @@ export default async function createCalendarCredentials(
       refreshToken: credentials.refresh_token,
     },
   })
-
-  return createdCalendarCredentials
 }

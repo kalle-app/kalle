@@ -3,14 +3,16 @@ import { Suspense } from "react"
 import Layout from "app/layouts/Layout"
 import postOAuthToken from "../queries/postOAuthToken"
 import createCalendarCredentials from "app/googlecalendar/mutations/createCalendarCredentials"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button, Form } from "react-bootstrap"
 
 interface credentials {
   access_token: string
   refresh_token: string
 }
-
+/**
+ * This gets a code as a query parameter. This code needs to be sent to googleapi which returns a refresh_token. The refresh_tokem is used to generate a session_access_token.
+ */
 function OAuthCallbackPage() {
   const [isError, setIsError] = useState(false)
   const [isCalenderAdded, setIsCalenderAdded] = useState(false)
@@ -23,9 +25,10 @@ function OAuthCallbackPage() {
     try {
       if (!code || Array.isArray(code))
         return <p>Google Authentication failed with Code {code}. Please try again.</p>
+
       return postOAuthToken(code)
         .then(({ access_token, refresh_token }: credentials) => {
-          let x = postCredentials({
+          postCredentials({
             credentials: { access_token, refresh_token },
             name: calendarName,
             status: "Active",
@@ -61,7 +64,7 @@ function OAuthCallbackPage() {
               <Form.Control
                 type="email"
                 placeholder="Enter a name you'd like for your calendar"
-                onChange={(event) => setCalendarName(event?.target.value)}
+                onChange={(event) => setCalendarName(event.target.value)}
               />
               <Form.Text className="text-muted">
                 This name helps you to recognize the calendar. For example "Private" or "My project

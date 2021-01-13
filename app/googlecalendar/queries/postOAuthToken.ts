@@ -1,4 +1,4 @@
-import GoogleClient from "../../helpers/GoogleClient"
+import GoogleClient from "../helpers/GoogleClient"
 
 export default async function postOAuthToken(code: string) {
   const oauth2Client = GoogleClient.Connection

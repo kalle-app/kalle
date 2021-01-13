@@ -4,8 +4,8 @@ import Layout from "app/layouts/Layout"
 import createConnection from "../queries/createConnection"
 import getCalendarCredentials from "../queries/getCalendarCredentials"
 import { Button, Row, Col, Form } from "react-bootstrap"
-import getFreeBusySchedule from "../../queries/getFreeBusySchedule"
-import createCalendarEvent from "../../queries/createCalendarEvent"
+import getFreeBusySchedule from "../queries/getFreeBusySchedule"
+import createCalendarEvent from "../queries/createCalendarEvent"
 
 function TestFun() {
   const now = new Date()
