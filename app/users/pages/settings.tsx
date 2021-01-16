@@ -25,7 +25,11 @@ const CalendarList = () => {
       <Suspense fallback="Loading ...">
         <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
       </Suspense>
-      <SectionFooter text="Add Calendar" action={() => setShowAddCalendarModal(true)} />
+      <SectionFooter
+        id="addcalendar"
+        text="Add Calendar"
+        action={() => setShowAddCalendarModal(true)}
+      />
     </Card>
   )
 }
@@ -35,7 +39,7 @@ const PersonalInformation = () => {
     <Card className="mt-4">
       <SectionHeader title="Personal Information" subtitle="Change your account information here" />
       <UserDataForm />
-      <SectionFooter text="Update" action={() => alert("Test")} />
+      <SectionFooter id="update" text="Update" action={() => alert("Test")} />
     </Card>
   )
 }
