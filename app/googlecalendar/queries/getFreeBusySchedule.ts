@@ -1,6 +1,7 @@
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 import GoogleClient from "../helpers/GoogleClient"
 import { google } from "googleapis"
+import { ExternalEvent } from "app/caldav"
 
 interface DateTimeString {
   start: string
@@ -52,7 +53,7 @@ export default async function getFreeBusySchedule({ start, end, userId }: Props)
       }
       const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
 
-      return convertToTimeStamp(result)
+      return convertToExternalEvent(result)
     })
     .catch((_) => {
       "could not get freebusy"
@@ -108,7 +109,8 @@ function convertToUnix(arr: DateTimeString[]): DateTimeUnix[] {
     }
   })
 }
-function convertToTimeStamp(arr: DateTimeUnix[]): DateTime[] {
+
+function convertToExternalEvent(arr: DateTimeUnix[]): ExternalEvent[] {
   return arr.map((el: DateTimeUnix) => {
     return {
       start: new Date(el.start * 1000),
