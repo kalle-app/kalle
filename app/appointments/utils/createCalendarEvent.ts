@@ -2,10 +2,10 @@ import * as ics from "ics"
 import { Appointment } from "../types"
 
 function durationToIcsDurationObject(duration: number): ics.DurationObject {
-  const durationInMinutes = duration / (60 * 10000)
+  const durationInMinutes = duration / (60 * 1000)
   return {
     hours: Math.floor(durationInMinutes / 60),
-    minutes: Math.floor(durationInMinutes % 60),
+    minutes: durationInMinutes % 60,
   }
 }
 
