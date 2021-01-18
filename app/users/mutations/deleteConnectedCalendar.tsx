@@ -8,5 +8,5 @@ export default async function deleteConnectedCalendar(calendarId: number, ctx: C
     where: { id: calendarId, ownerId: ctx.session.userId },
   })
 
-  return count
+  return count === 1 ? "success" : "not_found"
 }
