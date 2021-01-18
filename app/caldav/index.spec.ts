@@ -3,45 +3,72 @@ import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
 
-function test(calendarBackend: "Baikal" | "Nextcloud") {
+async function getBaikalContainer() {
+  return new GenericContainer("ckulka/baikal", "nginx")
+    .withExposedPorts(80)
+    .withBindMount(
+      path.join(__dirname, "../../test/baikal/Specific"),
+      "/var/www/baikal/Specific",
+      "rw"
+    )
+    .withBindMount(path.join(__dirname, "../../test/baikal/config"), "/var/www/baikal/config", "rw")
+}
+
+async function getNextcloudContainer() {
+  const image = await GenericContainer.fromDockerfile(
+    path.resolve(__dirname, "../../test/nextcloud")
+  ).build()
+
+  return image.withExposedPorts(80)
+}
+
+type Backends = "Baikal" | "Nextcloud"
+
+function test(calendarBackend: Backends) {
+  function switchByCalendar<T>(values: Record<Backends, T>): T {
+    return values[calendarBackend]
+  }
+
   describe("caldav stuff > " + calendarBackend, () => {
     let baseUrl: string
 
-    let baikalContainer: StartedTestContainer
+    let calendarBackend: StartedTestContainer
 
     beforeAll(async () => {
       jest.setTimeout(60 * 1000)
 
-      baikalContainer = await new GenericContainer("ckulka/baikal", "nginx")
-        .withExposedPorts(80)
-        .withBindMount(
-          path.join(__dirname, "../../test/baikal/Specific"),
-          "/var/www/baikal/Specific",
-          "rw"
-        )
-        .withBindMount(
-          path.join(__dirname, "../../test/baikal/config"),
-          "/var/www/baikal/config",
-          "rw"
-        )
-        .start()
+      const calendarBackendContainer = await switchByCalendar({
+        Baikal: getBaikalContainer,
+        Nextcloud: getNextcloudContainer,
+      })()
+      calendarBackend = await calendarBackendContainer.start()
 
-      baseUrl = `http://${baikalContainer.getHost()}:${baikalContainer.getMappedPort(80)}`
+      baseUrl = `http://${calendarBackend.getHost()}:${calendarBackend.getMappedPort(80)}`
     })
 
     afterAll(async () => {
-      await baikalContainer.stop()
+      await calendarBackend.stop()
     })
 
     function getBaikalJohnDoeConnection() {
-      return {
-        url: baseUrl + "/dav.php/calendars/john.doe/test",
-        auth: {
-          username: "john.doe",
-          password: "root",
-          digest: true,
+      return switchByCalendar({
+        Baikal: {
+          url: baseUrl + "/dav.php/calendars/john.doe/test",
+          auth: {
+            username: "john.doe",
+            password: "root",
+            digest: true,
+          },
         },
-      }
+        Nextcloud: {
+          url: baseUrl + "/remote.php/dav/principals/users/admin/",
+          auth: {
+            username: "admin",
+            password: "root",
+            digest: true,
+          },
+        },
+      })
     }
 
     describe("auth test", () => {
