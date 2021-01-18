@@ -2,6 +2,7 @@ import Button from "react-bootstrap/Button"
 
 interface SectionFooterProps {
   text: string
+  variant: string
   action(): void
   id?: string
 }
@@ -9,7 +10,7 @@ interface SectionFooterProps {
 const SectionFooter = (props: SectionFooterProps) => {
   return (
     <div className="p-3 d-flex justify-content-end">
-      <Button variant="primary" onClick={props.action} id={props.id}>
+      <Button variant={props.variant} onClick={props.action} id={props.id}>
         {props.text}
       </Button>
     </div>

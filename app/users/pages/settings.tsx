@@ -28,6 +28,7 @@ const CalendarList = () => {
       <SectionFooter
         id="add-calendar-button"
         text="Add Calendar"
+        variant="primary"
         action={() => setShowAddCalendarModal(true)}
       />
     </Card>
@@ -39,7 +40,16 @@ const PersonalInformation = () => {
     <Card className="mt-4">
       <SectionHeader title="Personal Information" subtitle="Change your account information here" />
       <UserDataForm />
-      <SectionFooter text="Update" action={() => alert("Test")} />
+      <SectionFooter text="Update Information" variant="primary" action={() => alert("Test")} />
+    </Card>
+  )
+}
+
+const DangerZone = () => {
+  return (
+    <Card className="mt-4">
+      <SectionHeader title="Danger Zone" subtitle="Delete your account and all associated data" />
+      <SectionFooter text="Delete your Account" variant="danger" action={() => alert("Test")} />
     </Card>
   )
 }
@@ -53,6 +63,7 @@ const SettingsContent = () => {
     <>
       <CalendarList />
       <PersonalInformation />
+      <DangerZone />
     </>
   )
 }
