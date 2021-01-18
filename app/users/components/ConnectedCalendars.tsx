@@ -1,12 +1,25 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { Link } from "blitz"
+import { useMutation } from "blitz"
 import { Button, Table } from "react-bootstrap"
+import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
 }
 
 const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
+  const [deleteCalendar] = useMutation(deleteConnectedCalendar)
+
+  const submitDeletion = async (calendarId: number) => {
+    try {
+      const calendar = await deleteCalendar(calendarId)
+      const index = props.calendars.findIndex((calendarEntry) => calendarEntry.id === calendarId)
+      props.calendars.splice(index, 1)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
   return (
     <Table>
       <thead>
@@ -24,9 +37,9 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
             <td className="align-middle">{calendarEntry.type}</td>
             <td className="align-middle">{calendarEntry.status}</td>
             <td>
-              <Link href="/tobeimplemented">
-                <Button variant="link">Edit</Button>
-              </Link>
+              <Button variant="link" onClick={() => submitDeletion(calendarEntry.id)}>
+                Delete
+              </Button>
             </td>
           </tr>
         ))}
