@@ -50,7 +50,7 @@ function test(calendarBackend: Backends) {
       await calendarBackend.stop()
     })
 
-    function getBaikalJohnDoeConnection() {
+    function getCalendarConnection() {
       return switchByCalendar({
         Baikal: {
           url: baseUrl + "/dav.php/calendars/john.doe/test",
@@ -153,7 +153,7 @@ function test(calendarBackend: Backends) {
     describe("freeBusy", () => {
       it("without events", async () => {
         const result = await getTakenTimeSlots(
-          getBaikalJohnDoeConnection(),
+          getCalendarConnection(),
           new Date("2020-11-16T00:00:00.000Z"),
           new Date("2020-11-21T00:00:00.000Z")
         )
@@ -162,7 +162,7 @@ function test(calendarBackend: Backends) {
       })
       it("with events", async () => {
         const result = await getTakenTimeSlots(
-          getBaikalJohnDoeConnection(),
+          getCalendarConnection(),
           new Date("2020-11-23T00:00:00.000Z"),
           new Date("2020-11-28T00:00:00.000Z")
         )
@@ -187,7 +187,7 @@ function test(calendarBackend: Backends) {
     describe("events", () => {
       it("without events", async () => {
         const result = await getEvents(
-          getBaikalJohnDoeConnection(),
+          getCalendarConnection(),
           new Date("2020-11-16T00:00:00.000Z"),
           new Date("2020-11-21T00:00:00.000Z")
         )
@@ -196,7 +196,7 @@ function test(calendarBackend: Backends) {
       })
       it("with events", async () => {
         const result = await getEvents(
-          getBaikalJohnDoeConnection(),
+          getCalendarConnection(),
           new Date("2020-11-23T00:00:00.000Z"),
           new Date("2020-11-28T00:00:00.000Z")
         )
@@ -224,7 +224,7 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        const result = await createEvent(getBaikalJohnDoeConnection(), {
+        const result = await createEvent(getCalendarConnection(), {
           name: "DummyEvent",
           timezone: 0,
           start: date,
@@ -234,7 +234,7 @@ function test(calendarBackend: Backends) {
         })
         expect(result).toEqual("success")
 
-        const events = await getEvents(getBaikalJohnDoeConnection(), date, addMinutes(date, 30))
+        const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))
 
         date.setMilliseconds(0)
 
