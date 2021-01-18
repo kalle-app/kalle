@@ -4,9 +4,9 @@ import { Ctx } from "blitz"
 export default async function deleteConnectedCalendar(calendarId: number, ctx: Ctx) {
   ctx.session.authorize()
 
-  const count = await db.connectedCalendar.deleteMany({
+  const result = await db.connectedCalendar.deleteMany({
     where: { id: calendarId, ownerId: ctx.session.userId },
   })
 
-  return count === 1 ? "success" : "not_found"
+  return result.count === 1 ? "success" : "error"
 }
