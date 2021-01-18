@@ -1,0 +1,3 @@
+FROM nextcloud:18.0.3
+
+RUN SQLITE_DATABASE=/db.sqlite NEXTCLOUD_UPDATE=1 NEXTCLOUD_ADMIN_USER=admin NEXTCLOUD_ADMIN_PASSWORD=root /entrypoint.sh echo "done"
