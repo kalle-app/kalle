@@ -1,8 +1,9 @@
 import { Card, Row, Col, Button } from "react-bootstrap"
 import type { Meeting } from "db"
-import { Link, useMutation } from "blitz"
+import { Link, useMutation, invalidateQuery } from "blitz"
 import { getOrigin } from "utils/generalUtils"
 import deleteMeetingMutation from "../mutations/deleteMeeting"
+import getMeetings from "../queries/getMeetings"
 
 interface MeetingsProps {
   meetings: Meeting[]
@@ -12,13 +13,8 @@ const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
 
   const submitDeletion = async (meetingId: number) => {
-    try {
-      const meeting = await deleteMeeting(meetingId)
-      const index = meetings.findIndex((meeting) => meeting.id === meetingId)
-      meetings.splice(index, 1)
-    } catch (error) {
-      alert(error)
-    }
+    const meeting = await deleteMeeting(meetingId)
+    invalidateQuery(getMeetings)
   }
 
   const { meetings } = props
