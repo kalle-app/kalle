@@ -16,7 +16,11 @@ const MainContent = () => {
         <Suspense fallback="Loading ...">
           <AllSchedules />
         </Suspense>
-        <SectionFooter text="Add Schedule" action={() => showOverlay(true)} />
+        <SectionFooter
+          id="add-schedule-footer"
+          text="Add Schedule"
+          action={() => showOverlay(true)}
+        />
       </Card>
       <AddSchedule show={modalVisible} setVisibility={showOverlay} />
     </>

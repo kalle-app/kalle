@@ -1,12 +1,18 @@
-import { CalendarCredentials } from "@prisma/client"
 import { Link } from "blitz"
 import { Button, Table } from "react-bootstrap"
 
-interface CalendarCredentialsProps {
-  calendars: CalendarCredentials[]
+interface CalendarCredentialsOverviewProps {
+  calendars: CalendarCredentialsOverview[]
 }
 
-const ConnectedCalendars = (props: CalendarCredentialsProps) => {
+interface CalendarCredentialsOverview {
+  id: number
+  name: string
+  type: string
+  status: string | null
+}
+
+const ConnectedCalendars = (props: CalendarCredentialsOverviewProps) => {
   return (
     <Table>
       <thead>

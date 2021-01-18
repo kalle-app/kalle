@@ -12,7 +12,6 @@ describe("A Google Calendar", () => {
   })
   it("offers link to Google login ", () => {
     cy.contains("Go to Google Login")
-    // cy.url().should("include", "accounts.google")
     cy.clearCookies()
   })
 })
