@@ -61,11 +61,11 @@ function test(calendarBackend: Backends) {
           },
         },
         Nextcloud: {
-          url: baseUrl + "/remote.php/dav/principals/users/admin/",
+          url: "http://localhost:5080" + "/remote.php/dav/calendars/admin/personal",
           auth: {
             username: "admin",
             password: "root",
-            digest: true,
+            digest: false,
           },
         },
       })
@@ -74,13 +74,13 @@ function test(calendarBackend: Backends) {
     describe("auth test", () => {
       describe("when given invalid credentials", () => {
         it("returns unauthorized", async () => {
-          await expect(
-            verifyConnectionDetails(
-              baseUrl + "/dav.php/calendars/john.doe/test",
-              "john.doe",
-              "wrong-password"
-            )
-          ).resolves.toEqual({ fail: "unauthorized" })
+          const {
+            url,
+            auth: { username },
+          } = getCalendarConnection()
+          await expect(verifyConnectionDetails(url, username, "wrong-password")).resolves.toEqual({
+            fail: "unauthorized",
+          })
         })
       })
 
@@ -105,7 +105,7 @@ function test(calendarBackend: Backends) {
       describe.skip("when given valid webdav url, but not a calendar resource", () => {
         it("returns the normalised caldav base URL", async () => {
           await expect(
-            verifyConnectionDetails(baseUrl + "/dav.php/john.doe", "john.doe", "root")
+            verifyConnectionDetails(baseUrl + "/dav.php/john.doe", "john.doe", "root", true)
           ).resolves.toEqual({
             fail: null,
             caldavBaseUrl: "http://localhost:5232/dav.php/calendars/john.doe/test",
@@ -115,12 +115,12 @@ function test(calendarBackend: Backends) {
 
       describe("when given an url without a protocol", () => {
         it("assumes https and fails b/c Baikal doesnt support it", async () => {
+          const {
+            url,
+            auth: { username, password },
+          } = getCalendarConnection()
           await expect(
-            verifyConnectionDetails(
-              baseUrl.replace("http://", "") + "/dav.php/john.doe",
-              "john.doe",
-              "root"
-            )
+            verifyConnectionDetails(url.replace("http://", ""), username, password)
           ).resolves.toEqual({
             fail: "wrong_protocol",
           })
@@ -129,20 +129,18 @@ function test(calendarBackend: Backends) {
 
       describe("when given valid details", () => {
         it("returns the connection details including the correct auth method", async () => {
-          await expect(
-            verifyConnectionDetails(
-              baseUrl + "/dav.php/calendars/john.doe/test",
-              "john.doe",
-              "root"
-            )
-          ).resolves.toEqual({
+          const {
+            auth: { username, password },
+            url,
+          } = getCalendarConnection()
+          await expect(verifyConnectionDetails(url, username, password, true)).resolves.toEqual({
             fail: null,
             connectionDetails: {
-              url: baseUrl + "/dav.php/calendars/john.doe/test",
+              url,
               auth: {
-                username: "john.doe",
-                password: "root",
-                digest: true,
+                username: username,
+                password: password,
+                digest: switchByCalendar({ Nextcloud: false, Baikal: true }),
               },
             },
           })

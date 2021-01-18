@@ -70,7 +70,8 @@ interface ConnectionVerificationSuccess {
 export async function verifyConnectionDetails(
   url: string,
   username: string,
-  password: string
+  password: string,
+  dangerouslyAllowInsecureHttp = false
 ): Promise<ConnectionVerificationSuccess | ConnectionDetailsVerificationFailure> {
   try {
     url = ensureProtocolIsSpecified(url)
@@ -101,7 +102,10 @@ export async function verifyConnectionDetails(
 
     let digest = true
     let response = await checkConnectionWith("digest auth")
-    if (response === "unauthorized" && url.startsWith("https://")) {
+    if (
+      response === "unauthorized" &&
+      (dangerouslyAllowInsecureHttp || url.startsWith("https://"))
+    ) {
       digest = false
       response = await checkConnectionWith("basic auth")
     }
