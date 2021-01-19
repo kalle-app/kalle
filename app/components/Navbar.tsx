@@ -58,7 +58,7 @@ const PublicNavigation = () => {
 
 const NavBar = () => {
   return (
-    <Navbar style={{ boxShadow: "5px 5px 5px rgba(218, 71, 31, 0.3)" }} bg="white" expand="lg">
+    <Navbar style={{ boxShadow: "0px 2px 4px rgba(218, 71, 31, 0.3)" }} bg="white" expand="lg">
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>
