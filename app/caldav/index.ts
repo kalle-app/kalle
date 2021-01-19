@@ -46,6 +46,7 @@ async function makeRequestTo(
 
 interface ConnectionDetailsVerificationFailure {
   fail: "unauthorized" | "other" | "wrong_url" | "wrong_protocol" | "no_caldav_support"
+  error?: any
 }
 
 interface ConnectionVerificationSuccess {
@@ -147,7 +148,7 @@ export async function verifyConnectionDetails(
       return { fail: "wrong_protocol" }
     }
 
-    return { fail: "other" }
+    return { fail: "other", error }
   }
 }
 
