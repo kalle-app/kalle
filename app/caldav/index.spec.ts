@@ -61,7 +61,7 @@ function test(calendarBackend: Backends) {
           },
         },
         Nextcloud: {
-          url: "http://localhost:5080" + "/remote.php/dav/calendars/admin/personal",
+          url: baseUrl + "/remote.php/dav/calendars/admin/personal",
           auth: {
             username: "admin",
             password: "root",
