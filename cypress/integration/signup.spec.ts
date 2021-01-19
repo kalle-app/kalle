@@ -19,11 +19,11 @@ describe("Signup Flow", () => {
     cy.url().should("equal", url("/signup"))
   })
 
-  describe("when using a taken email", () => {
-    it('shows "This email is already being used"', () => {
+  describe("when using a taken username", () => {
+    it('shows "This username is already being used"', () => {
       cy.visit(url("/signup"))
       filloutSignupFormWith(johnDoe)
-      cy.contains("This email is already being used")
+      cy.contains("This username is already being used")
     })
   })
 

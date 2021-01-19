@@ -39,6 +39,10 @@ model Session {
   privateData        String?
 }
 
+enum ConnectedCalendarStatus {
+  active
+}
+
 model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
@@ -47,7 +51,7 @@ model ConnectedCalendar {
   encryptedPassword String
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
-  status String
+  status ConnectedCalendarStatus
   type String
 }
 

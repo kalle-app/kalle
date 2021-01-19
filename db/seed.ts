@@ -1,5 +1,5 @@
-import db from "db"
-import { johnDoe } from "db/seed-data"
+import db from "."
+import { johnDoe } from "./seed-data"
 
 function mockHashPassword(pw: string) {
   if (pw === johnDoe.password) {
@@ -7,7 +7,7 @@ function mockHashPassword(pw: string) {
   }
 }
 
-export default async function seed() {
+async function main() {
   await db.user.create({
     data: {
       name: johnDoe.fullName,
@@ -27,4 +27,8 @@ export default async function seed() {
       },
     },
   })
+
+  process.exit(0)
 }
+
+main()

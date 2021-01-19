@@ -4,7 +4,7 @@ import { checkEnvVariables } from "../utils/checkEnvVariables"
 import { singleton } from "utils/singleton"
 
 export const getEmailService = singleton(() => {
-  checkEnvVariables("SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "MODE")
+  checkEnvVariables("SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM")
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -21,7 +21,7 @@ export const getEmailService = singleton(() => {
       from: process.env.EMAIL_FROM,
     },
     transport: transporter,
-    send: process.env.MODE !== "development",
+    preview: false,
     views: {
       options: {
         extension: "hbs",
