@@ -2,7 +2,7 @@ import Layout from "app/layouts/Layout"
 import ConnectedCalendars from "app/users/components/ConnectedCalendars"
 import SectionHeader from "app/users/components/SectionHeader"
 import UserDataForm from "app/users/components/UserDataForm"
-import { BlitzPage, useQuery, useMutation, invalidateQuery } from "blitz"
+import { BlitzPage, useQuery, useMutation, useRouter } from "blitz"
 import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
@@ -12,7 +12,7 @@ import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import deleteUserMutation from "../mutations/deleteUser"
-import getCurrentUser from "app/users/queries/getCurrentUser"
+import logoutMutation from "app/auth/mutations/logout"
 
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
@@ -48,12 +48,15 @@ const PersonalInformation = () => {
 }
 
 const DangerZone = () => {
+  const router = useRouter()
   const [deleteUser] = useMutation(deleteUserMutation)
+  const [logout] = useMutation(logoutMutation)
   const user = useCurrentUser()
 
   const submitDeletion = async () => {
     const calendar = await deleteUser(user?.id)
-    invalidateQuery(getCurrentUser)
+    await logout()
+    router.push("/")
   }
 
   return (
