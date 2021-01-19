@@ -2,7 +2,7 @@ import Layout from "app/layouts/Layout"
 import ConnectedCalendars from "app/users/components/ConnectedCalendars"
 import SectionHeader from "app/users/components/SectionHeader"
 import UserDataForm from "app/users/components/UserDataForm"
-import { BlitzPage, useQuery } from "blitz"
+import { BlitzPage, useQuery, useMutation, invalidateQuery } from "blitz"
 import React, { Suspense, useState } from "react"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
@@ -11,6 +11,8 @@ import AddCalendarModal from "app/users/components/AddCalendar"
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import deleteUserMutation from "../mutations/deleteUser"
+import getCurrentUser from "app/users/queries/getCurrentUser"
 
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
@@ -46,10 +48,18 @@ const PersonalInformation = () => {
 }
 
 const DangerZone = () => {
+  const [deleteUser] = useMutation(deleteUserMutation)
+  const user = useCurrentUser()
+
+  const submitDeletion = async () => {
+    const calendar = await deleteUser(user?.id)
+    invalidateQuery(getCurrentUser)
+  }
+
   return (
     <Card className="mt-4">
       <SectionHeader title="Danger Zone" subtitle="Delete your account and all associated data" />
-      <SectionFooter text="Delete your Account" variant="danger" action={() => alert("Test")} />
+      <SectionFooter text="Delete your Account" variant="danger" action={() => submitDeletion()} />
     </Card>
   )
 }
