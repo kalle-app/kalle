@@ -2,6 +2,7 @@ import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } fr
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
+import childProcess from "child_process"
 
 async function getBaikalContainer() {
   return new GenericContainer("ckulka/baikal", "nginx")
@@ -14,12 +15,28 @@ async function getBaikalContainer() {
     .withBindMount(path.join(__dirname, "../../test/baikal/config"), "/var/www/baikal/config", "rw")
 }
 
-async function getNextcloudContainer() {
-  const image = await GenericContainer.fromDockerfile(
-    path.resolve(__dirname, "../../test/nextcloud")
-  ).build()
+function exec(command: string, cwd = process.cwd()) {
+  return new Promise<void>((resolve, reject) => {
+    const $ = childProcess.exec(command, {
+      cwd,
+    })
 
-  return image.withExposedPorts(80)
+    $.on("exit", (code) => {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject()
+      }
+    })
+  })
+}
+
+async function getNextcloudContainer() {
+  // for some reason, testcontainer's build doesn't want to work.
+  // that's why we build it by hand ...
+  await exec("docker build -t nc-with-cal .", path.resolve(__dirname, "../../test/nextcloud"))
+
+  return new GenericContainer("nc-with-cal").withExposedPorts(80)
 }
 
 type Backends = "Baikal" | "Nextcloud"
