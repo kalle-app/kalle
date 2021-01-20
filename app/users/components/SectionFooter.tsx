@@ -4,6 +4,7 @@ interface SectionFooterProps {
   id: string
   text: string
   action(): void
+  id?: string
 }
 
 const SectionFooter = (props: SectionFooterProps) => {

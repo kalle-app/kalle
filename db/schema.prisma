@@ -39,6 +39,10 @@ model Session {
   privateData        String?
 }
 
+enum ConnectedCalendarStatus {
+  active
+}
+
 model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
@@ -48,7 +52,7 @@ model ConnectedCalendar {
   refreshToken String?
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
-  status String
+  status ConnectedCalendarStatus
   type String
 }
 
@@ -66,6 +70,7 @@ model Meeting {
   schedule Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int
   location String
+  bookings Booking[]
 }
 
 model DailySchedule {
@@ -83,5 +88,13 @@ model Schedule {
   dailySchedules DailySchedule[]
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int
+  inviteeEmail String
+  date DateTime
 }
   

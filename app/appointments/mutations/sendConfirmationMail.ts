@@ -15,7 +15,16 @@ export default async function sendConfirmationMail({ appointment }: { appointmen
       ],
     },
     locals: {
-      appointment: appointment,
+      appointment: {
+        ...appointment,
+        start: {
+          hour: appointment.start.getHours(),
+          minute: appointment.start.getMinutes(),
+          day: appointment.start.getDate(),
+          month: appointment.start.getMonth() + 1,
+          year: appointment.start.getFullYear(),
+        },
+      },
     },
   })
 }

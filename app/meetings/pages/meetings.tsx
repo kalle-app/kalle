@@ -1,9 +1,12 @@
 import Layout from "app/layouts/Layout"
-import { BlitzPage, useQuery } from "blitz"
+import { BlitzPage, Link, useQuery } from "blitz"
 import React, { Suspense } from "react"
 import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
+import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const MeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -11,24 +14,25 @@ const MeetingsContent = () => {
 }
 
 const MainContent = () => {
-  // display all meetings I invited to as cards here
-  // Customer can click on a meeting and info will be displayed
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
   return (
     <div className="text-center">
       <h3>All your active Meetings</h3>
-      <Suspense fallback="Loading...">
-        <MeetingsContent />
-      </Suspense>
-      <Button href="/meeting/create" variant="primary" className="m-3">
-        Create new Meeting
-      </Button>
+      <MeetingsContent />
+      <Link href="/meeting/create">
+        <Button variant="primary" className="m-3">
+          Create new Meeting
+        </Button>
+      </Link>
     </div>
   )
 }
 
 const MyMeetings: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <MainContent />
     </Suspense>
   )

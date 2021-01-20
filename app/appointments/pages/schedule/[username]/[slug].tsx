@@ -1,16 +1,16 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
+import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import getMeeting from "app/appointments/queries/getMeeting"
-import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation, invoke } from "blitz"
-import { DatePickerCalendar } from "react-nice-dates"
-import "react-nice-dates/build/style.css"
-import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
-import createCalendarEvent from "../../../../googlecalendar/queries/createCalendarEvent"
-import sendConfirmationMailMutation from "app/appointments/mutations/sendConfirmationMail"
+import { BlitzPage, useMutation, useParam, useQuery } from "blitz"
+import { enUS } from "date-fns/locale"
+import React, { Suspense, useEffect, useState } from "react"
+import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
+import Skeleton from "react-loading-skeleton"
+import { DatePickerCalendar } from "react-nice-dates"
+import "react-nice-dates/build/style.css"
 import getUserByName from "../../../../users/queries/getUserByName"
 
 interface SchedulerProps {
@@ -22,7 +22,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [meeting] = useQuery(getMeeting, { username: username, slug: meetingSlug })
   const [selectedDay, setSelectedDay] = useState<Date>()
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
-  const [sendConfirmationMail] = useMutation(sendConfirmationMailMutation)
+  const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
   const [user] = useQuery(getUserByName, username)
@@ -47,15 +47,15 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }, [slots, setSelectedDay])
 
   if (!meeting) {
-    return <p>Meeting invalid :(</p>
+    return <h2 className="text-center m-5">Meeting invalid :(</h2>
   }
 
   if (!slots) {
-    return <p>No free slots available :(</p>
+    return <h2 className="text-center m-5">No free slots available :(</h2>
   }
 
   if (!selectedDay) {
-    return <p>Loading...</p>
+    return <Skeleton count={10} />
   }
 
   const onDateChange = (selectedDay: Date | null) => {
@@ -65,7 +65,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!selectedTimeSlot) {
       alert("No timeslot selected")
       return
@@ -76,31 +76,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       return
     }
 
-    const start = selectedTimeSlot.start
-    const appointment = {
-      start,
-      durationInMilliseconds: meeting.duration * 60 * 1000,
-      title: meeting.name,
-      description: meeting.description ? meeting.description : "Description",
-      method: "request",
-      location: "Berlin",
-      url: "www.kalle.app",
-      organiser: {
-        name: username,
-        email: "info@kalle.app",
-      },
-      owner: {
-        name: email.split("@")[0],
-        email: email,
-      },
-    }
-    if (!user) return null
-    invoke(createCalendarEvent, { appointment: appointment, userId: user.id }).then(() =>
-      console.log("BLABLA")
-    )
-
-    sendConfirmationMail({
-      appointment: appointment,
+    await bookAppointment({
+      meeting: meeting,
+      meetingOwnerName: username,
+      inviteeEmail: email,
+      startDate: selectedTimeSlot.start,
     })
   }
 
@@ -163,7 +143,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
               />
             </Form.Group>
           </Form>
-          <Button variant="primary" onClick={() => onSubmit()}>
+          <Button variant="primary" onClick={() => onSubmit()} id="submit">
             Submit!
           </Button>
         </Modal.Body>
@@ -177,11 +157,11 @@ const ScheduleAppointment: BlitzPage = () => {
   const username = useParam("username", "string")
 
   if (!slug || !username) {
-    return <h3>Meeting not found</h3>
+    return <Skeleton count={10} />
   }
 
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <Scheduler meetingSlug={slug} username={username} />
     </Suspense>
   )

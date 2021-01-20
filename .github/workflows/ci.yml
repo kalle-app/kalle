@@ -33,15 +33,27 @@ jobs:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
       - name: Start services for E2E test
         run: docker-compose up -d
+      - name: Wait for Postgres to startup
+        run: sleep 5s
+      - name: Migrate Database
+        run: npx prisma migrate deploy --preview-feature
+      - name: Seed Database
+        run: npm run db:seed
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
           install: false
           record: true
           env: host=localhost,port=3000
-          build: npx blitz db migrate
           start: npx blitz start --production --port 3000
           wait-on: "http://localhost:3000"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SESSION_SECRET_KEY: supersecretsessionsecretkeywhichisatleast32byteslong
+          SMTP_HOST: localhost
+          SMTP_PORT: 1025
+          SMTP_USER: ignored
+          SMTP_PASSWORD: ignored
+          EMAIL_FROM: local-dev@kalle.app
+          MODE: test

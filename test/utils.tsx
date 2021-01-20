@@ -76,6 +76,7 @@ export const mockRouter: BlitzRouter = {
   back: jest.fn(),
   prefetch: jest.fn(),
   beforePopState: jest.fn(),
+  isReady: true,
   events: {
     on: jest.fn(),
     off: jest.fn(),

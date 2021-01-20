@@ -50,7 +50,7 @@ it("Meetings Flow", () => {
 
   cy.contains("Submit!").click()
 
-  cy.wait(300)
+  cy.wait(1000)
 
   cy.request("http://localhost:8025/api/v2/messages").then((response) => {
     const {
@@ -58,6 +58,8 @@ it("Meetings Flow", () => {
     } = response.body
 
     cy.log(newestMail)
+
+    expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
       "New appointment: My Test Meeting - 10:30, 23.11.2020 mit john.doe"

@@ -8,7 +8,8 @@
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "cypress:open": "cypress open --env host=localhost,port=3000"
+    "cypress:open": "cypress open --env host=localhost,port=3000",
+    "db:seed": "ts-node db/seed.ts"
   },
   "engines": {
     "node": "14.x"
@@ -38,11 +39,11 @@
     "@fortawesome/fontawesome-svg-core": "1.2.32",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
-    "@prisma/cli": "2.12.0",
-    "@prisma/client": "2.12.0",
-    "blitz": "0.25.0",
+    "@prisma/client": "2.14.0",
+    "blitz": "0.29.1",
     "bootstrap": "4.5.3",
     "child_process": "1.0.2",
+    "date-fns": "2.16.1",
     "email-templates": "8.0.0",
     "final-form": "4.20.1",
     "googleapis": "66.0.0",
@@ -60,14 +61,17 @@
     "react-dom": "0.0.0-experimental-7f28234f8",
     "react-error-boundary": "2.3.2",
     "react-final-form": "6.5.2",
+    "react-loading-skeleton": "2.1.1",
     "react-nice-dates": "3.0.7",
     "secure-e2ee": "0.2.0",
     "secure-password": "4.0.0",
     "urllib": "2.36.1",
+    "uuid": "8.3.2",
     "zod": "1.11.10"
   },
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "7.12.1",
+    "@prisma/cli": "2.14.0",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.0",
     "@testing-library/react-hooks": "3.4.2",
@@ -102,10 +106,12 @@
     "prettier": "2.1.2",
     "pretty-quick": "3.1.0",
     "react-test-renderer": "16.14.0",
+    "sass": "1.32.4",
     "testcontainers": "6.3.0",
     "ts-jest": "26.4.4",
     "typescript": "4.0.5",
-    "ws": "7.4.2"
+    "ws": "7.4.2",
+    "ts-node": "9.1.1"
   },
   "private": true
 }

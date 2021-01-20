@@ -2,11 +2,15 @@ import React from "react"
 import logoutMutation from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Suspense } from "react"
-import { useRouter, useMutation } from "blitz"
+import { useRouter, useMutation, useSession, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
 const Navigation = () => {
-  return useCurrentUser() ? <PrivateNavigation /> : <PublicNavigation />
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateNavigation /> : <PublicNavigation />
+  }
+  return <div></div>
 }
 
 const PrivateNavigation = () => {
@@ -16,10 +20,12 @@ const PrivateNavigation = () => {
   return (
     <>
       <Nav className="mr-auto">
-        <Nav.Link href="/meetings">Meetings</Nav.Link>
+        <Link href="/meetings" passHref>
+          <Nav.Link>Meetings</Nav.Link>
+        </Link>
       </Nav>
       <Nav>
-        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="basic-nav-dropdown">
+        <NavDropdown alignRight title={currentUser?.email ?? "Loading ..."} id="auth-dropdown">
           <NavDropdown.Item href="/schedules">Schedules</NavDropdown.Item>
           <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
           <NavDropdown.Divider />
@@ -42,7 +48,9 @@ const PublicNavigation = () => {
     <>
       <Nav className="mr-auto"></Nav>
       <Nav>
-        <Nav.Link href="/login">Log In</Nav.Link>
+        <Link href="/login" passHref>
+          <Nav.Link>Log In</Nav.Link>
+        </Link>
       </Nav>
     </>
   )
@@ -50,21 +58,23 @@ const PublicNavigation = () => {
 
 const NavBar = () => {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar style={{ boxShadow: "0px 2px 4px rgba(218, 71, 31, 0.3)" }} bg="white" expand="lg">
       <Container>
-        <Navbar.Brand href="/">
-          <img
-            alt="logo"
-            src="/logo.png"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />{" "}
-          Kalle
-        </Navbar.Brand>
+        <Link href="/" passHref>
+          <Navbar.Brand>
+            <img
+              alt="logo"
+              src="/logo.png"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{" "}
+            kalle.app
+          </Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Suspense fallback={<PublicNavigation />}>
+          <Suspense fallback={<div></div>}>
             <Navigation />
           </Suspense>
         </Navbar.Collapse>

@@ -11,9 +11,10 @@ import Card from "react-bootstrap/Card"
 import { Button, Modal } from "react-bootstrap"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { getOrigin } from "utils/generalUtils"
-import getSchedules from "app/meetings/queries/getSchedules"
-import { Schedule, DailySchedule } from "@prisma/client"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
+import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 enum Steps {
   General,
@@ -74,10 +75,14 @@ const InviteCreationContent = () => {
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
 
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   const submitMeeting = async () => {
     try {
       const data = await createMeeting(meeting)
-      const link = getOrigin() + "schedule/" + data?.ownerName + "/" + data?.link
+      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
       setMeetingLink(link)
       setShow(true)
     } catch (error) {
@@ -145,7 +150,7 @@ const InviteCreationContent = () => {
 
 const Create: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <InviteCreationContent />
     </Suspense>
   )

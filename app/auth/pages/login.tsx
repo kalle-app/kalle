@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useRouter, BlitzPage, useMutation } from "blitz"
+import { useRouter, BlitzPage, useMutation, Link } from "blitz"
 import loginMutation from "app/auth/mutations/login"
 import Layout from "app/layouts/Layout"
 import { Button, Row, Col, Form } from "react-bootstrap"
@@ -40,11 +40,11 @@ const LoginPage: BlitzPage = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Log In</h2>
         <Form>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
-          <Form.Group controlId="formPassword">
+          <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control
               id="password"
@@ -64,9 +64,9 @@ const LoginPage: BlitzPage = () => {
             <p className="my-auto d-flex justify-content-end">or</p>
           </Col>
           <Col className="d-flex justify-content-end">
-            <Button variant="outline-primary" href="/signup">
-              Sign Up
-            </Button>
+            <Link href="/signup">
+              <Button variant="outline-primary">Sign Up</Button>
+            </Link>
           </Col>
         </Row>
       </div>

@@ -1,6 +1,7 @@
-import { getTakenTimeSlots, getEvents, verifyConnectionDetails } from "./"
+import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
+import { addMinutes } from "date-fns"
 
 describe("caldav stuff", () => {
   let baseUrl: string
@@ -176,6 +177,32 @@ describe("caldav stuff", () => {
         },
       ]
       expect(result).toEqual(expected)
+    })
+  })
+
+  describe("create event", () => {
+    it("basic event", async () => {
+      const date = new Date()
+      const result = await createEvent(getBaikalJohnDoeConnection(), {
+        name: "DummyEvent",
+        timezone: 0,
+        start: date,
+        end: addMinutes(date, 30),
+        location: "Frankfurt",
+        description: "A description",
+      })
+      expect(result).toEqual("success")
+
+      const events = await getEvents(getBaikalJohnDoeConnection(), date, addMinutes(date, 30))
+
+      date.setMilliseconds(0)
+
+      const expected = {
+        title: "DummyEvent",
+        start: date,
+        end: addMinutes(date, 30),
+      }
+      expect(events).toContainEqual(expected)
     })
   })
 })

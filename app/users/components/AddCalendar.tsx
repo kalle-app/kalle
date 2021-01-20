@@ -25,6 +25,7 @@ const AddCalendar = (props: AddCalendarProps) => {
           </div>
           <Form
             className="p-4"
+            id="add-calendar"
             onSubmit={async (evt) => {
               evt.preventDefault()
 

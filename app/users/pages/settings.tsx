@@ -8,6 +8,9 @@ import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Card from "react-bootstrap/Card"
 import SectionFooter from "app/users/components/SectionFooter"
 import AddCalendarModal from "app/users/components/AddCalendar"
+import Skeleton from "react-loading-skeleton"
+import AuthError from "app/components/AuthError"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 const CalendarList = () => {
   // TODO: use CalendarCredentials for CalDav as well
@@ -22,11 +25,9 @@ const CalendarList = () => {
         title="My Calendars"
         subtitle="Add Calendars that you want to connect to Kalle"
       />
-      <Suspense fallback="Loading ...">
-        <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
-      </Suspense>
+      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
       <SectionFooter
-        id="addcalendar"
+        id="add-calendar-button"
         text="Add Calendar"
         action={() => setShowAddCalendarModal(true)}
       />
@@ -45,6 +46,10 @@ const PersonalInformation = () => {
 }
 
 const SettingsContent = () => {
+  if (!useCurrentUser()) {
+    return <AuthError />
+  }
+
   return (
     <>
       <CalendarList />
@@ -55,7 +60,7 @@ const SettingsContent = () => {
 
 const Settings: BlitzPage = () => {
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Skeleton count={10} />}>
       <SettingsContent />
     </Suspense>
   )
