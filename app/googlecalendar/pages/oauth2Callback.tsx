@@ -28,12 +28,18 @@ function OAuthCallbackPage() {
 
       return postOAuthToken(code)
         .then(({ access_token, refresh_token }: credentials) => {
-          postCredentials({
-            credentials: { access_token, refresh_token },
-            name: calendarName,
-            status: "Active",
-            type: "Google Calendar",
-          }).catch(() => setIsError(true))
+          console.log("acct ", access_token, "refr ", refresh_token)
+          if (!access_token || !refresh_token) {
+            console.log("errorrrrrrrrrrr!")
+            setIsError(true)
+          } else {
+            postCredentials({
+              credentials: { access_token, refresh_token },
+              name: calendarName,
+              status: "Active",
+              type: "Google Calendar",
+            }).catch(() => setIsError(true))
+          }
         })
         .catch((e) => setIsError(true))
     } catch (error) {
@@ -41,18 +47,31 @@ function OAuthCallbackPage() {
     }
   }
 
+  const SettingsLink = () => {
+    return (
+      <Link href={"/settings"}>
+        <Button variant="secondary" href={"/settings"}>
+          Go to Calendar Settings
+        </Button>
+      </Link>
+    )
+  }
+
   return (
     <>
       {isError ? (
-        <h1>An unknown error has occurred. Please try again.</h1>
+        <>
+          <h1>An error has occurred</h1>
+          <p>
+            Please try again. Notice that this Google Calendar might already be connected to Kalle.
+            If so please edit or delete it in the calendar settings.
+          </p>
+          <SettingsLink />
+        </>
       ) : isCalenderAdded ? (
         <>
           <h3>Great! {calendarName} has been added.</h3>
-          <Link href={"/settings"}>
-            <Button variant="secondary" href={"/settings"}>
-              Go to Calendar Settings
-            </Button>
-          </Link>{" "}
+          <SettingsLink />
         </>
       ) : (
         <>
