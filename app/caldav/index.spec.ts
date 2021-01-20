@@ -34,7 +34,10 @@ function exec(command: string, cwd = process.cwd()) {
 async function getNextcloudContainer() {
   // for some reason, testcontainer's build doesn't want to work.
   // that's why we build it by hand ...
-  await exec("docker build -t nc-with-cal .", path.resolve(__dirname, "../../test/nextcloud"))
+  await exec(
+    "docker buildx build -t nc-with-cal .",
+    path.resolve(__dirname, "../../test/nextcloud")
+  )
 
   return new GenericContainer("nc-with-cal").withExposedPorts(80)
 }
