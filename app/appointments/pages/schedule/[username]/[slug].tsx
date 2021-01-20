@@ -95,8 +95,10 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       },
     }
     if (!user) return null
-    invoke(createCalendarEvent, {appointment: appointment, userId: user.id}).then(()=>console.log("BLABLA"))
-    
+    invoke(createCalendarEvent, { appointment: appointment, userId: user.id }).then(() =>
+      console.log("BLABLA")
+    )
+
     sendConfirmationMail({
       appointment: appointment,
     })

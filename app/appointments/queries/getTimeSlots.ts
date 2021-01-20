@@ -1,4 +1,4 @@
-import {useQuery, invoke} from "blitz"
+import { useQuery, invoke } from "blitz"
 import getConnectedCalendars from "./getConnectedCalendars"
 import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
 import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
@@ -39,13 +39,13 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
   }, {})
 
   const calendars = await db.connectedCalendar.findMany({
-    where: { ownerId: meetingOwner.id},
+    where: { ownerId: meetingOwner.id },
   })
-  if(!calendars) return null
+  if (!calendars) return null
 
   let takenTimeSlots: ExternalEvent[] = []
-  takenTimeSlots.push(...await getCaldavTakenSlots(calendars, meeting))
-  takenTimeSlots.push(...await getGoogleCalendarSlots(calendars, meeting, meetingOwner))
+  takenTimeSlots.push(...(await getCaldavTakenSlots(calendars, meeting)))
+  takenTimeSlots.push(...(await getGoogleCalendarSlots(calendars, meeting, meetingOwner)))
 
   const between = {
     start: meeting.startDate,
@@ -61,13 +61,13 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
 async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
   let slots: ExternalEvent[] = []
-  const caldavCalendars = calendars.filter(calendar => calendar.type == 'caldav')
+  const caldavCalendars = calendars.filter((calendar) => calendar.type == "caldav")
   for (const calendar of caldavCalendars) {
     const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
     const newTakenSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress!,
-      auth: { username: calendar.username!, password, digest: true },
+      {
+        url: calendar.caldavAddress!,
+        auth: { username: calendar.username!, password, digest: true },
       },
       meeting.startDate,
       meeting.endDate
@@ -77,10 +77,18 @@ async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meet
   return slots
 }
 
-async function getGoogleCalendarSlots(calendars: ConnectedCalendar[], meeting: Meeting, meetingOwner: User) {
-  if(calendars.some(calendar => calendar.type == 'Google Calendar')) {
-    const newTakenSlots = await getFreeBusySchedule({start: meeting.startDate, end: meeting.endDate, userId: meetingOwner.id})
-    if(newTakenSlots) {
+async function getGoogleCalendarSlots(
+  calendars: ConnectedCalendar[],
+  meeting: Meeting,
+  meetingOwner: User
+) {
+  if (calendars.some((calendar) => calendar.type == "Google Calendar")) {
+    const newTakenSlots = await getFreeBusySchedule({
+      start: meeting.startDate,
+      end: meeting.endDate,
+      userId: meetingOwner.id,
+    })
+    if (newTakenSlots) {
       return newTakenSlots
     }
   }

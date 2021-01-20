@@ -1,15 +1,11 @@
-import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
-import GoogleClient from "../helpers/GoogleClient"
-import { google } from "googleapis"
 import { ExternalEvent } from "app/caldav"
+import { google } from "googleapis"
+import GoogleClient from "../helpers/GoogleClient"
+import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 
 interface DateTimeString {
   start: string
   end: string
-}
-interface DateTime {
-  start: Date
-  end: Date
 }
 interface DateTimeUnix {
   start: number
