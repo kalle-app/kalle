@@ -24,6 +24,10 @@ export default async function sendConfirmationMail({ appointment }: { appointmen
           month: appointment.start.getMonth() + 1,
           year: appointment.start.getFullYear(),
         },
+        duration: {
+          hours: Math.floor(appointment.durationInMilliseconds / (60 * 1000) / 60),
+          minutes: (appointment.durationInMilliseconds / (60 * 1000)) % 60,
+        },
       },
     },
   })

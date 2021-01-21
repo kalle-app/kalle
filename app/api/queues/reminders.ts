@@ -14,11 +14,16 @@ export default Queue(
         appointment: {
           ...appointment,
           start: {
-            hour: appointment.start.getHours(),
-            minute: appointment.start.getMinutes(),
-            day: appointment.start.getDate(),
-            month: appointment.start.getMonth() + 1,
-            year: appointment.start.getFullYear(),
+            // We create new dates here because date currently is not serialized properly on enqueuing
+            hour: new Date(appointment.start).getHours(),
+            minute: new Date(appointment.start).getMinutes(),
+            day: new Date(appointment.start).getDate(),
+            month: new Date(appointment.start).getMonth() + 1,
+            year: new Date(appointment.start).getFullYear(),
+          },
+          duration: {
+            hours: Math.floor(appointment.durationInMilliseconds / (60 * 1000) / 60),
+            minutes: (appointment.durationInMilliseconds / (60 * 1000)) % 60,
           },
         },
       },

@@ -2,7 +2,7 @@
   "name": "kalle",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently -r \"blitz start\" \"docker-compose up\"",
+    "start": "concurrently -r \"blitz start\" \"docker-compose up\" quirrel",
     "studio": "blitz db studio",
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",

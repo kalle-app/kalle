@@ -2,7 +2,7 @@ import { Ctx } from "blitz"
 import { Meeting } from "db"
 import createAppointmentEventMutation from "./createAppointmentEvent"
 import sendConfirmationMail from "./sendConfirmationMail"
-import { subMinutes } from "date-fns"
+import { addMinutes, addSeconds, subMinutes } from "date-fns"
 import reminderQueue from "../../api/queues/reminders"
 
 interface BookingInformation {
