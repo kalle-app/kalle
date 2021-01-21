@@ -1,10 +1,9 @@
 import Button from "react-bootstrap/Button"
 
 interface SectionFooterProps {
-  id: string
+  id?: string
   text: string
   action(): void
-  id?: string
 }
 
 const SectionFooter = (props: SectionFooterProps) => {
