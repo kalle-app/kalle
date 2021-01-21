@@ -21,7 +21,11 @@ const MainContent = () => {
       <Card>
         <SectionHeader title="My Schedules" subtitle="View and Add new Schedule Presets" />
         <AllSchedules />
-        <SectionFooter id="add-schedule-footer" text="Add Schedule" action={() => showOverlay(true)} />
+        <SectionFooter
+          id="add-schedule-footer"
+          text="Add Schedule"
+          action={() => showOverlay(true)}
+        />
       </Card>
       <AddSchedule show={modalVisible} setVisibility={showOverlay} />
     </>
