@@ -38,6 +38,10 @@ export default async function createAppointmentEventMutation(
     throw new Error("An error occured: Calendar does not exist")
   }
 
+  if (!calendar.encryptedPassword || !calendar.caldavAddress || !calendar.username) {
+    throw new Error("Some credentials for your calendar are missing.")
+  }
+
   const booking = await db.booking.create({
     data: {
       meeting: {
@@ -68,6 +72,5 @@ export default async function createAppointmentEventMutation(
   if (calDavResponse != "success") {
     throw new Error("An error occured: Event could not be added to calendar :(")
   }
-
   return booking
 }

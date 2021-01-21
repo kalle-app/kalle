@@ -1,8 +1,9 @@
 import db from "db"
 import { Ctx } from "blitz"
+
 interface GoogleCalenderCredentials {
   name: string
-  status: string
+  status: "active"
   type: string
   credentials: {
     access_token: string
