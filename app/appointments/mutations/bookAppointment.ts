@@ -48,10 +48,7 @@ export default async function bookAppointment(bookingInfo: BookingInformation, c
 
   await sendConfirmationMail(appointment)
 
-  console.log("a")
   const startTime = subMinutes(bookingInfo.startDate, 30)
-  console.log(startTime)
-
   await reminderQueue.enqueue(appointment, { runAt: startTime })
 
   return booking

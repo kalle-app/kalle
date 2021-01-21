@@ -5,7 +5,6 @@ import { Queue } from "quirrel/blitz"
 export default Queue(
   "api/queues/reminders",
   async ({ appointment }: { appointment: Appointment }) => {
-    console.log("ok")
     await getEmailService().send({
       template: "notification",
       message: {
