@@ -31,6 +31,7 @@ jobs:
       - run: npm run build
         env:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
+          NODE_ENV: development
       - name: Start services for E2E test
         run: docker-compose up -d
       - name: Wait for Postgres to startup
