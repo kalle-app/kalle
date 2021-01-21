@@ -1,10 +1,9 @@
-import { BlitzPage, Link, useMutation, useRouterQuery } from "blitz"
-import { Suspense } from "react"
-import Layout from "app/layouts/Layout"
-import postOAuthToken from "../queries/postOAuthToken"
 import createCalendarCredentials from "app/googlecalendar/mutations/createCalendarCredentials"
-import { useState } from "react"
+import Layout from "app/layouts/Layout"
+import { BlitzPage, Link, useMutation, useRouterQuery } from "blitz"
+import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
+import postOAuthToken from "../queries/postOAuthToken"
 
 interface credentials {
   access_token: string
@@ -28,15 +27,13 @@ function OAuthCallbackPage() {
 
       return postOAuthToken(code)
         .then(({ access_token, refresh_token }: credentials) => {
-          console.log("acct ", access_token, "refr ", refresh_token)
           if (!access_token || !refresh_token) {
-            console.log("errorrrrrrrrrrr!")
             setIsError(true)
           } else {
             postCredentials({
               credentials: { access_token, refresh_token },
               name: calendarName,
-              status: "Active",
+              status: "active",
               type: "Google Calendar",
             }).catch(() => setIsError(true))
           }
