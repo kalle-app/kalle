@@ -20,6 +20,7 @@ export const getEmailService = singleton(() => {
     message: {
       from: process.env.EMAIL_FROM,
     },
+    send: true,
     transport: transporter,
     preview: false,
     views: {

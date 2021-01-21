@@ -2,6 +2,8 @@ import { Ctx } from "blitz"
 import { Meeting } from "db"
 import createAppointmentEventMutation from "./createAppointmentEvent"
 import sendConfirmationMail from "./sendConfirmationMail"
+import { subMinutes } from "date-fns"
+import reminderQueue from "../../api/queues/reminders"
 
 interface BookingInformation {
   meeting: Meeting
@@ -22,7 +24,7 @@ export default async function bookAppointment(bookingInfo: BookingInformation, c
     ctx
   )
 
-  await sendConfirmationMail({
+  const appointment = {
     appointment: {
       start: bookingInfo.startDate,
       durationInMilliseconds: bookingInfo.meeting.duration * 60 * 1000,
@@ -42,7 +44,15 @@ export default async function bookAppointment(bookingInfo: BookingInformation, c
         email: bookingInfo.inviteeEmail,
       },
     },
-  })
+  }
+
+  await sendConfirmationMail(appointment)
+
+  console.log("a")
+  const startTime = subMinutes(bookingInfo.startDate, 30)
+  console.log(startTime)
+
+  await reminderQueue.enqueue(appointment, { runAt: startTime })
 
   return booking
 }
