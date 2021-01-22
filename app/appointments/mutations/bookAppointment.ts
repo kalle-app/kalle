@@ -10,6 +10,7 @@ interface BookingInformation {
   inviteeEmail: string
   meetingOwnerName: string
   startDate: Date
+  notificationTime: number
 }
 
 export default async function bookAppointment(bookingInfo: BookingInformation, ctx: Ctx) {
@@ -48,7 +49,7 @@ export default async function bookAppointment(bookingInfo: BookingInformation, c
 
   await sendConfirmationMail(appointment)
 
-  const startTime = subMinutes(bookingInfo.startDate, 30)
+  const startTime = subMinutes(bookingInfo.startDate, bookingInfo.notificationTime)
   await reminderQueue.enqueue(appointment, { runAt: startTime })
 
   return booking

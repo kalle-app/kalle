@@ -16,7 +16,10 @@ export default Queue(
           start: {
             // We create new dates here because date currently is not serialized properly on enqueuing
             hour: new Date(appointment.start).getHours(),
-            minute: new Date(appointment.start).getMinutes(),
+            minute:
+              new Date(appointment.start).getMinutes() == 0
+                ? "00"
+                : new Date(appointment.start).getMinutes(),
             day: new Date(appointment.start).getDate(),
             month: new Date(appointment.start).getMonth() + 1,
             year: new Date(appointment.start).getFullYear(),
