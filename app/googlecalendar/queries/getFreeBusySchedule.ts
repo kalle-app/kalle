@@ -60,7 +60,7 @@ export default async function getFreeBusySchedule({ start, end, userId }: Props)
  * Googlecalendar returns freebusy-slots of multiples calendars. These must be merged.
  * @returns the freebusy slots of all the combined calendars as one
  */
-function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
+export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   // Sort the array in descending order
   arr.sort(function (a, b) {
     return a.start - b.start
@@ -97,7 +97,7 @@ function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   })
 }
 
-function convertToUnix(arr: DateTimeString[]): DateTimeUnix[] {
+export function convertToUnix(arr: DateTimeString[]): DateTimeUnix[] {
   return arr.map((el: DateTimeString) => {
     return {
       start: new Date(el.start).getTime() / 1000,
