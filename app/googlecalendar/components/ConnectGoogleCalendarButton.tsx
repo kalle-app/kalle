@@ -6,7 +6,7 @@ const ConnectGoogleCalendarButton = (props) => {
   const [url] = useQuery(createConnection, undefined)
 
   return (
-    <Button variant="primary" href={url}>
+    <Button id={props.id} variant="primary" href={url}>
       {props.children}
     </Button>
   )

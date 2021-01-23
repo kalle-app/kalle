@@ -96,19 +96,23 @@ const CalDavFormBody = () => {
     <>
       <Form.Group controlId="formName">
         <Form.Label>Calendar name</Form.Label>
-        <Form.Control name="name" placeholder="Enter a name you'd like for your calendar" />
+        <Form.Control
+          id="caldav-name"
+          name="name"
+          placeholder="Enter a name you'd like for your calendar"
+        />
       </Form.Group>
       <Form.Group controlId="formUrl">
         <Form.Label>Calendar URL</Form.Label>
-        <Form.Control name="url" type="url" />
+        <Form.Control id="caldav-url" name="url" type="url" />
       </Form.Group>
       <Form.Group controlId="formUsername">
         <Form.Label>Username</Form.Label>
-        <Form.Control name="username" />
+        <Form.Control id="caldav-username" name="username" />
       </Form.Group>
       <Form.Group controlId="formPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" name="password" />
+        <Form.Control id="caldav-password" type="password" name="password" />
       </Form.Group>
     </>
   )
@@ -118,7 +122,9 @@ const GoogleFormBody = () => {
   return (
     <>
       <p>Please give Kalle access to your Google Calendar.</p>
-      <ConnectGoogleCalendarButton>Go to Google Login</ConnectGoogleCalendarButton>
+      <ConnectGoogleCalendarButton id="google-login-button">
+        Go to Google Login
+      </ConnectGoogleCalendarButton>
     </>
   )
 }

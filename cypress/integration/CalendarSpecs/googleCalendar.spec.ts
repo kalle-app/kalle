@@ -7,17 +7,17 @@ describe("A Google Calendar", () => {
   it("can be selected in settings", () => {
     loginAs(johnDoe)
     cy.contains("Connect a Calendar!").click()
-    cy.get("#addcalendar").click()
+    cy.get("#add-calendar-button").click()
     cy.get("select").select("Google Calendar")
   })
   it("offers link to Google login ", () => {
-    cy.contains("Go to Google Login")
+    cy.get("#google-login-button")
     cy.clearCookies()
   })
 })
 
+// TODO Manage Social Login, see https://github.com/lirantal/cypress-social-logins/issues/78
 // describe("Login", () => {
-//   // WIP, see https://github.com/lirantal/cypress-social-logins/issues/78
 //   it("Login through Google", () => {
 //     const username = Cypress.env("googleSocialLoginUsername")
 //     const password = Cypress.env("googleSocialLoginPassword")
