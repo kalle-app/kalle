@@ -22,6 +22,7 @@ const MainContent = () => {
         <SectionHeader title="My Schedules" subtitle="View and Add new Schedule Presets" />
         <AllSchedules />
         <SectionFooter
+          variant="primary"
           id="add-schedule-footer"
           text="Add Schedule"
           action={() => showOverlay(true)}

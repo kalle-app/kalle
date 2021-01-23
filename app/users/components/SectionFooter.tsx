@@ -3,13 +3,14 @@ import Button from "react-bootstrap/Button"
 interface SectionFooterProps {
   id?: string
   text: string
+  variant: string
   action(): void
 }
 
 const SectionFooter = (props: SectionFooterProps) => {
   return (
     <div className="p-3 d-flex justify-content-end">
-      <Button id={props.id} variant="primary" onClick={props.action}>
+      <Button variant={props.variant} onClick={props.action} id={props.id}>
         {props.text}
       </Button>
     </div>
