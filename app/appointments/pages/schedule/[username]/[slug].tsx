@@ -23,6 +23,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
+  const [notifictionTime, setNotificationTime] = useState(30)
   const [modalVisible, setModalVisible] = useState(false)
 
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
@@ -79,6 +80,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       meetingOwnerName: username,
       inviteeEmail: email,
       startDate: selectedTimeSlot.start,
+      notificationTime: notifictionTime,
     })
   }
 
@@ -138,6 +140,18 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                 type="email"
                 placeholder="Enter email"
                 onBlur={(e: React.FocusEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formNotificationTime">
+              <Form.Label>
+                Select how many minutes before the appointment you want to be notified:
+              </Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="30min"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                  setNotificationTime(Number(e.currentTarget.value))
+                }
               />
             </Form.Group>
           </Form>

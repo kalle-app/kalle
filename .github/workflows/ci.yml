@@ -12,7 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
@@ -31,6 +30,7 @@ jobs:
       - run: npm run build
         env:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
+          QUIRREL_BASE_URL: http://localhost:3000
       - name: Start services for E2E test
         run: docker-compose up -d
       - name: Wait for Postgres to startup
@@ -45,12 +45,13 @@ jobs:
           install: false
           record: true
           env: host=localhost,port=3000
-          start: npx blitz start --production --port 3000
+          start: npx concurrently 'blitz start --production --port 3000' 'quirrel'
           wait-on: "http://localhost:3000"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SESSION_SECRET_KEY: supersecretsessionsecretkeywhichisatleast32byteslong
+          QUIRREL_BASE_URL: http://localhost:3000
           SMTP_HOST: localhost
           SMTP_PORT: 1025
           SMTP_USER: ignored
