@@ -29,6 +29,8 @@ jobs:
           path-to-lcov: ./.coverage/lcov.info
           flag-name: unit
           parallel: true
+      - name: Remove Coverage
+        run: rm -rf .coverage .nyc_output
       - run: npm run build
         env:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
