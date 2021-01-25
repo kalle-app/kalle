@@ -8,6 +8,7 @@ function rewritePath(path) {
   path = path.replace(rootDir, "")
 
   path = path.replace(join(".blitz", "caches", "dev") + sep, "")
+  path = path.replace(join(".blitz", "caches", "build") + sep, "")
 
   if (path.startsWith(join("app", "_resolvers"))) {
     path = path.replace("_resolvers" + sep, "")
