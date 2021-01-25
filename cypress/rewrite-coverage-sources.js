@@ -5,10 +5,6 @@ const { join, resolve, sep } = require("path")
 const rootDir = resolve(join(__dirname, "..")) + sep
 
 function rewritePath(path) {
-  if (path.includes(join(".blitz", "caches"))) {
-    return null
-  }
-
   path = path.replace(rootDir, "")
 
   path = path.replace(join(".blitz", "caches", "dev") + sep, "")
@@ -33,6 +29,10 @@ function rewritePath(path) {
   return rootDir + path
 }
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0
+}
+
 function rewrite(json) {
   const newOutJson = {}
 
@@ -40,6 +40,10 @@ function rewrite(json) {
     const newPath = rewritePath(key)
 
     if (!newPath) {
+      continue
+    }
+
+    if (isEmpty(value.branchMap) && !isEmpty(value.b)) {
       continue
     }
 
