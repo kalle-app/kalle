@@ -56,3 +56,5 @@ lib-cov
 /Prisma
 
 /coverage
+
+out.json.old

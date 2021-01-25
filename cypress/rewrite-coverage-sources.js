@@ -5,6 +5,10 @@ const { join, resolve, sep } = require("path")
 const rootDir = resolve(join(__dirname, "..")) + sep
 
 function rewritePath(path) {
+  if (path.includes(join(".blitz", "caches"))) {
+    return null
+  }
+
   path = path.replace(rootDir, "")
 
   path = path.replace(join(".blitz", "caches", "dev") + sep, "")
@@ -55,5 +59,5 @@ process.stdin.on("end", () => {
 
   const newOutJson = rewrite(outJson)
 
-  process.stdout.write(JSON.stringify(newOutJson))
+  process.stdout.write(JSON.stringify(newOutJson, null, 2))
 })
