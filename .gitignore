@@ -54,3 +54,5 @@ lib-cov
 
 # Prisma files on windows
 /Prisma
+
+/coverage
