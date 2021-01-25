@@ -1,7 +1,7 @@
 module.exports = {
   presets: ["next/babel"],
   env: {
-    test: {
+    e2etest: {
       plugins: ["istanbul"],
     },
   },
