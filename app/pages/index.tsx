@@ -171,18 +171,18 @@ const PublicContent = () => {
 
 const MeetingCarousel = ({ meetings }) => {
   return (
-    <Carousel style={{ marginBottom: "5%", backgroundColor: "black" }}>
+    <Carousel style={{ marginBottom: "5%", backgroundColor: "white" }}>
       {meetings.map((meeting) => {
         return (
           <Carousel.Item>
             <Card
-              style={{ backgroundColor: "black", height: "200px" }}
+              style={{ backgroundColor: "white", height: "200px" }}
               as="li"
               key={"card" + meeting.id}
             ></Card>
             <Carousel.Caption key={"caption" + meeting.id}>
-              <h3>{meeting.name}</h3>
-              <p>
+              <h3 className="text-dark">{meeting.name}</h3>
+              <p className="text-dark">
                 {meeting.description.length > 100
                   ? meeting.description.substr(0, 99) + "..."
                   : meeting.description}
@@ -202,11 +202,11 @@ const MeetingCarousel = ({ meetings }) => {
 
 const InfoSection = ({ title, description, link, buttonText }) => {
   return (
-    <Col sm={4}>
+    <Col sm={4} className="mt-3">
       <h4>{title}</h4>
       <h6>{description}</h6>
       <Link href={link}>
-        <Button variant="outline-secondary" className="m-1" size="lg">
+        <Button variant="outline-secondary" className="m-2" size="lg">
           {buttonText}
         </Button>
       </Link>
@@ -239,13 +239,13 @@ const PrivateContent = () => {
           You have {meetings!.length > 0 ? meetings!.length : "no"} active meetings.
         </h4>
         {meetings!.length > 0 && <MeetingCarousel meetings={meetings} />}
-        <h4>Kalle is here to help you organizing a new meeting.</h4>
+        <h4 className="pb-3">Kalle is here to help you organizing a new meeting.</h4>
         <Link href="/meetings">
           <Button variant="primary" className="m-1" size="lg">
             Create Meeting
           </Button>
         </Link>
-        <Container style={{ marginTop: "5%" }}>
+        <Container style={{ marginTop: "3%" }}>
           <Row>
             <InfoSection
               title="Connect a calendar"
