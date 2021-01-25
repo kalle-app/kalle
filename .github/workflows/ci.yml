@@ -64,10 +64,10 @@ jobs:
           EMAIL_FROM: local-dev@kalle.app
           MODE: test
           NODE_ENV: e2etest
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-      - name: Process Coverage Report
-        run: npm run cypress:collect-coverage
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
+#      - name: Process Coverage Report
+#        run: npm run cypress:collect-coverage
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
