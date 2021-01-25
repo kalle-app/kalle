@@ -1,9 +1,11 @@
-import { useSession, BlitzPage, Link } from "blitz"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
-import Button from "react-bootstrap/Button"
+import getMeetings from "app/meetings/queries/getMeetings"
+import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { Suspense } from "react"
+import { Card, Carousel, Col, Container, Row } from "react-bootstrap"
+import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
-import { Card, Row, Col, Modal, Form, Container } from "react-bootstrap"
 
 const Content = () => {
   const session = useSession()
@@ -167,15 +169,106 @@ const PublicContent = () => {
   )
 }
 
-const PrivateContent = () => {
+const MeetingCarousel = ({ meetings }) => {
   return (
-    <main className="text-center">
-      <h2 className="p-4">Welcome to Kalle!</h2>
-      <Link href="/settings">
-        <Button variant="primary" className="m-1" size="lg">
-          Connect a Calendar!
+    <Carousel style={{ marginBottom: "5%", backgroundColor: "white" }}>
+      {meetings.map((meeting) => {
+        return (
+          <Carousel.Item>
+            <Card
+              style={{ backgroundColor: "white", height: "200px" }}
+              as="li"
+              key={"card" + meeting.id}
+            ></Card>
+            <Carousel.Caption key={"caption" + meeting.id}>
+              <h3 className="text-dark">{meeting.name}</h3>
+              <p className="text-dark">
+                {meeting.description.length > 100
+                  ? meeting.description.substr(0, 99) + "..."
+                  : meeting.description}
+              </p>
+              <Link href="/meetings">
+                <Button variant="outline-primary" className="m-1" size="sm">
+                  Details
+                </Button>
+              </Link>
+            </Carousel.Caption>
+          </Carousel.Item>
+        )
+      })}
+    </Carousel>
+  )
+}
+
+const InfoSection = ({ title, description, link, buttonText }) => {
+  return (
+    <Col sm={4} className="mt-3">
+      <h4>{title}</h4>
+      <h6>{description}</h6>
+      <Link href={link}>
+        <Button variant="outline-secondary" className="m-2" size="lg">
+          {buttonText}
         </Button>
       </Link>
+    </Col>
+  )
+}
+
+const PrivateContent = () => {
+  const user = useCurrentUser()
+  const [meetings] = useQuery(getMeetings, null)
+
+  return (
+    <main className="text">
+      <Container>
+        <Row>
+          <Col sm={7}>
+            <h2 className="p-4">Hey there {user?.name}!</h2>
+            <h4 className="p-4">
+              It's time to organize your meetings. I am Kalle and my mission is to help you doing
+              this. Bubble that my friend!
+            </h4>
+          </Col>
+          <Col sm={5} style={{ display: "flex" }}>
+            <img alt="logo" src="/logo.png" width="80%" height="auto" className="align-self-end" />
+          </Col>
+        </Row>
+      </Container>
+      <div className="text-center">
+        <h4 className="p-4">
+          You have {meetings!.length > 0 ? meetings!.length : "no"} active meetings.
+        </h4>
+        {meetings!.length > 0 && <MeetingCarousel meetings={meetings} />}
+        <h4 className="pb-3">Kalle is here to help you organizing a new meeting.</h4>
+        <Link href="/meetings">
+          <Button variant="primary" className="m-1" size="lg">
+            Create Meeting
+          </Button>
+        </Link>
+        <Container style={{ marginTop: "3%" }}>
+          <Row>
+            <InfoSection
+              title="Connect a calendar"
+              description="Kalle uses your calendars to show your invitees when you are available."
+              link="/settings"
+              buttonText="Connect Calendar"
+            />
+            <InfoSection
+              title="Set a schedule"
+              description="You can add schedules set general time windows where you are available. For example
+              weekdays from 9:00 to 17:00."
+              link="/settings"
+              buttonText="Add Schedule"
+            />
+            <InfoSection
+              title="Settings"
+              description="Manage your Kalle Account."
+              link="/settings"
+              buttonText="Settings"
+            />
+          </Row>
+        </Container>
+      </div>
     </main>
   )
 }
