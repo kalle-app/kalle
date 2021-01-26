@@ -1,5 +1,6 @@
 import { getTakenTimeSlots } from "app/caldav"
 import passwordEncryptor from "app/users/password-encryptor"
+import { Ctx } from "blitz"
 import db, { DailySchedule } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -12,9 +13,13 @@ import {
 interface GetTimeSlotsArgs {
   meetingSlug: string
   ownerName: string
+  hideInviteeSlots: boolean
 }
 
-export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSlotsArgs) {
+export default async function getTimeSlots(
+  { meetingSlug, ownerName, hideInviteeSlots }: GetTimeSlotsArgs,
+  ctx: Ctx
+) {
   const meeting = await db.meeting.findFirst({
     where: { link: meetingSlug, ownerName: ownerName },
     include: { schedule: { include: { dailySchedules: true } } },
@@ -50,6 +55,14 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     meeting.startDate,
     meeting.endDate
   )
+
+  if (hideInviteeSlots) {
+    ctx.session.authorize()
+    const inviteeCalendars = await db.connectedCalendar.findMany({
+      where: { ownerId: ctx.session.userId },
+    })
+    if (!inviteeCalendars) return null
+  }
 
   const between = {
     start: meeting.startDate,

@@ -1,7 +1,7 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import getMeeting from "app/appointments/queries/getMeeting"
 import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
+import { BlitzPage, useQuery, useParam, useMutation, Link } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
@@ -11,6 +11,7 @@ import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import Skeleton from "react-loading-skeleton"
 import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -25,8 +26,14 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [email, setEmail] = useState("")
   const [notifictionTime, setNotificationTime] = useState(30)
   const [modalVisible, setModalVisible] = useState(false)
+  const user = useCurrentUser()
+  const [hideOccupied, setHideOccupied] = useState(false)
 
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
+  const [slots] = useQuery(getTimeSlots, {
+    meetingSlug: meetingSlug,
+    ownerName: username,
+    hideInviteeSlots: hideOccupied,
+  })
 
   useEffect(() => {
     if (selectedDay) {
@@ -44,6 +51,14 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
 
     setSelectedDay(firstSlot.start)
   }, [slots, setSelectedDay])
+
+  useEffect(() => {
+    if (hideOccupied) {
+      // ToDo get my cal and hide fields where i am not available
+      return
+    }
+    // show all appointments again
+  }, [hideOccupied])
 
   if (!meeting) {
     return <h2 className="text-center m-5">Meeting invalid :(</h2>
@@ -96,6 +111,22 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                 <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
                 <p>Description: {meeting.description}</p>
                 <p>Location: {meeting.location}</p>
+                <hr></hr>
+                {user ? (
+                  <Form>
+                    <Form.Check
+                      type="switch"
+                      id="custom-switch"
+                      label="Only display dates where I am available"
+                      value={String(hideOccupied)}
+                      onChange={() => setHideOccupied(!hideOccupied)}
+                    />
+                  </Form>
+                ) : (
+                  <p>
+                    <Link href="/login">Login</Link> to only display dates, where you are available!
+                  </p>
+                )}
                 <DatePickerCalendar
                   date={selectedDay}
                   onDateChange={onDateChange}
