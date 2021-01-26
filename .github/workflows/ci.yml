@@ -27,10 +27,15 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./.coverage/lcov.info
+          flag-name: unit
+          parallel: true
+      - name: Remove Coverage
+        run: rm -rf .coverage .nyc_output
       - run: npm run build
         env:
           CALENDAR_PASSWORD_ENCRYPTION_PASSPHRASE: actionSecretWith32CharactersYoYo
           QUIRREL_BASE_URL: http://localhost:3000
+          NODE_ENV: e2etest
       - name: Start services for E2E test
         run: docker-compose up -d
       - name: Wait for Postgres to startup
@@ -58,3 +63,18 @@ jobs:
           SMTP_PASSWORD: ignored
           EMAIL_FROM: local-dev@kalle.app
           MODE: test
+          NODE_ENV: e2etest
+      - name: Process Coverage Report
+        run: npm run cypress:collect-coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
+          flag-name: e2e
+          parallel: true
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
