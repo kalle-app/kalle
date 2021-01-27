@@ -1,4 +1,8 @@
 module.exports = {
   presets: ["next/babel"],
-  plugins: [],
+  env: {
+    e2etest: {
+      plugins: ["istanbul"],
+    },
+  },
 }

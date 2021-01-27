@@ -46,6 +46,7 @@ async function makeRequestTo(
 
 interface ConnectionDetailsVerificationFailure {
   fail: "unauthorized" | "other" | "wrong_url" | "wrong_protocol" | "no_caldav_support"
+  error?: any
 }
 
 interface ConnectionVerificationSuccess {
@@ -70,7 +71,8 @@ interface ConnectionVerificationSuccess {
 export async function verifyConnectionDetails(
   url: string,
   username: string,
-  password: string
+  password: string,
+  dangerouslyAllowInsecureHttp = false
 ): Promise<ConnectionVerificationSuccess | ConnectionDetailsVerificationFailure> {
   try {
     url = ensureProtocolIsSpecified(url)
@@ -101,7 +103,10 @@ export async function verifyConnectionDetails(
 
     let digest = true
     let response = await checkConnectionWith("digest auth")
-    if (response === "unauthorized" && url.startsWith("https://")) {
+    if (
+      response === "unauthorized" &&
+      (dangerouslyAllowInsecureHttp || url.startsWith("https://"))
+    ) {
       digest = false
       response = await checkConnectionWith("basic auth")
     }
@@ -143,7 +148,7 @@ export async function verifyConnectionDetails(
       return { fail: "wrong_protocol" }
     }
 
-    return { fail: "other" }
+    return { fail: "other", error }
   }
 }
 

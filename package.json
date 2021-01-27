@@ -2,13 +2,14 @@
   "name": "kalle",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently -r \"blitz start\" \"docker-compose up\"",
+    "start": "concurrently -r \"blitz start\" \"docker-compose up\" quirrel",
     "studio": "blitz db studio",
     "build": "blitz build",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
     "test:watch": "jest --watch",
     "cypress:open": "cypress open --env host=localhost,port=3000",
+    "cypress:collect-coverage": "mv .nyc_output/out.json out.json.old && cat out.json.old  | cypress/rewrite-coverage-sources.js > .nyc_output/out.json && npx nyc report --reporter=lcov --exclude .blitz",
     "db:seed": "ts-node db/seed.ts"
   },
   "engines": {
@@ -40,6 +41,7 @@
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
     "@prisma/client": "2.14.0",
+    "@quirrel/next": "0.10.0",
     "blitz": "0.29.1",
     "bootstrap": "4.5.3",
     "cypress-social-logins": "1.9.3",
@@ -54,6 +56,7 @@
     "node-ical": "0.12.3",
     "nodemailer": "6.4.16",
     "pug": "3.0.0",
+    "quirrel": "1.0.3",
     "react": "0.0.0-experimental-7f28234f8",
     "react-bootstrap": "1.4.0",
     "react-copy-to-clipboard": "5.0.2",
@@ -71,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "7.12.1",
+    "@cypress/code-coverage": "3.9.2",
     "@prisma/cli": "2.14.0",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.0",
@@ -85,6 +89,7 @@
     "@typescript-eslint/parser": "4.8.1",
     "autoprefixer": "10.0.2",
     "babel-eslint": "10.1.0",
+    "babel-plugin-istanbul": "6.0.0",
     "concurrently": "5.3.0",
     "cypress": "6.1.0",
     "eslint": "7.13.0",
@@ -96,6 +101,7 @@
     "eslint-plugin-prettier": "3.3.0",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
+    "fast-glob": "3.2.5",
     "husky": "4.3.0",
     "jest": "26.6.3",
     "jest-environment-jsdom-fourteen": "1.0.1",
@@ -111,5 +117,10 @@
     "ts-node": "9.1.1",
     "typescript": "4.0.5"
   },
-  "private": true
+  "private": true,
+  "nyc": {
+    "reporter": [
+      "json"
+    ]
+  }
 }

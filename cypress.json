@@ -1,9 +1,12 @@
 {
   "projectId": "7agttn",
   "env": {
-    "googleSocialLoginUsername": "TODO: include johns google mail address :)",
+    "googleSocialLoginUsername": "TODO: for testing paste johns google mail address :)",
     "googleSocialLoginPassword": "supersecurepassword",
     "loginUrl": "https://accounts.google.com/o/oauth2/v2/auth",
-    "cookieName": "GoogleAuth"
+    "cookieName": "GoogleAuth",
+    "codeCoverage": {
+      "url": "/api/__coverage__"
+    }
   }
 }

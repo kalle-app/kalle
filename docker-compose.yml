@@ -23,3 +23,13 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+
+  nextcloud:
+    build: test/nextcloud
+    ports:
+      - 6080:80
+    environment:
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      SMTP_AUTHTYPE: PLAIN
+      MAIL_FROM_ADDRESS: nextcloud@localhost

@@ -69,7 +69,7 @@ export default async function createAppointmentEventMutation(
     }
   )
 
-  if (calDavResponse != "success") {
+  if (calDavResponse !== "success") {
     throw new Error("An error occured: Event could not be added to calendar :(")
   }
   return booking

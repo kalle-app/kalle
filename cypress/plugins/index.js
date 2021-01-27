@@ -24,4 +24,7 @@ module.exports = (on, config) => {
   on("task", {
     GoogleSocialLogin: GoogleSocialLogin,
   })
+  require("@cypress/code-coverage/task")(on, config)
+
+  return config
 }

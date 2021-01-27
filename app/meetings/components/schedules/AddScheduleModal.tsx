@@ -13,38 +13,55 @@ interface AddScheduleProps {
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 const initialSchedule = {
-  name: "",
-  schedule: {
-    monday: ["9:00", "17:00"],
-    tuesday: ["9:00", "17:00"],
-    wednesday: ["9:00", "17:00"],
-    thursday: ["9:00", "17:00"],
-    friday: ["9:00", "17:00"],
-    saturday: ["", ""],
-    sunday: ["", ""],
-  },
+  monday: { blocked: false, start: "9:00", end: "17:00" },
+  tuesday: { blocked: false, start: "9:00", end: "17:00" },
+  wednesday: { blocked: false, start: "9:00", end: "17:00" },
+  thursday: { blocked: false, start: "9:00", end: "17:00" },
+  friday: { blocked: false, start: "9:00", end: "17:00" },
+  saturday: { blocked: true, start: "", end: "" },
+  sunday: { blocked: true, start: "", end: "" },
 }
 
 const AddSchedule = (props: AddScheduleProps) => {
-  const [schedule, setSchedule] = useState(initialSchedule)
   const [createScheduleMutation] = useMutation(addSchedule)
+  const [schedule, setSchedule] = useState(initialSchedule)
+  const [name, setName] = useState("")
 
-  const scheduleChanged = (e: any, day: string, type: string) => {
-    const position = type === "start" ? 0 : 1
-    let newSchedule = schedule
-    newSchedule.schedule[day][position] = e.currentTarget.value
-    setSchedule(newSchedule)
-  }
-
-  const nameChanged = (e: any) => {
+  const scheduleChanged = (value: any, day: string, type: string) => {
+    let newDay = { ...schedule[day], [type]: value }
     setSchedule({
       ...schedule,
-      name: e.currentTarget.value,
+      [day]: newDay,
     })
   }
 
+  const nameChanged = (e: any) => {
+    setName(e.currentTarget.value)
+  }
+
   const submit = () => {
-    createScheduleMutation(schedule)
+    let postSchedule = {
+      name: name,
+      schedule: {
+        monday: schedule.monday.blocked ? ["", ""] : [schedule.monday.start, schedule.monday.end],
+        tuesday: schedule.tuesday.blocked
+          ? ["", ""]
+          : [schedule.tuesday.start, schedule.tuesday.end],
+        wednesday: schedule.wednesday.blocked
+          ? ["", ""]
+          : [schedule.wednesday.start, schedule.wednesday.end],
+        thursday: schedule.thursday.blocked
+          ? ["", ""]
+          : [schedule.thursday.start, schedule.thursday.end],
+        friday: schedule.friday.blocked ? ["", ""] : [schedule.friday.start, schedule.friday.end],
+        saturday: schedule.saturday.blocked
+          ? ["", ""]
+          : [schedule.saturday.start, schedule.saturday.end],
+        sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
+      },
+    }
+
+    createScheduleMutation(postSchedule)
       .then(async (data) => {
         await invalidateQuery(getSchedules)
         await invalidateQuery(getScheduleNames)
@@ -64,29 +81,55 @@ const AddSchedule = (props: AddScheduleProps) => {
         <Form>
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
-            <Form.Control name="name" value={schedule.name} onChange={nameChanged} />
+            <Form.Control
+              name="name"
+              value={name}
+              placeholder="e.g. Workdays"
+              onChange={nameChanged}
+            />
           </Form.Group>
+          <p>
+            Please specify when you are generally available. Your invitees cannot pick a time slot
+            outside of the provided window.
+          </p>
           <Form.Group controlId="days">
             {days.map((day) => {
               return (
                 <Form.Row key={day}>
                   <Form.Group as={Col}>
                     <Form.Label>{day.charAt(0).toUpperCase() + day.slice(1)}</Form.Label>
-                    <Form.Control
-                      value={schedule.schedule[day][0]}
-                      onChange={(e) => {
-                        scheduleChanged(e, day, "start")
+                    <Form.Check
+                      checked={schedule[day].blocked}
+                      type="checkbox"
+                      label="Block all day"
+                      onChange={(e: any): void => {
+                        console.log("e in checkbox ", e.currentTarget.value)
+                        scheduleChanged(!schedule[day].blocked, day, "blocked")
                       }}
                     />
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>&nbsp;</Form.Label>
-                    <Form.Control
-                      value={schedule.schedule[day][1]}
-                      onChange={(e) => {
-                        scheduleChanged(e, day, "end")
-                      }}
-                    />
+                    {!schedule[day].blocked && (
+                      <Form.Control
+                        value={schedule[day].start}
+                        onChange={(e) => {
+                          scheduleChanged(e.currentTarget.value, day, "start")
+                        }}
+                      />
+                    )}
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                    <Form.Label>&nbsp;</Form.Label>
+                    {!schedule[day].blocked && (
+                      <Form.Control
+                        // value={schedule.schedule[day][1]}
+                        value={schedule[day].end}
+                        onChange={(e) => {
+                          scheduleChanged(e.currentTarget.value, day, "end")
+                        }}
+                      />
+                    )}
                   </Form.Group>
                 </Form.Row>
               )
