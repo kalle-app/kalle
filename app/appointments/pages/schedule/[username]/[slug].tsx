@@ -11,7 +11,6 @@ import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { DatePickerCalendar } from "react-nice-dates"
 import "react-nice-dates/build/style.css"
-import getUserByName from "../../../../users/queries/getUserByName"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -25,7 +24,6 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
   const [modalVisible, setModalVisible] = useState(false)
-  const [user] = useQuery(getUserByName, username)
 
   const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
 
