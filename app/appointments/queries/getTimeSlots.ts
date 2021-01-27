@@ -61,6 +61,7 @@ export default async function getTimeSlots(
     const inviteeCalendars = await db.connectedCalendar.findMany({
       where: { ownerId: ctx.session.userId },
     })
+    // Get all googleCal and caldav events merged, merge them to takenSlots
     if (!inviteeCalendars) return null
   }
 
