@@ -42,8 +42,15 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
   if (calendars.length === 0) return null
 
   let takenTimeSlots: ExternalEvent[] = []
-  takenTimeSlots.push(...(await getCaldavTakenSlots(calendars, meeting)))
-  takenTimeSlots.push(...(await getGoogleCalendarSlots(calendars, meeting, meetingOwner)))
+
+  Promise.all([
+    getCaldavTakenSlots(calendars, meeting),
+    getGoogleCalendarSlots(calendars, meeting, meetingOwner),
+  ]).then((values) => {
+    values.map((slots) => {
+      takenTimeSlots.push(...slots)
+    })
+  })
 
   const between = {
     start: meeting.startDate,
