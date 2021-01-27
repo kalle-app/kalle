@@ -15,14 +15,13 @@ export default async function createCalendarCredentials(
   { name, status, type, credentials }: GoogleCalenderCredentials,
   ctx: Ctx
 ) {
-  console.log("GOT HERE")
-  if (!ctx.session?.userId) return null
+  ctx.session.authorize()
 
   const owner = await db.user.findFirst({
     where: { id: ctx.session.userId },
   })
 
-  if (!owner) return null
+  if (!owner) throw new Error("Invariant failed: Owner does not exist.")
 
   return await db.connectedCalendar.create({
     data: {

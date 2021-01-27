@@ -1,14 +1,12 @@
-import { useQuery, invoke } from "blitz"
-import getConnectedCalendars from "./getConnectedCalendars"
 import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
 import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
 import passwordEncryptor from "app/users/password-encryptor"
 import db, { ConnectedCalendar, DailySchedule, Meeting, User } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
-  scheduleToTakenSlots,
-  Schedule,
   Days,
+  Schedule,
+  scheduleToTakenSlots,
   timeStringToPartialTime,
 } from "../utils/scheduleToTakenSlots"
 
@@ -41,7 +39,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
   const calendars = await db.connectedCalendar.findMany({
     where: { ownerId: meetingOwner.id },
   })
-  if (!calendars) return null
+  if (calendars.length === 0) return null
 
   let takenTimeSlots: ExternalEvent[] = []
   takenTimeSlots.push(...(await getCaldavTakenSlots(calendars, meeting)))

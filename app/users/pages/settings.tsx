@@ -15,7 +15,6 @@ import deleteUserMutation from "../mutations/deleteUser"
 import logoutMutation from "app/auth/mutations/logout"
 
 const CalendarList = () => {
-  // TODO: use CalendarCredentials for CalDav as well
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 

@@ -1,9 +1,9 @@
 import { useQuery } from "blitz"
 import { Button } from "react-bootstrap"
-import createConnection from "../queries/createConnection"
+import getGcalOAuthConnection from "../queries/createConnection"
 
 const ConnectGoogleCalendarButton = (props) => {
-  const [url] = useQuery(createConnection, undefined)
+  const [url] = useQuery(getGcalOAuthConnection, null)
 
   return (
     <Button id={props.id} variant="primary" href={url}>

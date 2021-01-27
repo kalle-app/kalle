@@ -3,7 +3,7 @@ import { google } from "googleapis"
 import GoogleClient from "../helpers/GoogleClient"
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 
-interface DateTimeString {
+interface TimeSlotString {
   start: string
   end: string
 }
@@ -11,13 +11,13 @@ interface DateTimeUnix {
   start: number
   end: number
 }
-interface Props {
+interface GetFreeBusyScheduleArgs {
   start: Date
   end: Date
   userId: number
 }
 
-export default async function getFreeBusySchedule({ start, end, userId }: Props) {
+export default async function getFreeBusySchedule({ start, end, userId }: GetFreeBusyScheduleArgs) {
   await updateCalendarCredentials(userId)
   const auth = GoogleClient.Connection
   const calendar = google.calendar({ version: "v3", auth })
@@ -42,10 +42,10 @@ export default async function getFreeBusySchedule({ start, end, userId }: Props)
       requestBody: body,
     })
     .then((res) => {
-      var rawFreeBusy: DateTimeString[] = []
+      let rawFreeBusy: TimeSlotString[] = []
       console.log(res.data.calendars)
-      for (var key in res.data.calendars) {
-        res.data.calendars[key].busy?.forEach((el: DateTimeString) => rawFreeBusy.push(el))
+      for (let key in res.data.calendars) {
+        res.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
       }
       const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
 
@@ -66,12 +66,12 @@ export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
     return a.start - b.start
   })
 
-  var mergedArr: DateTimeUnix[] = []
+  let mergedArr: DateTimeUnix[] = []
   arr.push({ start: 16754814600, end: 16754818200 })
-  var old = arr[0]
-  var temp: DateTimeUnix = { start: -1, end: -1 }
-  for (var el of arr) {
-    var curr = el
+  let old = arr[0]
+  let temp: DateTimeUnix = { start: -1, end: -1 }
+  for (let el of arr) {
+    let curr = el
     if (curr == old) continue
 
     if (curr.start <= old.end) {
@@ -97,8 +97,8 @@ export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   })
 }
 
-export function convertToUnix(arr: DateTimeString[]): DateTimeUnix[] {
-  return arr.map((el: DateTimeString) => {
+export function convertToUnix(arr: TimeSlotString[]): DateTimeUnix[] {
+  return arr.map((el: TimeSlotString) => {
     return {
       start: new Date(el.start).getTime() / 1000,
       end: new Date(el.end).getTime() / 1000,

@@ -3,24 +3,27 @@ import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 import GoogleClient from "../helpers/GoogleClient"
 import { Appointment } from "../../appointments/types"
 
-interface Props {
+interface CreateCalendarArguments {
   appointment: Appointment
   userId: number
 }
 
-export default async function createCalendarEvents({ appointment, userId }: Props) {
+export default async function createCalendarEvents({
+  appointment,
+  userId,
+}: CreateCalendarArguments) {
   await updateCalendarCredentials(userId)
 
   const auth = GoogleClient.Connection
 
   const calendar = google.calendar({ version: "v3", auth })
 
-  let startDate: Date = new Date(appointment.start)
+  let startDate = new Date(appointment.start)
 
-  var endDate: Date = new Date(appointment.start)
+  let endDate = new Date(appointment.start)
   endDate.setMilliseconds(appointment.durationInMilliseconds + startDate.getMilliseconds())
 
-  var event = {
+  let event = {
     summary: appointment.title,
     location: appointment.location || "",
     description: appointment.description,
@@ -37,7 +40,7 @@ export default async function createCalendarEvents({ appointment, userId }: Prop
     },
   }
 
-  calendar.events.insert(
+  await calendar.events.insert(
     {
       auth: auth,
       calendarId: "primary",
@@ -45,8 +48,7 @@ export default async function createCalendarEvents({ appointment, userId }: Prop
     },
     function (err) {
       if (err) {
-        console.log("There was an error contacting the Calendar service: " + err)
-        return
+        throw new Error("An error occured: Error contacting the Calendar service: " + err)
       }
     }
   )
