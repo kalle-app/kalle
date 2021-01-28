@@ -54,6 +54,8 @@ model ConnectedCalendar {
   ownerId Int
   status ConnectedCalendarStatus
   type String
+  account Json
+  scopes String[]
 }
 
 model Meeting {

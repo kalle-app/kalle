@@ -36,9 +36,11 @@
     ]
   },
   "dependencies": {
+    "@azure/msal-node": "1.0.0-beta.4",
     "@fortawesome/fontawesome-svg-core": "1.2.32",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.12",
+    "@microsoft/microsoft-graph-client": "2.2.1",
     "@prisma/client": "2.14.0",
     "blitz": "0.29.1",
     "bootstrap": "4.5.3",
@@ -50,6 +52,7 @@
     "hbs": "4.1.1",
     "ics": "2.26.1",
     "lodash": "4.17.20",
+    "msal": "1.4.4",
     "node-fetch": "2.6.1",
     "node-ical": "0.12.3",
     "nodemailer": "6.4.16",

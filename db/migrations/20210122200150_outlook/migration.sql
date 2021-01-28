@@ -35,12 +35,15 @@ CREATE TABLE "Session" (
 CREATE TABLE "ConnectedCalendar" (
 "id" SERIAL,
     "name" TEXT NOT NULL,
-    "caldavAddress" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
-    "encryptedPassword" TEXT NOT NULL,
+    "caldavAddress" TEXT,
+    "username" TEXT,
+    "encryptedPassword" TEXT,
+    "refreshToken" TEXT,
     "ownerId" INTEGER NOT NULL,
     "status" "ConnectedCalendarStatus" NOT NULL,
     "type" TEXT NOT NULL,
+    "account" JSONB NOT NULL,
+    "scopes" TEXT[],
 
     PRIMARY KEY ("id")
 );
