@@ -13,20 +13,22 @@ import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import deleteUserMutation from "../mutations/deleteUser"
 import logoutMutation from "app/auth/mutations/logout"
+import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
+  const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
 
   return (
-    <Card>
+    <Card className="mt-4">
       {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
 
       <SectionHeader
         title="My Calendars"
         subtitle="Add Calendars that you want to connect to Kalle"
       />
-      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
+      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} defaultCalendarId={defaultCalendarId} />
       <SectionFooter
         id="add-calendar-button"
         text="Add Calendar"
