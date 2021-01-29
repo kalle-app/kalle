@@ -1,13 +1,3 @@
-$nice-dates-color-gray-dark: #e44500;
-$nice-dates-color-gray: #e44500;
-$nice-dates-color-gray-light: #e44500;
-$nice-dates-color-accent: $nice-dates-color-gray-dark;
-$nice-dates-font-size-small: 12px;
-$nice-dates-font-size-base: 14px;
-$nice-dates-font-size-big: 16px;
-
-@import "react-nice-dates/src/style.scss";
-
 @import url(https://fonts.googleapis.com/css?family=Quicksand:200,300,400,700);
 
 $headings-font-family: Quicksand;
@@ -38,3 +28,25 @@ $carousel-indicator-active-bg: #000000;
     background-color: $primary !important;
   }
 }
+
+$nice-dates-color-gray-dark: $secondary;
+
+.nice-dates-day {
+  &.-selected {
+    &:before {
+      background-color: $primary;
+    }
+    &:hover {
+      &:after {
+        border: 2px solid $primary;
+      }
+    }
+  }
+  &:hover {
+    &:after {
+      border: 2px solid $primary;
+    }
+  }
+}
+
+@import "react-nice-dates/src/style.scss";
