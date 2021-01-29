@@ -33,5 +33,14 @@ module.exports = {
   watchPathIgnorePatterns: ["node_modules"],
   // Coverage output
   coverageDirectory: ".coverage",
-  collectCoverageFrom: ["**/*.{js,jsx,ts,tsx}", "!**/*.d.ts", "!**/node_modules/**"],
+  collectCoverageFrom: [
+    "*/**/*.{js,jsx,ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**",
+    "!cypress/**",
+    "!db/**",
+    "!test/**",
+    "!coverage/**",
+    "!.*/**",
+  ],
 }
