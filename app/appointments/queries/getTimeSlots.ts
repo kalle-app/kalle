@@ -56,15 +56,6 @@ export default async function getTimeSlots(
     meeting.endDate
   )
 
-  if (hideInviteeSlots) {
-    ctx.session.authorize()
-    const inviteeCalendars = await db.connectedCalendar.findMany({
-      where: { ownerId: ctx.session.userId },
-    })
-    // Get all googleCal and caldav events merged, merge them to takenSlots
-    if (!inviteeCalendars) return null
-  }
-
   const between = {
     start: meeting.startDate,
     end: meeting.endDate,
