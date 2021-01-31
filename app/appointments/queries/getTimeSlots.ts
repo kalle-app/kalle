@@ -43,7 +43,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
   let takenTimeSlots: ExternalEvent[] = []
 
-  Promise.all([
+  await Promise.all([
     getCaldavTakenSlots(calendars, meeting),
     getGoogleCalendarSlots(calendars, meeting, meetingOwner),
   ]).then((values) => {

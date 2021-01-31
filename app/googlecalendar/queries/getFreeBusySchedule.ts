@@ -43,12 +43,10 @@ export default async function getFreeBusySchedule({ start, end, userId }: GetFre
     })
     .then((res) => {
       let rawFreeBusy: TimeSlotString[] = []
-      console.log(res.data.calendars)
       for (let key in res.data.calendars) {
         res.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
       }
       const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
-
       return convertToExternalEvent(result)
     })
     .catch((_) => {
