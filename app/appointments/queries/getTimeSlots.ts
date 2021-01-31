@@ -1,12 +1,13 @@
-import { getTakenTimeSlots } from "app/caldav"
+import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
+import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
 import passwordEncryptor from "app/users/password-encryptor"
 import { Ctx } from "blitz"
-import db, { DailySchedule } from "db"
+import db, { ConnectedCalendar, DailySchedule, Meeting, User } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
-  scheduleToTakenSlots,
-  Schedule,
   Days,
+  Schedule,
+  scheduleToTakenSlots,
   timeStringToPartialTime,
 } from "../utils/scheduleToTakenSlots"
 
@@ -32,11 +33,6 @@ export default async function getTimeSlots(
 
   if (!meetingOwner) return null
 
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meetingOwner.id },
-  })
-  if (!calendar) return null
-
   const schedule = meeting.schedule.dailySchedules.reduce((res: Schedule, item: DailySchedule) => {
     res[Days[item.day]] = {
       start: timeStringToPartialTime(item.startTime),
@@ -45,16 +41,37 @@ export default async function getTimeSlots(
     return res
   }, {})
 
-  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+  const calendars = await db.connectedCalendar.findMany({
+    where: { ownerId: meetingOwner.id },
+  })
+  if (calendars.length === 0) return null
 
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  let takenTimeSlots: ExternalEvent[] = []
+
+  const calendarPromises: Promise<ExternalEvent[]>[] = []
+  calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
+  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, meetingOwner))
+
+  if (hideInviteeSlots) {
+    ctx.session.authorize()
+    const invitee = await db.user.findFirst({
+      where: { id: ctx.session.userId },
+      include: { calendars: true}
+    })
+    if (!invitee) {
+      throw new Error("Current user invalid. Try logging in again")
+    }
+    if(invitee.calendars) {
+      calendarPromises.push(getCaldavTakenSlots(invitee.calendars, meeting))
+      calendarPromises.push(getGoogleCalendarSlots(invitee.calendars, meeting, invitee))
+    }
+  }
+
+  Promise.all(calendarPromises).then((values) => {
+    values.map((slots) => {
+      takenTimeSlots.push(...slots)
+    })
+  })
 
   const between = {
     start: meeting.startDate,
@@ -66,4 +83,41 @@ export default async function getTimeSlots(
     durationInMilliseconds: meeting.duration * 60 * 1000,
     takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
   })
+}
+
+async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
+  let slots: ExternalEvent[] = []
+  const caldavCalendars = calendars.filter((calendar) => calendar.type == "caldav")
+  for (const calendar of caldavCalendars) {
+    const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
+    const newTakenSlots = await getTakenTimeSlots(
+      {
+        url: calendar.caldavAddress!,
+        auth: { username: calendar.username!, password, digest: true },
+      },
+      meeting.startDate,
+      meeting.endDate
+    )
+    slots.push(...newTakenSlots)
+  }
+  return slots
+}
+
+async function getGoogleCalendarSlots(
+  calendars: ConnectedCalendar[],
+  meeting: Meeting,
+  meetingOwner: User
+) {
+  if (calendars.some((calendar) => calendar.type == "Google Calendar")) {
+    const newTakenSlots = await getFreeBusySchedule({
+      start: meeting.startDate,
+      end: meeting.endDate,
+      userId: meetingOwner.id,
+    })
+    if (newTakenSlots) {
+      return newTakenSlots
+    }
+  }
+  const empty: ExternalEvent[] = []
+  return empty
 }

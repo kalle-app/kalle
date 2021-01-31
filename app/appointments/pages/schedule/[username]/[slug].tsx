@@ -1,15 +1,15 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
+import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import getMeeting from "app/appointments/queries/getMeeting"
-import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation, Link } from "blitz"
+import { BlitzPage, useQuery, useParam, useMutation, Link, invalidateQuery } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import React, { Suspense, useEffect, useState } from "react"
+import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
-import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 interface SchedulerProps {
@@ -52,11 +52,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }, [slots, setSelectedDay])
 
   useEffect(() => {
-    if (hideOccupied) {
-      // ToDo get my cal and hide fields where i am not available
-      return
-    }
-    // show all appointments again
+    invalidateQuery(getTimeSlots)
   }, [hideOccupied])
 
   if (!meeting) {
@@ -118,7 +114,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                       id="custom-switch"
                       label="Only display dates where I am available"
                       value={String(hideOccupied)}
-                      onChange={() => setHideOccupied(!hideOccupied)}
+                      onClick={() => setHideOccupied(!hideOccupied)}
                     />
                   </Form>
                 ) : (

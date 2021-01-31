@@ -42,7 +42,12 @@ const PersonalInformation = () => {
     <Card className="mt-4">
       <SectionHeader title="Personal Information" subtitle="Change your account information here" />
       <UserDataForm />
-      <SectionFooter text="Update Information" variant="primary" action={() => alert("Test")} />
+      <SectionFooter
+        id="update"
+        text="Update Information"
+        variant="primary"
+        action={() => alert("Test")}
+      />
     </Card>
   )
 }

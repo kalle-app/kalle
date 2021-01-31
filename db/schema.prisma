@@ -46,9 +46,10 @@ enum ConnectedCalendarStatus {
 model ConnectedCalendar {
   id  Int @id @default(autoincrement())
   name String
-  caldavAddress String
-  username String
-  encryptedPassword String
+  caldavAddress String?
+  username String?
+  encryptedPassword String?
+  refreshToken String?
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   status ConnectedCalendarStatus

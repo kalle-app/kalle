@@ -42,17 +42,21 @@ const LoginPage: BlitzPage = () => {
         <Form>
           <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
+            <Form.Control id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} />
+            <Form.Control
+              id="password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </Form.Group>
           <Form.Text className="text-danger mb-4">{message}</Form.Text>
         </Form>
         <Row>
           <Col>
-            <Button variant="primary" onClick={processLogin} id="login">
+            <Button id="login" variant="primary" onClick={processLogin}>
               Log In
             </Button>
           </Col>
