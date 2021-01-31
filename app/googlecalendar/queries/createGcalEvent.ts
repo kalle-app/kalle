@@ -8,10 +8,7 @@ interface CreateCalendarArguments {
   userId: number
 }
 
-export default async function createCalendarEvents({
-  appointment,
-  userId,
-}: CreateCalendarArguments) {
+export default async function createGcalEvent({ appointment, userId }: CreateCalendarArguments) {
   await updateCalendarCredentials(userId)
 
   const auth = GoogleClient.Connection
@@ -47,9 +44,8 @@ export default async function createCalendarEvents({
       requestBody: event,
     },
     function (err) {
-      if (err) {
-        throw new Error("An error occured: Error contacting the Calendar service: " + err)
-      }
+      if (err) return "failure"
+      return "success"
     }
   )
 }

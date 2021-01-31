@@ -66,7 +66,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
 async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
   let slots: ExternalEvent[] = []
-  const caldavCalendars = calendars.filter((calendar) => calendar.type == "caldav")
+  const caldavCalendars = calendars.filter((calendar) => calendar.type === "caldav")
   for (const calendar of caldavCalendars) {
     const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
     const newTakenSlots = await getTakenTimeSlots(
@@ -87,7 +87,7 @@ async function getGoogleCalendarSlots(
   meeting: Meeting,
   meetingOwner: User
 ) {
-  if (calendars.some((calendar) => calendar.type == "Google Calendar")) {
+  if (calendars.some((calendar) => calendar.type === "Google Calendar")) {
     const newTakenSlots = await getFreeBusySchedule({
       start: meeting.startDate,
       end: meeting.endDate,
