@@ -25,20 +25,18 @@ function OAuthCallbackPage() {
       if (!code || Array.isArray(code))
         return <p>Google Authentication failed with Code {code}. Please try again.</p>
 
-      return postOAuthToken(code)
-        .then(({ access_token, refresh_token }: GoogleCalendarCredentials) => {
-          if (!access_token || !refresh_token) {
-            setIsError(true)
-          } else {
-            postCredentials({
-              credentials: { access_token, refresh_token },
-              name: calendarName,
-              status: "active",
-              type: "Google Calendar",
-            }).catch(() => setIsError(true))
-          }
+      const { access_token, refresh_token }: GoogleCalendarCredentials = await postOAuthToken(code)
+      if (!access_token || !refresh_token) setIsError(true)
+      try {
+        await postCredentials({
+          credentials: { access_token, refresh_token },
+          name: calendarName,
+          status: "active",
+          type: "Google Calendar",
         })
-        .catch((e) => setIsError(true))
+      } catch (error) {
+        setIsError(true)
+      }
     } catch (error) {
       setIsError(true)
     }
