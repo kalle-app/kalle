@@ -36,22 +36,16 @@ export default async function getFreeBusySchedule({ start, end, userId }: GetFre
     calendarExpansionMax: 100,
     items: calendarIDs.map((item) => ({ id: item })),
   }
+  const freebusy = await calendar.freebusy.query({
+    requestBody: body,
+  })
 
-  return calendar.freebusy
-    .query({
-      requestBody: body,
-    })
-    .then((res) => {
-      let rawFreeBusy: TimeSlotString[] = []
-      for (let key in res.data.calendars) {
-        res.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
-      }
-      const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
-      return convertToExternalEvent(result)
-    })
-    .catch((_) => {
-      "could not get freebusy"
-    })
+  let rawFreeBusy: TimeSlotString[] = []
+  for (let key in freebusy.data.calendars) {
+    freebusy.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
+  }
+
+  return convertToExternalEvent(mergeArr(convertToUnix(rawFreeBusy)))
 }
 
 /**
