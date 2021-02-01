@@ -1,6 +1,6 @@
 import { google } from "googleapis"
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
-import GoogleClient from "../helpers/GoogleClient"
+import { getGoogleClient } from "../helpers/GoogleClient"
 import { Appointment } from "../../appointments/types"
 
 interface CreateCalendarArguments {
@@ -11,7 +11,7 @@ interface CreateCalendarArguments {
 export default async function createGcalEvent({ appointment, userId }: CreateCalendarArguments) {
   await updateCalendarCredentials(userId)
 
-  const auth = GoogleClient.Connection
+  const auth = getGoogleClient()
 
   const calendar = google.calendar({ version: "v3", auth })
 

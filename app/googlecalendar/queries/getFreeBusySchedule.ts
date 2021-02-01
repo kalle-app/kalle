@@ -1,6 +1,6 @@
 import { ExternalEvent } from "app/caldav"
 import { google } from "googleapis"
-import GoogleClient from "../helpers/GoogleClient"
+import { getGoogleClient } from "../helpers/GoogleClient"
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 
 interface TimeSlotString {
@@ -19,7 +19,7 @@ interface GetFreeBusyScheduleArgs {
 
 export default async function getFreeBusySchedule({ start, end, userId }: GetFreeBusyScheduleArgs) {
   await updateCalendarCredentials(userId)
-  const auth = GoogleClient.Connection
+  const auth = getGoogleClient()
   const calendar = google.calendar({ version: "v3", auth })
   const calendars = await calendar.calendarList.list({
     minAccessRole: "owner",
