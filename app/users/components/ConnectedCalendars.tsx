@@ -1,5 +1,5 @@
 import { ConnectedCalendar } from "@prisma/client"
-import {useState} from "react"
+import { useState } from "react"
 import { useMutation, invalidateQuery, useQuery } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
@@ -12,9 +12,8 @@ interface ConnectedCalendarsProps {
   defaultCalendarId: number
 }
 
-
 const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(false)
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
   const [changeDefaultCalendar] = useMutation(updateDefaultCalendar)
   const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
@@ -23,34 +22,37 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
     const calendar = await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
-  const onChange = (event)=> {
+  const onChange = (event) => {
     changeDefaultCalendar(parseInt(event.target.value))
   }
   var dropdownElements: Array<JSX.Element> = []
-  
+
   //if (props.defaultCalendarId === null) dropdownElements.push(<option key={-1} value={-1}>Kalender auswählen</option>);
-  props.calendars.forEach(calendar => {
-    dropdownElements.push(<option key={calendar.id} value={calendar.id}>{calendar.name}</option>);
+  props.calendars.forEach((calendar) => {
+    dropdownElements.push(
+      <option key={calendar.id} value={calendar.id}>
+        {calendar.name}
+      </option>
+    )
   })
 
   return (
     <div>
-      {
-      props.calendars.length > 0 && 
-      <Form className="m-3" validated={validated} noValidate>
-        <Form.Group controlId="formName">
-          <Form.Label>Select your default calendar:</Form.Label>
+      {props.calendars.length > 0 && (
+        <Form className="m-3" validated={validated} noValidate>
+          <Form.Group controlId="formName">
+            <Form.Label>Select your default calendar:</Form.Label>
             <Form.Control
-                as="select"
-                name="defaultCalendar"
-                defaultValue={props.defaultCalendarId}
-                onChange={onChange}
-              >
-                {dropdownElements}
+              as="select"
+              name="defaultCalendar"
+              defaultValue={props.defaultCalendarId}
+              onChange={onChange}
+            >
+              {dropdownElements}
             </Form.Control>
-        </Form.Group>
-      </Form>
-      }
+          </Form.Group>
+        </Form>
+      )}
       <Table>
         <thead>
           <tr>
