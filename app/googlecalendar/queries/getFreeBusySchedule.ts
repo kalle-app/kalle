@@ -59,6 +59,8 @@ export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   })
 
   let mergedArr: DateTimeUnix[] = []
+
+  // timestamps of the year 2500 to make the algorithm work, see docs for deeper explanation
   arr.push({ start: 16754814600, end: 16754818200 })
   let old = arr[0]
   let temp: DateTimeUnix = { start: -1, end: -1 }
