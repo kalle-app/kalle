@@ -1,128 +1,88 @@
-# Branching
+# Contributing to Kalle
 
-## Quick Legend
+This document aims to ease new contributors into working on Kalle.
 
-<table>
-  <thead>
-    <tr>
-      <th>Instance</th>
-      <th>Branch</th>
-      <th>Description, Instructions, Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Stable</td>
-      <td>master</td>
-      <td>Accepts merges from develop</td>
-    </tr>
-    <tr>
-      <td>Working</td>
-      <td>develop</td>
-      <td>Accepts merges from Features and Hotfixes</td>
-    </tr>
-    <tr>
-      <td>Features</td>
-      <td>feature/bugfix</td>
-      <td>Always branch off HEAD of Working</td>
-    </tr>
-  </tbody>
-</table>
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=3 orderedList=false} -->
 
-## Main Branches
+<!-- code_chunk_output -->
 
-The main repository will always hold two evergreen branches:
+- [Introduction to the Codebase](#introduction-to-the-codebase)
+  - [Term Definitions](#term-definitions)
+  - [Starting a Development Environment](#starting-a-development-environment)
+  - [Database Structure](#database-structure)
+  - [Folder Structure](#folder-structure)
+- [Some Code Guidelines](#some-code-guidelines)
 
-- `master`
-- `develop`
+<!-- /code_chunk_output -->
 
-The main branch should be considered `origin/develop` and will be the main branch where the source code of `HEAD` always reflects a state with the latest delivered development changes for the next release. As a developer, you will be branching and merging from `develop`.
+## Introduction to the Codebase
 
-Consider `origin/master` to always represent the latest code deployed to production. During day to day development, the `master` branch will not be interacted with.
+This introduction assumes that you've used Kalle and are familiar with the problem it solves.
 
-When the source code in the `develop` branch is stable and has been deployed, all of the changes will be merged into `master` and tagged with a release number. _How this is done in detail will be discussed later._
+### Term Definitions
 
-## Supporting Branches
+To prevent misunderstanding, we agree on using the following terms to describe our problem domain:
 
-Supporting branches are used to aid parallel development between team members, ease tracking of features, and to assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited life time, since they will be removed eventually.
+| Term                   | Description                                                                                                                                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Appointment Suggestion | Created by the _Invitee_, by opening the scheduling link and selecting one of the available timeslots.                                                                                                             |
+| Appointment            | An _Appointment Suggestion_ that was accepted by the _Calendar Owner_.                                                                                                                                             |
+| Calendar Owner         | Registered user that uses Kalle to invite people (aka to use Kalle to send a link to get _Appointment Suggestions_ from _Invitees_)                                                                                |
+| Connected Calendar     | An external calendar, connected via CalDav / GCal / O365 / ...                                                                                                                                                     |
+| External Event         | An interval in the _Unified Calendar_, during which the calendar owner isn't available for appointment booking.                                                                                                    |
+| Meeting                | Created by a _Calendar Owner_ when they want to schedule an appointment with someone. Can be understood as "the desire to speak about some topic". Kalle is used to help to find an _Appointment_ for a _Meeting_. |
+| Integrated Calendar    | The Kalle-hosted calendar used for blocking slots                                                                                                                                                                  |
+| Invitee                | Invited by the _Calendar Owner_ to schedule an appointment with them.                                                                                                                                              |
+| Target Calendar        | The _Connected Calendars_ where _Appointments_ are inserted.                                                                                                                                                       |
+| Time Slot              | An time period (its duration, e.g. 30 min. is defined by the calendar owner) in which the calendar owner is available and that can be picked from an _invitee_ to create as _appointment suggestion_.              |
+| Unified Calendar       | The combination of all _Connected Calendars_ and the _Integrated Calendar_.                                                                                                                                        |
 
-The different types of branches we may use are:
+#### Example of finding an Appointment
 
-- Feature branches
-- fix branches
+Alice wants to meet with Bob to talk about Goldfishes. For this purpose, she creates a _Meeting_ in Kalle with the topic "Goldfish Update". She sends Bob the link to this _meeting_ (kalle.app/alice/goldfish-updates).
 
-Each of these branches have a specific purpose and are bound to strict rules as to which branches may be their originating branch and which branches must be their merge targets. Each branch and its usage is explained below.
+Bob opens the link and gets a lot of _time slots_ displayed in wich Alice is available. He chooses one of them. With this he creates an _Appointment Suggestion_.
 
-### Feature Branches
+Alice receives an e-mail: "Bob has chosen an appointment". She clicks on "Confirm". This turns the _Appointment Suggestion_ into an _Appointment_ for the _meeting_ called "Goldfish Update".
 
-Feature branches are used when developing a new feature or enhancement which has the potential of a development lifespan longer than a single deployment. When starting development, the deployment in which this feature will be released may not be known. No matter when the feature branch will be finished, it will always be merged back into the develop branch.
+### Starting a Development Environment
 
-During the lifespan of the feature development, the lead should watch the `develop` branch (network tool or branch tool in GitHub) to see if there have been commits since the feature was branched. Any and all changes to `develop` should be merged into the feature before merging back to `develop`; this can be done at various times during the project or at the end, but time to handle merge conflicts should be accounted for.
+Requirements:
 
-`<tbd number>` represents the project to which Project Management will be tracked.
+- [ ] Docker, Docker-Compose
+- [ ] Node.js
 
-- Must branch from: `develop`
-- Must merge back into: `develop`
-- Branch naming convention: `feature/GH-<tbd number>`
+`npm install` to fetch dependencies.
+`npm start` to start the dev environment.
+<kbd>CTRL+C</kbd> to stop.
+`docker-compose down` to tear it down.
 
-#### Working with a feature branch
+`npm run db:seed` seeds the database (optional, but recommended).
 
-If the branch does not exist yet, create the branch locally and then push to GitHub. A feature branch should always be 'publicly' available. That is, development should never exist in just one developer's local branch.
+`npm test` executes unit & integration tests. The first run can take a while, it'll fetch some Docker images in the background.
 
-```
-$ git checkout -b feature/GH-id develop                 // creates a local branch for the new feature
-$ git push origin feature/GH-id                        // makes the new feature remotely available
-```
+`npm cypress:open` starts Cypress (e2e tests).
 
-Periodically, changes made to `develop` (if any) should be merged back into your feature branch.
+### Database Structure
 
-```
-$ git merge develop                                  // merges changes from master into feature branch
-```
+We use [Prisma](https://prisma.io) as our database client.
+Familiarise yourself with Kalle's database schema by reading [`db/schema.prisma`](./db/schema.prisma).
+You can use [Prisma-ERD](https://prisma-erd.simonknott.de) to visualize it.
 
-When development on the feature is complete, reviewers should merge changes into `develop` and then make sure the remote branch is deleted.
+### Folder Structure
 
-```
-$ git checkout develop                               // change to the develop branch
-$ git merge --no-ff feature/GH-id                      // makes sure to create a commit object during merge
-$ git push origin develop                            // push merge changes
-$ git push origin :feature/GH-id                       // deletes the remote branch
-```
+Kalle's core can be found in [`app/`](./app).
+A good way of getting to grips with the codebase is to start at the `pages/`-folders, and work your way from there.
 
-> Please merge via the CLI instead of merging via Squeak. Otherwise some git-files for the CI and other services will be lost.
+[`db/`](./db) contains the database schema, migrations and a seed script.
 
-### Fix Branches
+[`test/`](./test) contains all kinds of utilities needed for our integration tests.
 
-Fix branches differ from feature branches only semantically. Fix branches will be created when there is a bug on the develop branch that should be fixed and merged into the next deployment. For that reason, a bug branch typically will not last longer than one deployment cycle. Additionally, bug branches are used to explicitly track the difference between bug development and feature development. No matter when the bug branch will be finished, it will always be merged back into `develop`.
+[`cypress/`](./cypress) contains end-to-end tests.
 
-Although likelihood will be less, during the lifespan of the bug development, the lead should watch the `develop` branch (network tool or branch tool in GitHub) to see if there have been commits since the bug was branched. Any and all changes to `develop` should be merged into the bug before merging back to `develop`; this can be done at various times during the project or at the end, but time to handle merge conflicts should be accounted for.
+[`email/`](./email) contains email templates.
 
-`<tbd number>` represents the Basecamp project to which Project Management will be tracked.
+## Some Code Guidelines
 
-- Must branch from: `develop`
-- Must merge back into: `develop`
-- Branch naming convention: `bugfix/GH-<GH number>`
-
-#### Working with a fix branch
-
-If the branch does not exist yet, create the branch locally and then push to GitHub. A bug branch should always be 'publicly' available. That is, development should never exist in just one developer's local branch.
-
-```
-$ git checkout -b bugfix/GH-id develop                     // creates a local branch for the new bug
-$ git push origin bugfix/GH-id                            // makes the new bug remotely available
-```
-
-Periodically, changes made to `develop` (if any) should be merged back into your bug branch.
-
-```
-$ git merge develop                                  // merges changes from develop into bug branch
-```
-
-When development on the bug is complete, [the Lead] should merge changes into `develop` and then make sure the remote branch is deleted.
-
-```
-$ git checkout develop                               // change to the develop branch
-$ git merge --no-ff bugfix/GH-id                          // makes sure to create a commit object during merge
-$ git push origin develop                            // push merge changes
-$ git push origin :bugfix/GH-id                           // deletes the remote branch
-```
+- We follow the [Github Flow](https://guides.github.com/introduction/flow/).
+- Make sure to name your branches semantically succinct. We like to use the prefixes `feature/`, `fix/` and `chore/`.
