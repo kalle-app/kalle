@@ -71,6 +71,8 @@ You can use [Prisma-ERD](https://prisma-erd.simonknott.de) to visualize it.
 
 ### Folder Structure
 
+Familiarity with Blitz.js is assumed. [Blitz.js Tutorial](https://blitzjs.com/docs/tutorial)
+
 Kalle's core can be found in [`app/`](./app).
 A good way of getting to grips with the codebase is to start at the `pages/`-folders, and work your way from there.
 
