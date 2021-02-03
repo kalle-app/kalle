@@ -5,7 +5,7 @@ import { addMinutes } from "date-fns"
 import childProcess from "child_process"
 
 async function getBaikalContainer() {
-  return new GenericContainer("ckulka/baikal", "nginx")
+  return new GenericContainer("ckulka/baikal", "0.7.2-nginx")
     .withExposedPorts(80)
     .withBindMount(
       path.join(__dirname, "../../test/baikal/Specific"),
