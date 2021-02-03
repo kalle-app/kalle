@@ -59,7 +59,7 @@ const DangerZone = () => {
   const user = useCurrentUser()
 
   const submitDeletion = async () => {
-    const calendar = await deleteUser(user?.id)
+    await deleteUser(user?.id)
     await logout()
     router.push("/")
   }

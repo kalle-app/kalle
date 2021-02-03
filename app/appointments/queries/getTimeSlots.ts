@@ -1,6 +1,7 @@
 import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
 import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
 import passwordEncryptor from "app/users/password-encryptor"
+import { Ctx } from "blitz"
 import db, { ConnectedCalendar, DailySchedule, Meeting, User } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -13,9 +14,13 @@ import {
 interface GetTimeSlotsArgs {
   meetingSlug: string
   ownerName: string
+  hideInviteeSlots: boolean
 }
 
-export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSlotsArgs) {
+export default async function getTimeSlots(
+  { meetingSlug, ownerName, hideInviteeSlots }: GetTimeSlotsArgs,
+  ctx: Ctx
+) {
   const meeting = await db.meeting.findFirst({
     where: { link: meetingSlug, ownerName: ownerName },
     include: { schedule: { include: { dailySchedules: true } } },
@@ -43,13 +48,29 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
   let takenTimeSlots: ExternalEvent[] = []
 
-  await Promise.all([
-    getCaldavTakenSlots(calendars, meeting),
-    getGoogleCalendarSlots(calendars, meeting, meetingOwner),
-  ]).then((values) => {
-    // eslint-disable-next-line array-callback-return
-    values.map((slots) => {
-      takenTimeSlots.push(...slots)
+  const calendarPromises: Promise<ExternalEvent[]>[] = []
+  calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
+  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, meetingOwner))
+
+  if (hideInviteeSlots) {
+    ctx.session.authorize()
+    const invitee = await db.user.findFirst({
+      where: { id: ctx.session.userId },
+      include: { calendars: true },
+    })
+    if (!invitee) {
+      throw new Error("Current user invalid. Try logging in again")
+    }
+    if (invitee.calendars) {
+      calendarPromises.push(getCaldavTakenSlots(invitee.calendars, meeting))
+      calendarPromises.push(getGoogleCalendarSlots(invitee.calendars, meeting, invitee))
+    }
+  }
+
+  const calendarPromiseRes = await Promise.all(calendarPromises)
+  calendarPromiseRes.forEach((values) => {
+    values.forEach((slots) => {
+      takenTimeSlots.push(slots)
     })
   })
 
@@ -67,7 +88,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
 async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
   let slots: ExternalEvent[] = []
-  const caldavCalendars = calendars.filter((calendar) => calendar.type === "caldav")
+  const caldavCalendars = calendars.filter((calendar) => calendar.type === "CalDav")
   for (const calendar of caldavCalendars) {
     const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
     const newTakenSlots = await getTakenTimeSlots(

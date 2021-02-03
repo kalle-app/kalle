@@ -15,8 +15,6 @@ export default async function createAppointmentEventMutation(
   bookingDetails: BookingDetails,
   ctx: Ctx
 ) {
-  ctx.session.authorize()
-
   const meeting = await db.meeting.findFirst({
     where: { id: bookingDetails.meetingId },
     include: {
@@ -48,7 +46,6 @@ export default async function createAppointmentEventMutation(
       date: bookingDetails.date,
     },
   })
-
   if (calendar.type === "Google Calendar") {
     const appointment = {
       start: bookingDetails.date,

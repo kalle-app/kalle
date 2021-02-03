@@ -12,7 +12,7 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
 
   const submitDeletion = async (calendarId: number) => {
-    const calendar = await deleteCalendar(calendarId)
+    await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
 

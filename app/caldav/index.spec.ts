@@ -198,7 +198,9 @@ function test(calendarBackend: Backends) {
             end: new Date("2020-11-26T11:00:00.000Z"),
           },
         ]
-        expect(result).toEqual(expected)
+        expect(result).toContainEqual(expected[0])
+        expect(result).toContainEqual(expected[1])
+        expect(result).toContainEqual(expected[2])
       })
     })
 
@@ -235,7 +237,9 @@ function test(calendarBackend: Backends) {
             end: new Date("2020-11-26T11:00:00.000Z"),
           },
         ]
-        expect(result).toEqual(expected)
+        expect(result).toContainEqual(expected[0])
+        expect(result).toContainEqual(expected[1])
+        expect(result).toContainEqual(expected[2])
       })
     })
 
