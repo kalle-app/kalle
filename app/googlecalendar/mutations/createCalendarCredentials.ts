@@ -35,5 +35,5 @@ export default async function createCalendarCredentials(
     },
   })
 
-  return { fail: null }
+  return true
 }
