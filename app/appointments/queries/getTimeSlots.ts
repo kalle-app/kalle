@@ -47,6 +47,7 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     getCaldavTakenSlots(calendars, meeting),
     getGoogleCalendarSlots(calendars, meeting, meetingOwner),
   ]).then((values) => {
+    // eslint-disable-next-line array-callback-return
     values.map((slots) => {
       takenTimeSlots.push(...slots)
     })
