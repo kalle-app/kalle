@@ -56,12 +56,12 @@ export default async function getTimeSlots(
     ctx.session.authorize()
     const invitee = await db.user.findFirst({
       where: { id: ctx.session.userId },
-      include: { calendars: true}
+      include: { calendars: true },
     })
     if (!invitee) {
       throw new Error("Current user invalid. Try logging in again")
     }
-    if(invitee.calendars) {
+    if (invitee.calendars) {
       calendarPromises.push(getCaldavTakenSlots(invitee.calendars, meeting))
       calendarPromises.push(getGoogleCalendarSlots(invitee.calendars, meeting, invitee))
     }

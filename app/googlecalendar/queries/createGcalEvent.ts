@@ -1,6 +1,6 @@
 import { google } from "googleapis"
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
-import GoogleClient from "../helpers/GoogleClient"
+import { getGoogleClient } from "../helpers/GoogleClient"
 import { Appointment } from "../../appointments/types"
 
 interface CreateCalendarArguments {
@@ -8,13 +8,10 @@ interface CreateCalendarArguments {
   userId: number
 }
 
-export default async function createCalendarEvents({
-  appointment,
-  userId,
-}: CreateCalendarArguments) {
+export default async function createGcalEvent({ appointment, userId }: CreateCalendarArguments) {
   await updateCalendarCredentials(userId)
 
-  const auth = GoogleClient.Connection
+  const auth = getGoogleClient()
 
   const calendar = google.calendar({ version: "v3", auth })
 
@@ -47,9 +44,8 @@ export default async function createCalendarEvents({
       requestBody: event,
     },
     function (err) {
-      if (err) {
-        throw new Error("An error occured: Error contacting the Calendar service: " + err)
-      }
+      if (err) return "failure"
+      return "success"
     }
   )
 }

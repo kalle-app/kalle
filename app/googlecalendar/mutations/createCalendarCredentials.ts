@@ -23,7 +23,7 @@ export default async function createCalendarCredentials(
 
   if (!owner) throw new Error("Invariant failed: Owner does not exist.")
 
-  return await db.connectedCalendar.create({
+  await db.connectedCalendar.create({
     data: {
       name: name,
       owner: {
@@ -34,4 +34,6 @@ export default async function createCalendarCredentials(
       refreshToken: credentials.refresh_token,
     },
   })
+
+  return { fail: null }
 }

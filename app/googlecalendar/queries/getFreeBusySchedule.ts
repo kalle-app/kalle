@@ -1,6 +1,6 @@
 import { ExternalEvent } from "app/caldav"
 import { google } from "googleapis"
-import GoogleClient from "../helpers/GoogleClient"
+import { getGoogleClient } from "../helpers/GoogleClient"
 import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
 
 interface TimeSlotString {
@@ -19,7 +19,7 @@ interface GetFreeBusyScheduleArgs {
 
 export default async function getFreeBusySchedule({ start, end, userId }: GetFreeBusyScheduleArgs) {
   await updateCalendarCredentials(userId)
-  const auth = GoogleClient.Connection
+  const auth = getGoogleClient()
   const calendar = google.calendar({ version: "v3", auth })
   const calendars = await calendar.calendarList.list({
     minAccessRole: "owner",
@@ -36,24 +36,16 @@ export default async function getFreeBusySchedule({ start, end, userId }: GetFre
     calendarExpansionMax: 100,
     items: calendarIDs.map((item) => ({ id: item })),
   }
+  const freebusy = await calendar.freebusy.query({
+    requestBody: body,
+  })
 
-  return calendar.freebusy
-    .query({
-      requestBody: body,
-    })
-    .then((res) => {
-      let rawFreeBusy: TimeSlotString[] = []
-      console.log(res.data.calendars)
-      for (let key in res.data.calendars) {
-        res.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
-      }
-      const result: DateTimeUnix[] = mergeArr(convertToUnix(rawFreeBusy))
+  let rawFreeBusy: TimeSlotString[] = []
+  for (let key in freebusy.data.calendars) {
+    freebusy.data.calendars[key].busy?.forEach((el: TimeSlotString) => rawFreeBusy.push(el))
+  }
 
-      return convertToExternalEvent(result)
-    })
-    .catch((_) => {
-      "could not get freebusy"
-    })
+  return convertToExternalEvent(mergeArr(convertToUnix(rawFreeBusy)))
 }
 
 /**
@@ -67,6 +59,8 @@ export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   })
 
   let mergedArr: DateTimeUnix[] = []
+
+  // timestamps of the year 2500 to make the algorithm work, see docs for deeper explanation
   arr.push({ start: 16754814600, end: 16754818200 })
   let old = arr[0]
   let temp: DateTimeUnix = { start: -1, end: -1 }

@@ -5,10 +5,6 @@ import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
 import postOAuthToken from "../queries/postOAuthToken"
 
-interface GoogleCalendarCredentials {
-  access_token: string
-  refresh_token: string
-}
 /**
  * This gets a code as a query parameter. This code needs to be sent to googleapi which returns a refresh_token. The refresh_tokem is used to generate a session_access_token.
  */
@@ -25,20 +21,22 @@ function OAuthCallbackPage() {
       if (!code || Array.isArray(code))
         return <p>Google Authentication failed with Code {code}. Please try again.</p>
 
-      return postOAuthToken(code)
-        .then(({ access_token, refresh_token }: GoogleCalendarCredentials) => {
-          if (!access_token || !refresh_token) {
-            setIsError(true)
-          } else {
-            postCredentials({
-              credentials: { access_token, refresh_token },
-              name: calendarName,
-              status: "active",
-              type: "Google Calendar",
-            }).catch(() => setIsError(true))
-          }
+      const { access_token, refresh_token } = await postOAuthToken(code)
+      if (!access_token || !refresh_token) setIsError(true)
+      if (access_token == undefined || refresh_token == undefined) {
+        setIsError(true)
+        throw Error("Got now refresh or access token")
+      }
+      try {
+        await postCredentials({
+          credentials: { access_token, refresh_token },
+          name: calendarName,
+          status: "active",
+          type: "Google Calendar",
         })
-        .catch((e) => setIsError(true))
+      } catch (error) {
+        setIsError(true)
+      }
     } catch (error) {
       setIsError(true)
     }

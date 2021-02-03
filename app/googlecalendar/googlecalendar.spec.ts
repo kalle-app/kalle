@@ -23,5 +23,4 @@ describe("googlecalendar", () => {
     ]
     expect(mergeArr(calendarOne)).toEqual([{ start: 123, end: 650 }])
   })
-  it("testConversion", () => {})
 })

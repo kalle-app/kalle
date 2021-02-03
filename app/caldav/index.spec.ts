@@ -1,4 +1,4 @@
-import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } from "./"
+import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createCalDavEvent } from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
@@ -242,7 +242,7 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        const result = await createEvent(getCalendarConnection(), {
+        const result = await createCalDavEvent(getCalendarConnection(), {
           name: "DummyEvent",
           timezone: 0,
           start: date,
