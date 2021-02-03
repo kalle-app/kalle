@@ -46,6 +46,8 @@ export default async function getTimeSlots(
   })
   if (calendars.length === 0) return null
 
+  const r = await getCaldavTakenSlots(calendars, meeting)
+
   let takenTimeSlots: ExternalEvent[] = []
 
   const calendarPromises: Promise<ExternalEvent[]>[] = []
@@ -67,12 +69,14 @@ export default async function getTimeSlots(
     }
   }
 
-  Promise.all(calendarPromises).then((values) => {
+  const calendarPromiseRes = await Promise.all(calendarPromises)
+  calendarPromiseRes.forEach((values) => {
     values.forEach((slots) => {
-      takenTimeSlots.push(...slots)
+      takenTimeSlots.push(slots)
     })
   })
 
+  console.log(takenTimeSlots)
   const between = {
     start: meeting.startDate,
     end: meeting.endDate,
@@ -87,7 +91,7 @@ export default async function getTimeSlots(
 
 async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
   let slots: ExternalEvent[] = []
-  const caldavCalendars = calendars.filter((calendar) => calendar.type === "caldav")
+  const caldavCalendars = calendars.filter((calendar) => calendar.type === "CalDav")
   for (const calendar of caldavCalendars) {
     const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
     const newTakenSlots = await getTakenTimeSlots(
@@ -115,6 +119,7 @@ async function getGoogleCalendarSlots(
       userId: meetingOwner.id,
     })
     if (newTakenSlots) {
+      console.log(newTakenSlots)
       return newTakenSlots
     }
   }
