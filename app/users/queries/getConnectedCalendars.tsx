@@ -10,12 +10,12 @@ export default async function getConnectedCalendars(_ = null, ctx: Ctx) {
       caldavAddress: true,
       id: true,
       name: true,
-      owner: true,
       ownerId: true,
       status: true,
       type: true,
       username: true,
       encryptedPassword: false,
+      refreshToken: true,
     },
   })
 

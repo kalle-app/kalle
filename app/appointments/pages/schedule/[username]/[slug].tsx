@@ -1,16 +1,16 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
+import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import getMeeting from "app/appointments/queries/getMeeting"
-import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
-import { DatePickerCalendar } from "react-nice-dates"
-import "react-nice-dates/build/style.css"
-import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import { BlitzPage, useMutation, useParam, useQuery } from "blitz"
+import { enUS } from "date-fns/locale"
+import React, { Suspense, useEffect, useState } from "react"
+import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
-import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
+import { DatePickerCalendar } from "react-nice-dates"
+import "react-nice-dates/build/style.css"
 
 interface SchedulerProps {
   meetingSlug: string

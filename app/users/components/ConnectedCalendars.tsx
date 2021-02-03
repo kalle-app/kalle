@@ -1,5 +1,5 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { useMutation, invalidateQuery } from "blitz"
+import { invalidateQuery, useMutation } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"

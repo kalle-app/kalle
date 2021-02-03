@@ -1,11 +1,12 @@
-import { getTakenTimeSlots } from "app/caldav"
+import { ExternalEvent, getTakenTimeSlots } from "app/caldav"
+import getFreeBusySchedule from "app/googlecalendar/queries/getFreeBusySchedule"
 import passwordEncryptor from "app/users/password-encryptor"
-import db, { DailySchedule } from "db"
+import db, { ConnectedCalendar, DailySchedule, Meeting, User } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
-  scheduleToTakenSlots,
-  Schedule,
   Days,
+  Schedule,
+  scheduleToTakenSlots,
   timeStringToPartialTime,
 } from "../utils/scheduleToTakenSlots"
 
@@ -27,11 +28,6 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
 
   if (!meetingOwner) return null
 
-  const calendar = await db.connectedCalendar.findFirst({
-    where: { ownerId: meetingOwner.id },
-  })
-  if (!calendar) return null
-
   const schedule = meeting.schedule.dailySchedules.reduce((res: Schedule, item: DailySchedule) => {
     res[Days[item.day]] = {
       start: timeStringToPartialTime(item.startTime),
@@ -40,16 +36,22 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     return res
   }, {})
 
-  const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+  const calendars = await db.connectedCalendar.findMany({
+    where: { ownerId: meetingOwner.id },
+  })
+  if (calendars.length === 0) return null
 
-  let takenTimeSlots = await getTakenTimeSlots(
-    {
-      url: calendar.caldavAddress,
-      auth: { username: calendar.username, password, digest: true },
-    },
-    meeting.startDate,
-    meeting.endDate
-  )
+  let takenTimeSlots: ExternalEvent[] = []
+
+  await Promise.all([
+    getCaldavTakenSlots(calendars, meeting),
+    getGoogleCalendarSlots(calendars, meeting, meetingOwner),
+  ]).then((values) => {
+    // eslint-disable-next-line array-callback-return
+    values.map((slots) => {
+      takenTimeSlots.push(...slots)
+    })
+  })
 
   const between = {
     start: meeting.startDate,
@@ -61,4 +63,41 @@ export default async function getTimeSlots({ meetingSlug, ownerName }: GetTimeSl
     durationInMilliseconds: meeting.duration * 60 * 1000,
     takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
   })
+}
+
+async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meeting) {
+  let slots: ExternalEvent[] = []
+  const caldavCalendars = calendars.filter((calendar) => calendar.type === "caldav")
+  for (const calendar of caldavCalendars) {
+    const password = await passwordEncryptor.decrypt(calendar.encryptedPassword!)
+    const newTakenSlots = await getTakenTimeSlots(
+      {
+        url: calendar.caldavAddress!,
+        auth: { username: calendar.username!, password, digest: true },
+      },
+      meeting.startDate,
+      meeting.endDate
+    )
+    slots.push(...newTakenSlots)
+  }
+  return slots
+}
+
+async function getGoogleCalendarSlots(
+  calendars: ConnectedCalendar[],
+  meeting: Meeting,
+  meetingOwner: User
+) {
+  if (calendars.some((calendar) => calendar.type === "Google Calendar")) {
+    const newTakenSlots = await getFreeBusySchedule({
+      start: meeting.startDate,
+      end: meeting.endDate,
+      userId: meetingOwner.id,
+    })
+    if (newTakenSlots) {
+      return newTakenSlots
+    }
+  }
+  const empty: ExternalEvent[] = []
+  return empty
 }
