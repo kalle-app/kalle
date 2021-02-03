@@ -59,6 +59,8 @@ Requirements:
 
 `npm run db:seed` seeds the database (optional, but recommended).
 
+`npx prisma migrate dev --preview-feature` creates and applies a database migration, in case you changed your `schema.prisma`.
+
 `npm test` executes unit & integration tests. The first run can take a while, it'll fetch some Docker images in the background.
 
 `npm cypress:open` starts Cypress (e2e tests).
