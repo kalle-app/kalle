@@ -78,6 +78,7 @@ export default async function createAppointmentEventMutation(
   }
 
   const password = await passwordEncryptor.decrypt(calendar.encryptedPassword)
+
   const calDavResponse = await createCalDavEvent(
     {
       url: calendar.caldavAddress,

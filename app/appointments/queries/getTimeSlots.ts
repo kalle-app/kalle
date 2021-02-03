@@ -76,7 +76,6 @@ export default async function getTimeSlots(
     })
   })
 
-  console.log(takenTimeSlots)
   const between = {
     start: meeting.startDate,
     end: meeting.endDate,
@@ -119,7 +118,6 @@ async function getGoogleCalendarSlots(
       userId: meetingOwner.id,
     })
     if (newTakenSlots) {
-      console.log(newTakenSlots)
       return newTakenSlots
     }
   }
