@@ -34,4 +34,6 @@ export default async function createCalendarCredentials(
       refreshToken: credentials.refresh_token,
     },
   })
+
+  return { fail: null }
 }
