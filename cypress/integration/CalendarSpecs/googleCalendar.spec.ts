@@ -1,10 +1,11 @@
 import { johnDoe } from "../../../db/seed-data"
 import { loginAs } from "../../login"
+import { url } from "../../support/url"
 
 describe("A Google Calendar", () => {
   it("can be selected in settings", () => {
     loginAs(johnDoe)
-    cy.contains("Connect a Calendar!").click()
+    cy.visit(url("/settings"))
     cy.get("#add-calendar-button").click()
     cy.get("select").select("Google Calendar")
   })

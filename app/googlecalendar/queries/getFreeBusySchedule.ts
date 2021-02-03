@@ -66,7 +66,7 @@ export function mergeArr(arr: DateTimeUnix[]): DateTimeUnix[] {
   let temp: DateTimeUnix = { start: -1, end: -1 }
   for (let el of arr) {
     let curr = el
-    if (curr == old) continue
+    if (curr === old) continue
 
     if (curr.start <= old.end) {
       if (temp.start === -1) {
