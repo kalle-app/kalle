@@ -46,8 +46,6 @@ export default async function getTimeSlots(
   })
   if (calendars.length === 0) return null
 
-  const r = await getCaldavTakenSlots(calendars, meeting)
-
   let takenTimeSlots: ExternalEvent[] = []
 
   const calendarPromises: Promise<ExternalEvent[]>[] = []

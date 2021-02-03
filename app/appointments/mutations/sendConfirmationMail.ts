@@ -19,7 +19,7 @@ export default async function sendConfirmationMail({ appointment }: { appointmen
         ...appointment,
         start: {
           hour: appointment.start.getHours(),
-          minute: appointment.start.getMinutes() == 0 ? "00" : appointment.start.getMinutes(),
+          minute: appointment.start.getMinutes() === 0 ? "00" : appointment.start.getMinutes(),
           day: appointment.start.getDate(),
           month: appointment.start.getMonth() + 1,
           year: appointment.start.getFullYear(),
