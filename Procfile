@@ -1,2 +1,2 @@
 web: blitz start --production --port $PORT
-release: blitz db migrate
+release: npx prisma migrate deploy --preview-feature
