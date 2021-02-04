@@ -52,6 +52,13 @@ export default async function getTimeSlots(
   calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
   calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, meetingOwner))
 
+  const calendarPromiseResult = await Promise.all(calendarPromises)
+  calendarPromiseResult.forEach((values) => {
+    values.forEach((slots) => {
+      takenTimeSlots.push(slots)
+    })
+  })
+
   if (hideInviteeSlots) {
     ctx.session.authorize()
     const invitee = await db.user.findFirst({
