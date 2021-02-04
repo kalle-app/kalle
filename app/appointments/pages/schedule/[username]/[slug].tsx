@@ -19,7 +19,7 @@ interface SchedulerProps {
 
 const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, username }) => {
   const [meeting] = useQuery(getMeeting, { username: username, slug: meetingSlug })
-  const [selectedDay, setSelectedDay] = useState<Date>()
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
@@ -128,8 +128,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                   locale={enUS}
                   modifiers={{
                     disabled: (date) => {
-                      const isDateAvailable = slots.some((slot) =>
-                        areDatesOnSameDay(slot.start, date)
+                      const isDateAvailable = slots.some(
+                        (slot) => areDatesOnSameDay(slot.start, date) && slot.start > new Date()
                       )
                       return !isDateAvailable
                     },

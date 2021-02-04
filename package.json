@@ -68,6 +68,7 @@
     "react-nice-dates": "3.0.7",
     "secure-e2ee": "0.2.0",
     "secure-password": "4.0.0",
+    "unique-names-generator": "4.3.1",
     "urllib": "2.36.1",
     "uuid": "8.3.2",
     "zod": "1.11.10"

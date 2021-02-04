@@ -2,6 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 import { Form, Button } from "react-bootstrap"
 import { Link } from "blitz"
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from "unique-names-generator"
+
+const config: Config = {
+  dictionaries: [adjectives, colors, animals],
+  separator: "-",
+}
 
 interface GeneralFormResult {
   name: string
@@ -39,7 +45,7 @@ const General = (props: GeneralProps) => {
         </Form.Group>
         <Form.Group controlId="link">
           <Form.Label>Invite Link</Form.Label>
-          <Form.Control name="link" />
+          <Form.Control name="link" defaultValue={uniqueNamesGenerator(config)} />
         </Form.Group>
         <Form.Group controlId="description">
           <Form.Label>Description</Form.Label>
