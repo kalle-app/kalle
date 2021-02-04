@@ -81,7 +81,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
 
     if (selectedTimeSlot.start < new Date()) {
-      alert("Timeslot already passed")
+      alert("Timeslot already passed :/")
       return
     }
 
