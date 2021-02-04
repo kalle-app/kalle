@@ -80,6 +80,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       return
     }
 
+    if (selectedTimeSlot.start < new Date()) {
+      alert("Timeslot already passed")
+      return
+    }
+
     if (!email) {
       alert("Email not set")
       return
