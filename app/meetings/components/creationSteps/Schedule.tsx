@@ -56,7 +56,7 @@ const ScheduleStep = (props: ScheduleProps) => {
         }}
       >
         <Form.Group controlId="duration">
-          <Form.Label>Duration</Form.Label>
+          <Form.Label className="mr-3">Duration</Form.Label>
           <ButtonGroup toggle>
             {[15, 30, 60].map((d) => (
               <ToggleButton
