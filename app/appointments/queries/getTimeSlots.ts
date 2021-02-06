@@ -25,7 +25,6 @@ async function getTakenSlots(
   const calendarPromises: Promise<ExternalEvent[]>[] = []
   calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
   calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, owner))
-  
   let takenTimeSlots: ExternalEvent[] = []
   const result = await Promise.all(calendarPromises)
   result.forEach((values) => {
@@ -77,7 +76,7 @@ export default async function getTimeSlots(
       throw new Error("Current user invalid. Try logging in again")
     }
     if (invitee.calendars) {
-      takenTimeSlots.push(...await getTakenSlots(calendars, meeting, meetingOwner))
+      takenTimeSlots.push(...(await getTakenSlots(calendars, meeting, meetingOwner)))
     }
   }
 
