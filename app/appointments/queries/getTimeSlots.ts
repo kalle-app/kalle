@@ -17,6 +17,25 @@ interface GetTimeSlotsArgs {
   hideInviteeSlots: boolean
 }
 
+async function getTakenSlots(
+  calendars: ConnectedCalendar[],
+  meeting: Meeting,
+  owner: User
+): Promise<ExternalEvent[]> {
+  const calendarPromises: Promise<ExternalEvent[]>[] = []
+  calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
+  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, owner))
+  
+  let takenTimeSlots: ExternalEvent[] = []
+  const result = await Promise.all(calendarPromises)
+  result.forEach((values) => {
+    values.forEach((slots) => {
+      takenTimeSlots.push(slots)
+    })
+  })
+  return takenTimeSlots
+}
+
 export default async function getTimeSlots(
   { meetingSlug, ownerName, hideInviteeSlots }: GetTimeSlotsArgs,
   ctx: Ctx
@@ -46,18 +65,7 @@ export default async function getTimeSlots(
   })
   if (calendars.length === 0) return null
 
-  let takenTimeSlots: ExternalEvent[] = []
-
-  const calendarPromises: Promise<ExternalEvent[]>[] = []
-  calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
-  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, meetingOwner))
-
-  const calendarPromiseResult = await Promise.all(calendarPromises)
-  calendarPromiseResult.forEach((values) => {
-    values.forEach((slots) => {
-      takenTimeSlots.push(slots)
-    })
-  })
+  let takenTimeSlots = await getTakenSlots(calendars, meeting, meetingOwner)
 
   if (hideInviteeSlots) {
     ctx.session.authorize()
@@ -69,17 +77,9 @@ export default async function getTimeSlots(
       throw new Error("Current user invalid. Try logging in again")
     }
     if (invitee.calendars) {
-      calendarPromises.push(getCaldavTakenSlots(invitee.calendars, meeting))
-      calendarPromises.push(getGoogleCalendarSlots(invitee.calendars, meeting, invitee))
+      takenTimeSlots.push(...await getTakenSlots(calendars, meeting, meetingOwner))
     }
   }
-
-  const calendarPromiseRes = await Promise.all(calendarPromises)
-  calendarPromiseRes.forEach((values) => {
-    values.forEach((slots) => {
-      takenTimeSlots.push(slots)
-    })
-  })
 
   const between = {
     start: meeting.startDate,
