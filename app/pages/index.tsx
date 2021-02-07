@@ -1,11 +1,14 @@
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import Layout from "app/layouts/Layout"
+import HomeLayout from "app/layouts/HomeLayout"
 import getMeetings from "app/meetings/queries/getMeetings"
 import { BlitzPage, Link, useQuery, useSession } from "blitz"
-import { Suspense } from "react"
+import { format } from "date-fns"
+import { Meeting } from "db"
+import React, { Suspense } from "react"
 import { Card, Carousel, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
+import { CopyToClipboard } from "react-copy-to-clipboard"
 
 const Content = () => {
   const session = useSession()
@@ -22,7 +25,9 @@ const PublicContent = () => {
         <Row>
           <Col sm={5}>
             <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
-            <h4 className="p-4">Kalle helps you finding the best meeting slot with your partner</h4>
+            <h4 className="p-4">
+              Kalle helps you scheduling meetings with friends, colleagues and customers!
+            </h4>
             <div className="p-4">
               <Link href="/signup">
                 <Button variant="outline-primary" className="m-1" size="lg" block>
@@ -51,7 +56,7 @@ const PublicContent = () => {
             <Row>
               <Col lg={12}>
                 <h4>1. Connect a calendar</h4>
-                <h6>You can connect any calendar type, even CalDAV!</h6>
+                <h6>You can connect your Google-, MS-Outlook-, and even CalDAV Calendars!</h6>
               </Col>
             </Row>
           </Col>
@@ -62,7 +67,8 @@ const PublicContent = () => {
           <Col sm={4}>
             <h4>3. Share it & meet!</h4>
             <h6>
-              Your partner will select an appointment in your calendar and you will get notified!
+              Your partner will pick an appointment from your available slots and you will get
+              notified!
             </h6>
           </Col>
         </Row>
@@ -106,18 +112,19 @@ const PublicContent = () => {
         <br />
         <Row>
           <Col>
-            <h2 className="text-center">time-management</h2>
+            <h2 className="text-center">Time-management</h2>
             <br></br>
             <h5 className="text-center">
-              With Kalle you will no longer have extensive meeting chats, but more effective time!
+              With Kalle you will no longer have extensive chats to schedule a meeting, and instead
+              have more free time!
             </h5>
           </Col>
           <Col>
-            <h2 className="text-center">secure first</h2>
+            <h2 className="text-center">Customizable</h2>
             <br></br>
             <h5 className="text-center">
-              Kalle takes care of the GDPR. It is open-source, so you can check everything you want
-              to!
+              Feel that there are features missing? Make sure to check out the advances options. As
+              we are Open source, you can even create new functionalities
             </h5>
           </Col>
         </Row>
@@ -149,14 +156,14 @@ const PublicContent = () => {
         <br />
         <Row>
           <Col>
-            <h2 className="text-center">connectivity</h2>
+            <h2 className="text-center">Connectivity</h2>
             <br></br>
             <h5 className="text-center">
               You can connect many different calendars: CalDAV, Google Calendar, Oulook..
             </h5>
           </Col>
           <Col>
-            <h2 className="text-center">busy?</h2>
+            <h2 className="text-center">Busy?</h2>
             <br></br>
             <h5 className="text-center">
               Kalle automatically recognises when you are busy and will only show you free
@@ -205,6 +212,7 @@ const InfoSection = ({ title, description, link, buttonText }) => {
     <Col sm={4} className="mt-3">
       <h4>{title}</h4>
       <h6>{description}</h6>
+
       <Link href={link}>
         <Button variant="outline-secondary" className="m-2" size="lg">
           {buttonText}
@@ -214,12 +222,9 @@ const InfoSection = ({ title, description, link, buttonText }) => {
   )
 }
 
-const PrivateContent = () => {
-  const user = useCurrentUser()
-  const [meetings] = useQuery(getMeetings, null)
-
+const IntroSection = ({ user }) => {
   return (
-    <main className="text">
+    <section style={{ backgroundColor: "#ffebe3" }}>
       <Container>
         <Row>
           <Col sm={7}>
@@ -230,45 +235,103 @@ const PrivateContent = () => {
             </h4>
           </Col>
           <Col sm={5} style={{ display: "flex" }}>
-            <img alt="logo" src="/logo.png" width="80%" height="auto" className="align-self-end" />
+            <img alt="logo" src="/logo.png" width="60%" height="auto" className="align-self-end" />
+          </Col>
+        </Row>
+        <Row>
+          <InfoSection
+            title="Connect a calendar"
+            description="Kalle uses your calendars to show your invitees when you are available."
+            link="/settings"
+            buttonText="Connect Calendar"
+          />
+          <InfoSection
+            title="Set a schedule"
+            description="You can add schedules set general time windows where you are available. For example
+              weekdays from 9:00 to 17:00."
+            link="/settings"
+            buttonText="Add Schedule"
+          />
+          <InfoSection
+            title="Settings"
+            description="Manage your Kalle Account."
+            link="/settings"
+            buttonText="Settings"
+          />
+        </Row>
+      </Container>
+    </section>
+  )
+}
+
+const OverviewSection = ({ meetings }) => {
+  return (
+    <section style={{ backgroundColor: "#fff9f7", minHeight: "70vh" }}>
+      <Container className="pt-4">
+        <Row>
+          <Col sm={7} className="pr-sm-3">
+            <Card>
+              <Card.Header>
+                <Row>
+                  <Col sm={8}>
+                    <h4>Active meetings ({meetings!.length})</h4>
+                  </Col>
+                  <Col sm={4}>
+                    <Link href="/meetings">
+                      <Button variant="primary" className="m-1 float-md-right">
+                        + Meeting
+                      </Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </Card.Header>
+              <Card.Body style={{ minHeight: "150px", maxHeight: "60vh", overflowY: "scroll" }}>
+                {meetings!.length == 0 ? "No active Meetings" : ""}
+                {meetings?.map((meeting: Meeting) => {
+                  return (
+                    <>
+                      <Row className="mx-4 my-2 border border-secondary rounded">
+                        <Col md={10} className="py-2 px-3">
+                          <b>{meeting.name}</b> ({meeting.duration}min) <br></br>
+                          Active until: {format(meeting.endDate, "dd.MM.yyyy")}
+                        </Col>
+                        <CopyToClipboard text={meeting.link}>
+                          <Col
+                            md={2}
+                            className="text-center justify-content-center border-left border-secondary hoverPrimary"
+                          >
+                            <div className="my-auto">Copy Link</div>
+                          </Col>
+                        </CopyToClipboard>
+                      </Row>
+                    </>
+                  )
+                })}
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col sm={5}>
+            <Card>
+              <Card.Header>
+                <h4>Upcoming appointments</h4>
+              </Card.Header>
+              <Card.Body></Card.Body>
+            </Card>
           </Col>
         </Row>
       </Container>
-      <div className="text-center">
-        <h4 className="p-4">
-          You have {meetings!.length > 0 ? meetings!.length : "no"} active meetings.
-        </h4>
-        {meetings!.length > 0 && <MeetingCarousel meetings={meetings} />}
-        <h4 className="pb-3">Kalle is here to help you organizing a new meeting.</h4>
-        <Link href="/meetings">
-          <Button variant="primary" className="m-1" size="lg">
-            Create Meeting
-          </Button>
-        </Link>
-        <Container style={{ marginTop: "3%" }}>
-          <Row>
-            <InfoSection
-              title="Connect a calendar"
-              description="Kalle uses your calendars to show your invitees when you are available."
-              link="/settings"
-              buttonText="Connect Calendar"
-            />
-            <InfoSection
-              title="Set a schedule"
-              description="You can add schedules set general time windows where you are available. For example
-              weekdays from 9:00 to 17:00."
-              link="/settings"
-              buttonText="Add Schedule"
-            />
-            <InfoSection
-              title="Settings"
-              description="Manage your Kalle Account."
-              link="/settings"
-              buttonText="Settings"
-            />
-          </Row>
-        </Container>
-      </div>
+    </section>
+  )
+}
+
+const PrivateContent = () => {
+  const user = useCurrentUser()
+  const [meetings] = useQuery(getMeetings, null)
+
+  return (
+    <main className="text">
+      <IntroSection user={user} />
+      <OverviewSection meetings={meetings} />
     </main>
   )
 }
@@ -281,6 +344,6 @@ const Home: BlitzPage = () => {
   )
 }
 
-Home.getLayout = (page) => <Layout title="Home">{page}</Layout>
+Home.getLayout = (page) => <HomeLayout title="Dashboard | Kalle">{page}</HomeLayout>
 
 export default Home
