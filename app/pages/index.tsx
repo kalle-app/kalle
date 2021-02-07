@@ -264,60 +264,75 @@ const IntroSection = ({ user }) => {
   )
 }
 
-const OverviewSection = ({ meetings }) => {
+const OverviewBox = (props: { span; header; children }) => {
   return (
-    <section style={{ backgroundColor: "#fff9f7", minHeight: "70vh" }}>
-      <Container className="pt-4">
+    <Col sm={props.span} className="p-3">
+      <Col sm={12} className="p-3 rounded border border-secondary">
+        <div>
+          <div>
+            {props.header}
+            <hr></hr>
+          </div>
+          <div style={{ minHeight: "300px", maxHeight: "60vh", overflowY: "scroll" }}>
+            {props.children}
+          </div>
+        </div>
+      </Col>
+    </Col>
+  )
+}
+
+const OverviewSection = ({ meetings, appointments }) => {
+  return (
+    <section style={{ minHeight: "70vh" }}>
+      <Container className="pt-2">
         <Row>
-          <Col sm={7} className="pr-sm-3">
-            <Card>
-              <Card.Header>
-                <Row>
-                  <Col sm={8}>
-                    <h4>Active meetings ({meetings!.length})</h4>
-                  </Col>
-                  <Col sm={4}>
-                    <Link href="/meetings">
-                      <Button variant="primary" className="m-1 float-md-right">
-                        + Meeting
-                      </Button>
-                    </Link>
-                  </Col>
-                </Row>
-              </Card.Header>
-              <Card.Body style={{ minHeight: "150px", maxHeight: "60vh", overflowY: "scroll" }}>
-                {meetings!.length == 0 ? "No active Meetings" : ""}
-                {meetings?.map((meeting: Meeting) => {
-                  return (
-                    <>
-                      <Row className="mx-4 my-2 border border-secondary rounded">
-                        <Col md={10} className="py-2 px-3">
-                          <b>{meeting.name}</b> ({meeting.duration}min) <br></br>
-                          Active until: {format(meeting.endDate, "dd.MM.yyyy")}
-                        </Col>
-                        <CopyToClipboard text={meeting.link}>
-                          <Col
-                            md={2}
-                            className="text-center justify-content-center border-left border-secondary hoverPrimary"
-                          >
-                            <div className="my-auto">Copy Link</div>
-                          </Col>
-                        </CopyToClipboard>
-                      </Row>
-                    </>
-                  )
-                })}
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col sm={5}>
-            <Card>
-              <Card.Header>
-                <h4>Upcoming appointments</h4>
-              </Card.Header>
-              <Card.Body></Card.Body>
-            </Card>
-          </Col>
+          <OverviewBox
+            span={7}
+            header={
+              <Row>
+                <Col sm={8}>
+                  <h4>Active meetings ({meetings!.length})</h4>
+                </Col>
+                <Col sm={4}>
+                  <Link href="/meeting/create">
+                    <Button variant="primary" className="m-1 float-md-right">
+                      + Meeting
+                    </Button>
+                  </Link>
+                </Col>
+              </Row>
+            }
+          >
+            {meetings!.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
+            {meetings?.map((meeting: Meeting) => {
+              return (
+                <>
+                  <Row className="mx-2 my-2 border border-secondary rounded">
+                    <Col md={10} className="py-2 px-3">
+                      <b>{meeting.name}</b> ({meeting.duration}min) <br></br>
+                      Active until: {format(meeting.endDate, "dd.MM.yyyy")}
+                    </Col>
+                    <CopyToClipboard text={meeting.link}>
+                      <Col
+                        md={2}
+                        className="text-center justify-content-center border-left border-secondary hoverPrimary"
+                      >
+                        Copy Link
+                      </Col>
+                    </CopyToClipboard>
+                  </Row>
+                </>
+              )
+            })}
+          </OverviewBox>
+          <OverviewBox span={5} header={<h4>Upcoming appointments</h4>}>
+            {appointments.length === 0 ? (
+              <p className="text-center">No upcoming appointments</p>
+            ) : (
+              ""
+            )}
+          </OverviewBox>
         </Row>
       </Container>
     </section>
@@ -331,7 +346,7 @@ const PrivateContent = () => {
   return (
     <main className="text">
       <IntroSection user={user} />
-      <OverviewSection meetings={meetings} />
+      <OverviewSection meetings={meetings} appointments={[]} />
     </main>
   )
 }

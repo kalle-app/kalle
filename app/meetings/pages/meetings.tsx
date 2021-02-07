@@ -32,9 +32,7 @@ const MainContent = () => {
           </Link>
         </Col>
       </Row>
-      <Row>
-        <MeetingsContent />
-      </Row>
+      <MeetingsContent />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import deleteMeetingMutation from "../mutations/deleteMeeting"
 import getMeetings from "../queries/getMeetings"
 import { format } from "date-fns"
 import { CopyToClipboard } from "react-copy-to-clipboard"
+import { Geo, CalendarRange } from "react-bootstrap-icons"
 
 interface MeetingsProps {
   meetings: Meeting[]
@@ -55,9 +56,10 @@ const Meetings = (props: MeetingsProps) => {
                   </Button>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-1">
                 <Col className="my-auto pb-1">
                   <p className="my-auto">
+                    <CalendarRange className="mr-2"></CalendarRange>
                     {format(meeting.startDate, "dd.MM.yyy")} -{" "}
                     {format(meeting.endDate, "dd.MM.yyy")}
                   </p>
@@ -65,10 +67,13 @@ const Meetings = (props: MeetingsProps) => {
               </Row>
               <Row>
                 <Col className="my-auto pb-1">
-                  <p className="my-auto">{meeting.location}</p>
+                  <p className="my-auto">
+                    <Geo className="mr-2"></Geo>
+                    {meeting.location}
+                  </p>
                 </Col>
               </Row>
-              <Row>
+              <Row className="mt-1">
                 <Col>
                   <p className="my-auto">{meeting.description}</p>
                 </Col>
