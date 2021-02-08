@@ -39,12 +39,12 @@ const Meetings = (props: MeetingsProps) => {
               className="p-3 my-2 text-left shadow"
             >
               <Row>
-                <Col md={8}>
+                <Col xs={8}>
                   <h5 className="font-weight-bold">
                     {meeting.name} ({meeting.duration}min){" "}
                   </h5>
                 </Col>
-                <Col md={4}>
+                <Col xs={4}>
                   <Button
                     className="ml-3"
                     variant="outline-danger"
@@ -82,7 +82,7 @@ const Meetings = (props: MeetingsProps) => {
                 <Link href={"/meeting/bookings/" + meeting.id}>
                   <Button variant="outline-primary">View Bookings</Button>
                 </Link>
-                <CopyToClipboard text={hrefToDisplay} className="ml-md-3">
+                <CopyToClipboard text={hrefToDisplay} className="ml-3">
                   <Button variant="outline-primary">Copy Link</Button>
                 </CopyToClipboard>
               </div>

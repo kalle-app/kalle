@@ -1,14 +1,17 @@
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import HomeLayout from "app/layouts/HomeLayout"
 import getMeetings from "app/meetings/queries/getMeetings"
+import getUpcomingBookings from "app/meetings/queries/getUpcomingBookings"
 import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { format } from "date-fns"
-import { Meeting } from "db"
+import { Booking, Meeting } from "db"
 import React, { Suspense } from "react"
 import { Card, Carousel, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
 import { CopyToClipboard } from "react-copy-to-clipboard"
+import { getOrigin } from "utils/generalUtils"
+import ReactTooltip from "react-tooltip"
 
 const Content = () => {
   const session = useSession()
@@ -176,45 +179,17 @@ const PublicContent = () => {
   )
 }
 
-const MeetingCarousel = ({ meetings }) => {
-  return (
-    <Carousel style={{ marginBottom: "5%", backgroundColor: "white" }}>
-      {meetings.map((meeting) => {
-        return (
-          <Carousel.Item>
-            <Card
-              style={{ backgroundColor: "white", height: "200px" }}
-              as="li"
-              key={"card" + meeting.id}
-            ></Card>
-            <Carousel.Caption key={"caption" + meeting.id}>
-              <h3 className="text-dark">{meeting.name}</h3>
-              <p className="text-dark">
-                {meeting.description.length > 100
-                  ? meeting.description.substr(0, 99) + "..."
-                  : meeting.description}
-              </p>
-              <Link href="/meetings">
-                <Button variant="outline-primary" className="m-1" size="sm">
-                  Details
-                </Button>
-              </Link>
-            </Carousel.Caption>
-          </Carousel.Item>
-        )
-      })}
-    </Carousel>
-  )
-}
-
 const InfoSection = ({ title, description, link, buttonText }) => {
   return (
     <Col sm={4} className="mt-3">
-      <h4>{title}</h4>
-      <h6>{description}</h6>
-
       <Link href={link}>
-        <Button variant="outline-secondary" className="m-2" size="lg">
+        <Button
+          data-tip={description}
+          data-offset="{'top': 20}"
+          variant="outline-secondary"
+          className="m-2"
+          size="lg"
+        >
           {buttonText}
         </Button>
       </Link>
@@ -228,35 +203,40 @@ const IntroSection = ({ user }) => {
       <Container>
         <Row>
           <Col sm={7}>
-            <h2 className="p-4">Hey there {user?.name}!</h2>
-            <h4 className="p-4">
+            <h2 className="py-4">Hey there {user?.name}!</h2>
+            <h4 className="py-4">
               It's time to organize your meetings. I am Kalle and my mission is to help you doing
               this. Bubble that my friend!
             </h4>
           </Col>
-          <Col sm={5} style={{ display: "flex" }}>
+          <Col sm={5} style={{ display: "flex" }} className="justify-content-center">
             <img alt="logo" src="/logo.png" width="60%" height="auto" className="align-self-end" />
           </Col>
         </Row>
         <Row>
+          <Col>
+            <h4 className="text-left">Let's get started: </h4>
+          </Col>
+        </Row>
+        <Row className="text-center">
           <InfoSection
             title="Connect a calendar"
             description="Kalle uses your calendars to show your invitees when you are available."
-            link="/settings"
-            buttonText="Connect Calendar"
+            link="/calendars"
+            buttonText="1. Connect a Calendar"
           />
           <InfoSection
             title="Set a schedule"
             description="You can add schedules set general time windows where you are available. For example
               weekdays from 9:00 to 17:00."
-            link="/settings"
-            buttonText="Add Schedule"
+            link="/schedules"
+            buttonText="2. Add a Schedule"
           />
           <InfoSection
-            title="Settings"
-            description="Manage your Kalle Account."
-            link="/settings"
-            buttonText="Settings"
+            title="Create a Meeting"
+            description="Create a Meeting to schedule an appointment."
+            link="/meeting/create"
+            buttonText="3. Create a Meeting"
           />
         </Row>
       </Container>
@@ -267,17 +247,50 @@ const IntroSection = ({ user }) => {
 const OverviewBox = (props: { span; header; children }) => {
   return (
     <Col sm={props.span} className="p-3">
-      <Col sm={12} className="p-3 rounded border border-secondary">
+      <Col sm={12} className="p-3 rounded shadow">
         <div>
           <div>
             {props.header}
             <hr></hr>
           </div>
-          <div style={{ minHeight: "300px", maxHeight: "60vh", overflowY: "scroll" }}>
-            {props.children}
-          </div>
+          <div style={{ minHeight: "300px" }}>{props.children}</div>
         </div>
       </Col>
+    </Col>
+  )
+}
+
+const MeetingOverviewBox = ({ meeting }) => {
+  const href = `/schedule/${meeting.ownerName}/${meeting.link}`
+  const hrefToDisplay = getOrigin() + href
+  return (
+    <Col md={6} className="my-1">
+      <Card
+        key={meeting.id + meeting.ownerName + meeting.name}
+        id={"" + meeting.id}
+        className="p-3 my-2 text-left"
+      >
+        <Row>
+          <Col md={12}>
+            <h5 className="font-weight-bold">
+              {meeting.name} ({meeting.duration}min){" "}
+            </h5>
+          </Col>
+        </Row>
+        <Row className="mt-1">
+          <Col className="my-auto pb-1">
+            <p className="my-auto">Active until: {format(meeting.endDate, "dd.MM.yyy")}</p>
+          </Col>
+        </Row>
+        <div className="d-flex mt-4 justify-content-end">
+          <Link href={"/meeting/bookings/" + meeting.id}>
+            <Button variant="outline-primary">View Bookings</Button>
+          </Link>
+          <CopyToClipboard text={hrefToDisplay} className="ml-3">
+            <Button variant="outline-primary">Copy Link</Button>
+          </CopyToClipboard>
+        </div>
+      </Card>
     </Col>
   )
 }
@@ -305,32 +318,44 @@ const OverviewSection = ({ meetings, appointments }) => {
             }
           >
             {meetings!.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
-            {meetings?.map((meeting: Meeting) => {
-              return (
-                <>
-                  <Row className="mx-2 my-2 border border-secondary rounded">
-                    <Col md={10} className="py-2 px-3">
-                      <b>{meeting.name}</b> ({meeting.duration}min) <br></br>
-                      Active until: {format(meeting.endDate, "dd.MM.yyyy")}
-                    </Col>
-                    <CopyToClipboard text={meeting.link}>
-                      <Col
-                        md={2}
-                        className="text-center justify-content-center border-left border-secondary hoverPrimary"
-                      >
-                        Copy Link
-                      </Col>
-                    </CopyToClipboard>
-                  </Row>
-                </>
-              )
-            })}
+            <Row>
+              {meetings?.map((meeting: Meeting) => {
+                return <MeetingOverviewBox meeting={meeting} />
+              })}
+            </Row>
           </OverviewBox>
           <OverviewBox span={5} header={<h4>Upcoming appointments</h4>}>
             {appointments.length === 0 ? (
               <p className="text-center">No upcoming appointments</p>
             ) : (
-              ""
+              appointments.map((appointment: Booking & { meeting: Meeting }) => {
+                return (
+                  <>
+                    <Row className="py-2">
+                      <Col xs={8}>
+                        <Row>
+                          <Col xs={5}>
+                            <b>{format(appointment.date, "dd.MM HH:mm")}</b>
+                          </Col>
+                          <Col xs={7}>{appointment.meeting.name}</Col>
+                        </Row>
+                      </Col>
+                      <Col xs={4}>
+                        <Link
+                          href={
+                            "/meeting/bookings/" + appointment.meetingId + "/#" + appointment.id
+                          }
+                        >
+                          <Button variant="primary" className="m-1 float-md-right">
+                            Details
+                          </Button>
+                        </Link>
+                      </Col>
+                    </Row>
+                    <hr></hr>
+                  </>
+                )
+              })
             )}
           </OverviewBox>
         </Row>
@@ -342,11 +367,13 @@ const OverviewSection = ({ meetings, appointments }) => {
 const PrivateContent = () => {
   const user = useCurrentUser()
   const [meetings] = useQuery(getMeetings, null)
+  const [appointments] = useQuery(getUpcomingBookings, 10)
 
   return (
     <main className="text">
       <IntroSection user={user} />
-      <OverviewSection meetings={meetings} appointments={[]} />
+      <OverviewSection meetings={meetings} appointments={appointments} />
+      <ReactTooltip />
     </main>
   )
 }
