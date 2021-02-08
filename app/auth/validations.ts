@@ -27,5 +27,9 @@ export const UpdateUserInput = z.object({
     .string()
     .min(10, { message: "Password must contain at least 10 characters" })
     .max(100, { message: "Password cannot contain more than 100 characters" }),
+  repeatPassword: z
+    .string()
+    .min(10, { message: "Password must contain at least 10 characters" })
+    .max(100, { message: "Password cannot contain more than 100 characters" }),
 })
 export type UpdateUserInputType = z.infer<typeof UpdateUserInput>
