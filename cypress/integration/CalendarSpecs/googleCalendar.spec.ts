@@ -3,9 +3,9 @@ import { loginAs } from "../../login"
 import { url } from "../../support/url"
 
 describe("A Google Calendar", () => {
-  it("can be selected in settings", () => {
+  it("can be selected under calendars", () => {
     loginAs(johnDoe)
-    cy.visit(url("/settings"))
+    cy.visit(url("/calendars"))
     cy.get("#add-calendar-button").click()
     cy.get("select").select("Google Calendar")
   })

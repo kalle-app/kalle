@@ -62,7 +62,7 @@ it("Meetings Flow", () => {
       items: [newestMail],
     } = response.body
 
-    cy.log(newestMail)
+    cy.log(response.body)
 
     expect(newestMail).to.exist
 

@@ -9,7 +9,7 @@ const {
 function addCaldavCalendar(cal: Omit<typeof baikal, "encryptedPassword">) {
   loginAs(johnDoe)
 
-  cy.visit(url("/settings"))
+  cy.visit(url("/calendars"))
 
   cy.get("#add-calendar-button").click()
 
@@ -24,10 +24,10 @@ function addCaldavCalendar(cal: Omit<typeof baikal, "encryptedPassword">) {
 }
 
 describe("Calendars", () => {
-  it("are shown in the settings page", () => {
+  it("are shown in the calendars page", () => {
     loginAs(johnDoe)
 
-    cy.visit(url("/settings"))
+    cy.visit(url("/calendars"))
 
     cy.contains(baikal.name)
   })
