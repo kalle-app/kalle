@@ -13,7 +13,7 @@ export default async function updateUserData(input: UpdateUserInputType, ctx: Ct
     where: {
       id: ctx.session.userId,
     },
-    data:{ 
+    data: {
       name: name,
       email: email.toLowerCase(),
       hashedPassword,

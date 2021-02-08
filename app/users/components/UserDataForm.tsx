@@ -3,11 +3,11 @@ import Form from "react-bootstrap/Form"
 import Col from "react-bootstrap/Col"
 
 interface UserDataFormProps {
-  message: string,
-  setName: (args: any) => void,
-  setEmail: (args: any) => void,
-  setPassword: (args: any) => void,
-  setRepeatPassword: (args: any) => void,
+  message: string
+  setName: (args: any) => void
+  setEmail: (args: any) => void
+  setPassword: (args: any) => void
+  setRepeatPassword: (args: any) => void
 }
 
 const UserDataForm = (props: UserDataFormProps) => {
