@@ -20,11 +20,11 @@ interface GetTimeSlotsArgs {
 async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting,
-  owner: User
+  calendarOwner: User
 ): Promise<ExternalEvent[]> {
   const calendarPromises: Promise<ExternalEvent[]>[] = []
   calendarPromises.push(getCaldavTakenSlots(calendars, meeting))
-  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, owner))
+  calendarPromises.push(getGoogleCalendarSlots(calendars, meeting, calendarOwner))
   let takenTimeSlots: ExternalEvent[] = []
   const result = await Promise.all(calendarPromises)
   result.forEach((values) => {
@@ -76,7 +76,7 @@ export default async function getTimeSlots(
       throw new Error("Current user invalid. Try logging in again")
     }
     if (invitee.calendars) {
-      takenTimeSlots.push(...(await getTakenSlots(calendars, meeting, meetingOwner)))
+      takenTimeSlots.push(...(await getTakenSlots(invitee.calendars, meeting, invitee)))
     }
   }
 
@@ -113,13 +113,13 @@ async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meet
 async function getGoogleCalendarSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting,
-  meetingOwner: User
+  calendarOwner: User
 ) {
   if (calendars.some((calendar) => calendar.type === "Google Calendar")) {
     const newTakenSlots = await getFreeBusySchedule({
       start: meeting.startDate,
       end: meeting.endDate,
-      userId: meetingOwner.id,
+      userId: calendarOwner.id,
     })
     if (newTakenSlots) {
       return newTakenSlots
