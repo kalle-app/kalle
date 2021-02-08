@@ -49,7 +49,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
 
     setSelectedDay(firstSlot.start)
-  }, [slots, setSelectedDay])
+  }, [slots, selectedDay])
 
   useEffect(() => {
     invalidateQuery(getTimeSlots)
