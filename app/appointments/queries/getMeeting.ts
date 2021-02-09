@@ -7,8 +7,6 @@ interface MeetingLink {
 }
 
 export default async function getMeeting(link: MeetingLink, ctx: Ctx) {
-  ctx.session.authorize()
-
   const meeting = await db.meeting.findFirst({
     where: {
       link: link.slug,

@@ -14,8 +14,6 @@ interface BookingInformation {
 }
 
 export default async function bookAppointment(bookingInfo: BookingInformation, ctx: Ctx) {
-  ctx.session.authorize()
-
   const booking = await createAppointmentEventMutation(
     {
       meetingId: bookingInfo.meeting.id,

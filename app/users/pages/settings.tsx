@@ -42,7 +42,12 @@ const PersonalInformation = () => {
     <Card className="mt-4">
       <SectionHeader title="Personal Information" subtitle="Change your account information here" />
       <UserDataForm />
-      <SectionFooter text="Update Information" variant="primary" action={() => alert("Test")} />
+      <SectionFooter
+        id="update"
+        text="Update Information"
+        variant="primary"
+        action={() => alert("Test")}
+      />
     </Card>
   )
 }
@@ -54,7 +59,7 @@ const DangerZone = () => {
   const user = useCurrentUser()
 
   const submitDeletion = async () => {
-    const calendar = await deleteUser(user?.id)
+    await deleteUser(user?.id)
     await logout()
     router.push("/")
   }

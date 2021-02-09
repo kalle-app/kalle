@@ -1,11 +1,11 @@
-import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createEvent } from "./"
+import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createCalDavEvent } from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
 import childProcess from "child_process"
 
 async function getBaikalContainer() {
-  return new GenericContainer("ckulka/baikal", "nginx")
+  return new GenericContainer("ckulka/baikal", "0.7.2-nginx")
     .withExposedPorts(80)
     .withBindMount(
       path.join(__dirname, "../../test/baikal/Specific"),
@@ -198,7 +198,9 @@ function test(calendarBackend: Backends) {
             end: new Date("2020-11-26T11:00:00.000Z"),
           },
         ]
-        expect(result).toEqual(expected)
+        expect(result).toContainEqual(expected[0])
+        expect(result).toContainEqual(expected[1])
+        expect(result).toContainEqual(expected[2])
       })
     })
 
@@ -235,14 +237,16 @@ function test(calendarBackend: Backends) {
             end: new Date("2020-11-26T11:00:00.000Z"),
           },
         ]
-        expect(result).toEqual(expected)
+        expect(result).toContainEqual(expected[0])
+        expect(result).toContainEqual(expected[1])
+        expect(result).toContainEqual(expected[2])
       })
     })
 
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        const result = await createEvent(getCalendarConnection(), {
+        const result = await createCalDavEvent(getCalendarConnection(), {
           name: "DummyEvent",
           timezone: 0,
           start: date,
