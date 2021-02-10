@@ -42,6 +42,7 @@ const CalendarList = () => {
 
 const PersonalInformation = () => {
   const [update] = useMutation(updateMutation)
+  const [state, setState] = useState("")
   const [message, setMessage] = useState("")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -59,6 +60,7 @@ const PersonalInformation = () => {
     })
 
     if (!parseResult.success) {
+      setState("text-danger")
       setMessage(parseResult.error.errors[0].message)
       return
     }
@@ -66,15 +68,20 @@ const PersonalInformation = () => {
     try {
       await update({ name, email, password, repeatPassword })
       invalidateQuery(getCurrentUser)
-      setMessage("")
+      setState("text-success")
+      setMessage("You have successfully changed your account information")
     } catch (error) {
-      setMessage("Sorry, we had an unexpected error. Please try again.")
+      setState("text-danger")
+      setMessage(
+        "There was an error. Please make sure your e-mail adress is not used by another account."
+      )
     }
   }
   return (
     <Card className="mt-4">
       <SectionHeader title="Personal Information" subtitle="Change your account information here" />
       <UserDataForm
+        state={state}
         message={message}
         setName={setName}
         setEmail={setEmail}

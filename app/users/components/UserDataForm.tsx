@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form"
 import Col from "react-bootstrap/Col"
 
 interface UserDataFormProps {
+  state: string
   message: string
   setName: (args: any) => void
   setEmail: (args: any) => void
@@ -39,7 +40,7 @@ const UserDataForm = (props: UserDataFormProps) => {
           <Form.Control type="password" onChange={(e) => props.setRepeatPassword(e.target.value)} />
         </Form.Group>
       </Form.Row>
-      <Form.Text className="text-danger mb-4">{props.message}</Form.Text>
+      <Form.Text className={props.state + " mb-4"}>{props.message}</Form.Text>
     </Form>
   )
 }
