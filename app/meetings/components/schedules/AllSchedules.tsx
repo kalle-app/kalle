@@ -1,6 +1,6 @@
 import { DailySchedule, Schedule } from "@prisma/client"
 import getSchedules from "app/meetings/queries/getSchedules"
-import { dynamic, useQuery } from "blitz"
+import { useQuery } from "blitz"
 import React from "react"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
 
@@ -10,7 +10,7 @@ const AllSchedules = () => {
     <Row>
       {schedules!.map((schedule: Schedule & { dailySchedules: DailySchedule[] }) => {
         return (
-          <Col md={4} className="m-5">
+          <Col md={4} className="m-5" key={schedule.id}>
             <Card>
               <Card.Header className="text-center">{schedule.name}</Card.Header>
               <ListGroup variant="flush">

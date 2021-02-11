@@ -8,6 +8,7 @@ interface SingleTimeSlotProps {
   end: Date
   setSelectedTimeSlot(v: TimeSlot): void
   selectedTimeSlot?: TimeSlot
+  timezone?: string
 }
 
 const SingleTimeSlot = (props: SingleTimeSlotProps) => {
@@ -23,7 +24,7 @@ const SingleTimeSlot = (props: SingleTimeSlotProps) => {
         setSelectedTimeSlot({ start, end })
       }}
     >
-      {formatAs24HourClockString(start)}-{formatAs24HourClockString(end)}
+      {formatAs24HourClockString(start, props.timezone)}-{formatAs24HourClockString(end, props.timezone)}
     </Button>
   )
 }

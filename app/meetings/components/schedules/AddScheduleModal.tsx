@@ -2,7 +2,7 @@ import { SearchableDropdown } from "app/components/SearchableDropdown"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
 import timezones from "./tz"
@@ -27,9 +27,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [createScheduleMutation] = useMutation(addSchedule)
   const [schedule, setSchedule] = useState(initialSchedule)
   const [name, setName] = useState("")
-  const [timezone, setTimezone] = useState(
-    Intl.DateTimeFormat().resolvedOptions().timeZoneName ?? "Europe/London"
-  )
+  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   const scheduleChanged = (value: any, day: string, type: string) => {
     let newDay = { ...schedule[day], [type]: value }
@@ -65,7 +63,7 @@ const AddSchedule = (props: AddScheduleProps) => {
         sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
       },
     })
-    
+
     await invalidateQuery(getSchedules)
     await invalidateQuery(getScheduleNames)
     props.setVisibility(false)
