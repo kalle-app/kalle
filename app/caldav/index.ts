@@ -283,7 +283,6 @@ export async function getTakenTimeSlots(
 
 interface EventDetails {
   name: string
-  timezone: number
   start: Date
   end: Date
   location: string

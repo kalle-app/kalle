@@ -64,9 +64,8 @@ model Meeting {
   ownerName String
   description String
   duration Int
-  timezone Int
-  startDate DateTime
-  endDate DateTime
+  startDateUTC DateTime
+  endDateUTC DateTime
   schedule Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int
   location String
@@ -95,6 +94,6 @@ model Booking {
   meeting Meeting @relation(fields: [meetingId], references: [id])
   meetingId Int
   inviteeEmail String
-  date DateTime
+  startDateUTC DateTime
 }
   

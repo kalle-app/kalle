@@ -248,7 +248,6 @@ function test(calendarBackend: Backends) {
         const date = new Date()
         const result = await createCalDavEvent(getCalendarConnection(), {
           name: "DummyEvent",
-          timezone: 0,
           start: date,
           end: addMinutes(date, 30),
           location: "Frankfurt",

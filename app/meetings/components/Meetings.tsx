@@ -25,8 +25,8 @@ const Meetings = (props: MeetingsProps) => {
   return (
     <ul>
       {meetings.map((meeting) => {
-        const end = meeting.endDate.toString()
-        const start = meeting.startDate.toString()
+        const end = meeting.endDateUTC.toString()
+        const start = meeting.startDateUTC.toString()
 
         const href = `/schedule/${meeting.ownerName}/${meeting.link}`
         const hrefToDisplay = getOrigin() + href

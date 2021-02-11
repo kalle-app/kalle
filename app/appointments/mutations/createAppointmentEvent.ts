@@ -43,7 +43,7 @@ export default async function createAppointmentEventMutation(
         connect: { id: bookingDetails.meetingId },
       },
       inviteeEmail: bookingDetails.inviteeEmail,
-      date: bookingDetails.date,
+      startDateUTC: bookingDetails.date,
     },
   })
   if (calendar.type === "Google Calendar") {
@@ -86,7 +86,6 @@ export default async function createAppointmentEventMutation(
     },
     {
       name: `${meeting.name} with ${bookingDetails.inviteeEmail}`,
-      timezone: meeting.timezone,
       start: bookingDetails.date,
       end: addMinutes(bookingDetails.date, 30),
       location: meeting.location,

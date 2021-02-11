@@ -28,7 +28,6 @@ const initialMeeting: Meeting = {
   link: "",
   description: "",
   duration: 15,
-  timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
   location: "",

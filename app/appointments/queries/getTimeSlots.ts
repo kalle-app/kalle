@@ -81,8 +81,8 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: meeting.startDate,
-    end: meeting.endDate,
+    start: meeting.startDateUTC,
+    end: meeting.endDateUTC,
   }
 
   return computeAvailableSlots({
@@ -102,8 +102,8 @@ async function getCaldavTakenSlots(calendars: ConnectedCalendar[], meeting: Meet
         url: calendar.caldavAddress!,
         auth: { username: calendar.username!, password, digest: true },
       },
-      meeting.startDate,
-      meeting.endDate
+      meeting.startDateUTC,
+      meeting.endDateUTC
     )
     slots.push(...newTakenSlots)
   }
@@ -117,8 +117,8 @@ async function getGoogleCalendarSlots(
 ) {
   if (calendars.some((calendar) => calendar.type === "Google Calendar")) {
     const newTakenSlots = await getFreeBusySchedule({
-      start: meeting.startDate,
-      end: meeting.endDate,
+      start: meeting.startDateUTC,
+      end: meeting.endDateUTC,
       userId: calendarOwner.id,
     })
     if (newTakenSlots) {
