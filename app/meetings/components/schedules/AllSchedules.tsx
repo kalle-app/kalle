@@ -17,11 +17,15 @@ const AllSchedules = () => {
                 {schedule.dailySchedules.map((dailySchedule: DailySchedule) => {
                   return (
                     <ListGroup.Item key={dailySchedule.day}>
-                      <b>{dailySchedule.day}: </b>
+                      <b>{dailySchedule.day[0].toUpperCase() + dailySchedule.day.substring(1)}: </b>
                       {dailySchedule.startTime} - {dailySchedule.endTime}
                     </ListGroup.Item>
                   )
                 })}
+                <ListGroup.Item>
+                  <b>Timezone: </b>
+                  {schedule.timezone.toString()}
+                </ListGroup.Item>
               </ListGroup>
             </Card>
           </Col>
