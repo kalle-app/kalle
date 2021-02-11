@@ -1,7 +1,13 @@
 import db from "db"
 import { Ctx } from "blitz"
 
-export default async function addMeeting(scheduleCreate, ctx: Ctx) {
+interface ScheduleCreateArgs {
+  name: string
+  timezone: string
+  schedule: Record<string, [start: string, end: string]>
+}
+
+export default async function addMeeting(scheduleCreate: ScheduleCreateArgs, ctx: Ctx) {
   if (!ctx.session?.userId) return null
 
   const owner = await db.user.findFirst({
@@ -13,6 +19,7 @@ export default async function addMeeting(scheduleCreate, ctx: Ctx) {
   const schedule = await db.schedule.create({
     data: {
       name: scheduleCreate.name,
+      timezone: scheduleCreate.timezone,
       owner: {
         connect: { id: owner.id },
       },

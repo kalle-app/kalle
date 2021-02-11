@@ -86,6 +86,7 @@ model DailySchedule {
 model Schedule {
   id             Int             @id @default(autoincrement())
   name           String
+  timezone             String
   dailySchedules DailySchedule[]
   owner          User            @relation(fields: [ownerId], references: [id])
   ownerId        Int

@@ -7,6 +7,7 @@ import { Card, Carousel, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
 
+
 const Content = () => {
   const session = useSession()
   if (!session.isLoading) {

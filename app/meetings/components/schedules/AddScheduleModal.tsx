@@ -1,10 +1,11 @@
+import { SearchableDropdown } from "app/components/SearchableDropdown"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
 import React, { useState } from "react"
 import { Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
-
+import timezones from "./tz"
 interface AddScheduleProps {
   show: boolean
   setVisibility: (value: boolean) => void
@@ -26,6 +27,9 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [createScheduleMutation] = useMutation(addSchedule)
   const [schedule, setSchedule] = useState(initialSchedule)
   const [name, setName] = useState("")
+  const [timezone, setTimezone] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZoneName ?? "Europe/London"
+  )
 
   const scheduleChanged = (value: any, day: string, type: string) => {
     let newDay = { ...schedule[day], [type]: value }
@@ -39,9 +43,10 @@ const AddSchedule = (props: AddScheduleProps) => {
     setName(e.currentTarget.value)
   }
 
-  const submit = () => {
-    let postSchedule = {
+  const submit = async () => {
+    await createScheduleMutation({
       name: name,
+      timezone,
       schedule: {
         monday: schedule.monday.blocked ? ["", ""] : [schedule.monday.start, schedule.monday.end],
         tuesday: schedule.tuesday.blocked
@@ -59,17 +64,11 @@ const AddSchedule = (props: AddScheduleProps) => {
           : [schedule.saturday.start, schedule.saturday.end],
         sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
       },
-    }
-
-    createScheduleMutation(postSchedule)
-      .then(async (data) => {
-        await invalidateQuery(getSchedules)
-        await invalidateQuery(getScheduleNames)
-        props.setVisibility(false)
-      })
-      .catch((error) => {
-        alert(error)
-      })
+    })
+    
+    await invalidateQuery(getSchedules)
+    await invalidateQuery(getScheduleNames)
+    props.setVisibility(false)
   }
 
   return (
@@ -92,6 +91,14 @@ const AddSchedule = (props: AddScheduleProps) => {
             Please specify when you are generally available. Your invitees cannot pick a time slot
             outside of the provided window.
           </p>
+          <Form.Group>
+            <SearchableDropdown
+              description="Change time zone"
+              options={timezones}
+              onSelect={setTimezone}
+              value={timezone}
+            />
+          </Form.Group>
           <Form.Group controlId="days">
             {days.map((day) => {
               return (
