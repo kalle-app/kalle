@@ -1,5 +1,5 @@
 import { createCalDavEvent } from "app/caldav"
-import { Ctx, invoke } from "blitz"
+import { invoke } from "blitz"
 import db from "db"
 import passwordEncryptor from "app/users/password-encryptor"
 import { addMinutes } from "date-fns"
@@ -12,8 +12,7 @@ interface BookingDetails {
 }
 
 export default async function createAppointmentEventMutation(
-  bookingDetails: BookingDetails,
-  ctx: Ctx
+  bookingDetails: BookingDetails
 ) {
   const meeting = await db.meeting.findFirst({
     where: { id: bookingDetails.meetingId },
@@ -57,7 +56,7 @@ export default async function createAppointmentEventMutation(
       url: "www.kalle.app",
       organiser: {
         name: meeting.ownerName,
-        email: "info@kalle.app",
+        email: meeting.owner.email,
       },
       owner: {
         name: bookingDetails.inviteeEmail.split("@")[0],
