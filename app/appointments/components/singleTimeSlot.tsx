@@ -24,7 +24,8 @@ const SingleTimeSlot = (props: SingleTimeSlotProps) => {
         setSelectedTimeSlot({ start, end })
       }}
     >
-      {formatAs24HourClockString(start, props.timezone)}-{formatAs24HourClockString(end, props.timezone)}
+      {formatAs24HourClockString(start, props.timezone)}-
+      {formatAs24HourClockString(end, props.timezone)}
     </Button>
   )
 }

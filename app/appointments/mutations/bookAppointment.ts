@@ -14,13 +14,11 @@ interface BookingInformation {
 }
 
 export default async function bookAppointment(bookingInfo: BookingInformation, ctx: Ctx) {
-  const booking = await createAppointmentEventMutation(
-    {
-      meetingId: bookingInfo.meeting.id,
-      inviteeEmail: bookingInfo.inviteeEmail,
-      date: bookingInfo.startDate,
-    }
-  )
+  const booking = await createAppointmentEventMutation({
+    meetingId: bookingInfo.meeting.id,
+    inviteeEmail: bookingInfo.inviteeEmail,
+    date: bookingInfo.startDate,
+  })
 
   const meetingFromDb = await db.meeting.findUnique({
     where: { id: bookingInfo.meeting.id },

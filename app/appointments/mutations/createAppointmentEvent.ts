@@ -11,9 +11,7 @@ interface BookingDetails {
   date: Date
 }
 
-export default async function createAppointmentEventMutation(
-  bookingDetails: BookingDetails
-) {
+export default async function createAppointmentEventMutation(bookingDetails: BookingDetails) {
   const meeting = await db.meeting.findFirst({
     where: { id: bookingDetails.meetingId },
     include: {

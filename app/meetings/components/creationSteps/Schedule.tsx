@@ -102,21 +102,26 @@ const ScheduleStep = (props: ScheduleProps) => {
         <Form.Group controlId="select-schedule">
           <Form.Label>Select Schedule</Form.Label>
           {props.schedulePresets.length == 0 ? (
-            <p>Please add a Schedule to continue with the creation of a meeting. A schedule sets your general availability.</p>
-          ) : (<>
-            <Form.Control
-              as="select"
-              onChange={(e) => setScheduleId(Number(e.currentTarget.value))}
-              value={scheduleId}
-            >
-              <option>Select a Schedule</option>
-              {props.schedulePresets.map((schedule: Schedule) => {
-                return <option value={schedule.id}>{schedule.name}</option>
-              })}
-            </Form.Control>
             <p>
-              The time zone is {props.schedulePresets.find(s => s.id === scheduleId)?.timezone}.
-            </p></>
+              Please add a Schedule to continue with the creation of a meeting. A schedule sets your
+              general availability.
+            </p>
+          ) : (
+            <>
+              <Form.Control
+                as="select"
+                onChange={(e) => setScheduleId(Number(e.currentTarget.value))}
+                value={scheduleId}
+              >
+                <option>Select a Schedule</option>
+                {props.schedulePresets.map((schedule: Schedule) => {
+                  return <option value={schedule.id}>{schedule.name}</option>
+                })}
+              </Form.Control>
+              <p>
+                The time zone is {props.schedulePresets.find((s) => s.id === scheduleId)?.timezone}.
+              </p>
+            </>
           )}
         </Form.Group>
         <Button id="add-schedule" onClick={() => setModalVisibility(true)}>
