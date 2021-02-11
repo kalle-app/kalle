@@ -158,7 +158,7 @@ export interface ExternalEvent {
   end: Date
 }
 
-function formatDateAsICS(date: Date) {
+export function formatDateAsICS(date: Date) {
   return date.toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z"
 }
 
@@ -300,8 +300,8 @@ VERSION:2.0
 PRODID:-//MailClient.VObject/8.0.3385.0
 BEGIN:VEVENT
 UID:${uid}
-DTSTART;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.start)}
-DTEND;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.end)}
+DTSTART:${formatDateAsICS(eventDetails.start)}
+DTEND:${formatDateAsICS(eventDetails.end)}
 TRANSP:OPAQUE
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
 LAST-MODIFIED:${formatDateAsICS(dateNow)}

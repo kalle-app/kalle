@@ -1,4 +1,10 @@
-import { getTakenTimeSlots, getEvents, verifyConnectionDetails, createCalDavEvent } from "./"
+import {
+  getTakenTimeSlots,
+  getEvents,
+  verifyConnectionDetails,
+  createCalDavEvent,
+  formatDateAsICS,
+} from "./"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
@@ -272,3 +278,8 @@ function test(calendarBackend: Backends) {
 
 test("Baikal")
 test("Nextcloud")
+
+it("formatDateAsICS", () => {
+  expect(formatDateAsICS(new Date("2021-02-11T15:02:33.944Z"))).toBe("20210211T150233Z")
+  expect(formatDateAsICS(new Date("2021-02-11T15:02:33.944+01:00"))).toBe("20210211T140233Z")
+})
