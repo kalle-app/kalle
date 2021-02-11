@@ -88,7 +88,10 @@ export default async function getTimeSlots(
   return computeAvailableSlots({
     between,
     durationInMilliseconds: meeting.duration * 60 * 1000,
-    takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
+    takenSlots: [
+      ...takenTimeSlots,
+      ...scheduleToTakenSlots(schedule, between, meeting.schedule.timezone),
+    ],
   })
 }
 
