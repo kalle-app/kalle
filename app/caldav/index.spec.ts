@@ -61,7 +61,7 @@ function test(calendarBackend: Backends) {
     let calendarBackend: StartedTestContainer
 
     beforeAll(async () => {
-      jest.setTimeout(60 * 1000)
+      jest.setTimeout(120 * 1000)
 
       const calendarBackendContainer = await switchByCalendar({
         Baikal: getBaikalContainer,
