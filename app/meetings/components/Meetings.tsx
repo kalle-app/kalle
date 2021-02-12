@@ -26,17 +26,18 @@ const Meetings = (props: MeetingsProps) => {
   }
 
   return (
-    <Row>
+    <Row style={{ display: "flex", flexWrap: "wrap" }}>
       {meetings.map((meeting) => {
         const href = `/schedule/${meeting.ownerName}/${meeting.link}`
         const hrefToDisplay = getOrigin() + href
 
         return (
-          <Col md={4} className="my-1">
+          <Col md={4} style={{ display: "flex" }} className="my-1">
             <Card
               key={meeting.id + meeting.ownerName + meeting.name}
               id={"" + meeting.id}
               className="p-3 my-2 text-left shadow"
+              style={{ width: "100%" }}
             >
               <Row>
                 <Col xs={8}>

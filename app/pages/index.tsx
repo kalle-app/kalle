@@ -264,11 +264,12 @@ const MeetingOverviewBox = ({ meeting }) => {
   const href = `/schedule/${meeting.ownerName}/${meeting.link}`
   const hrefToDisplay = getOrigin() + href
   return (
-    <Col md={6} className="my-1">
+    <Col md={6} className="my-1" style={{ display: "flex" }}>
       <Card
         key={meeting.id + meeting.ownerName + meeting.name}
         id={"" + meeting.id}
         className="p-3 my-2 text-left"
+        style={{ width: "100%" }}
       >
         <Row>
           <Col md={12}>
@@ -282,14 +283,16 @@ const MeetingOverviewBox = ({ meeting }) => {
             <p className="my-auto">Active until: {format(meeting.endDate, "dd.MM.yyy")}</p>
           </Col>
         </Row>
-        <div className="d-flex mt-4 justify-content-end">
-          <Link href={"/meeting/bookings/" + meeting.id}>
-            <Button variant="outline-primary">View Bookings</Button>
-          </Link>
-          <CopyToClipboard text={hrefToDisplay} className="ml-3">
-            <Button variant="outline-primary">Copy Link</Button>
-          </CopyToClipboard>
-        </div>
+        <Row className="mt-4 justify-content-end">
+          <Col>
+            <Link href={"/meeting/bookings/" + meeting.id}>
+              <Button variant="outline-primary">View Bookings</Button>
+            </Link>
+            <CopyToClipboard text={hrefToDisplay} className="ml-3">
+              <Button variant="outline-primary">Copy Link</Button>
+            </CopyToClipboard>
+          </Col>
+        </Row>
       </Card>
     </Col>
   )
@@ -318,7 +321,7 @@ const OverviewSection = ({ meetings, appointments }) => {
             }
           >
             {meetings!.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
-            <Row>
+            <Row style={{ display: "flex", flexWrap: "wrap" }}>
               {meetings?.map((meeting: Meeting) => {
                 return <MeetingOverviewBox meeting={meeting} />
               })}
