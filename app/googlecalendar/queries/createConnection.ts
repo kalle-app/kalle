@@ -1,6 +1,6 @@
 import { createGoogleOauth } from "../helpers/GoogleClient"
 
-export default async function getGcalOAuthConnection(_ = null) {
+export default async function getCcalOAuthUrl() {
   const scopes = ["https://www.googleapis.com/auth/calendar"]
 
   return createGoogleOauth().generateAuthUrl({
