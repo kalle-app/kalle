@@ -41,9 +41,10 @@ To prevent misunderstanding, we agree on using the following terms to describe o
 
 Alice wants to meet with Bob to talk about Goldfishes. For this purpose, she creates a _Meeting_ in Kalle with the topic "Goldfish Update". She sends Bob the link to this _meeting_ (kalle.app/alice/goldfish-updates).
 
-Bob opens the link and gets a lot of _time slots_ displayed in wich Alice is available. He chooses one of them. With this he creates an _Appointment Suggestion_.
+Bob opens the link and gets a lot of _time slots_ displayed in wich Alice is available. He chooses one of them. This creates a _Meeting_.
 
-Alice receives an e-mail: "Bob has chosen an appointment". She clicks on "Confirm". This turns the _Appointment Suggestion_ into an _Appointment_ for the _meeting_ called "Goldfish Update".
+Alice receives an e-mail: "Bob has chosen a meeting".
+It is also inserted into her calendar.
 
 ### Starting a Development Environment
 
