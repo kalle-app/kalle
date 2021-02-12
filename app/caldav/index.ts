@@ -286,15 +286,6 @@ export async function getTakenTimeSlots(
   return await icsFreeBusyToInternalFreeBusy(response.data.toString())
 }
 
-export interface EventDetails {
-  name: string
-  timezone: number
-  start: Date
-  end: Date
-  location: string
-  description: string
-}
-
 export async function createCalDavEvent(
   calendar: CalendarConnectionDetails,
   appointment: Appointment
@@ -329,15 +320,22 @@ END:VCALENDAR\r\n`
       Depth: 1,
     },
   })
-  return response.res.statusMessage === "Created" ? "success" : "failure"
+
+  if (response.res.statusMessage !== "Created") {
+    throw response.res
+  }
 }
 
 export async function getCalendarService(calendar: ConnectedCalendar): Promise<CalendarService> {
+  if (!calendar.encryptedPassword || !calendar.caldavAddress || !calendar.username) {
+    throw new Error("Some credentials for your calendar are missing.")
+  }
+
   const connectionDetails: CalendarConnectionDetails = {
-    url: calendar.caldavAddress!,
+    url: calendar.caldavAddress,
     auth: {
-      username: calendar.username!,
-      password: await passwordEncryptor.decrypt(calendar.encryptedPassword!),
+      username: calendar.username,
+      password: await passwordEncryptor.decrypt(calendar.encryptedPassword),
       digest: calendar.type === "CaldavDigest",
     },
   }

@@ -1,13 +1,13 @@
 import { ExternalEvent } from "app/caldav"
 import { google } from "googleapis"
-import { createGoogleOauth } from "./helpers/GoogleClient"
+import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
 import { Appointment } from "../appointments/types"
 import { ConnectedCalendar } from "db"
 import { CalendarService } from "app/calendar-service"
 import { addMilliseconds } from "date-fns"
 
 export async function createGcalEvent(appointment: Appointment, refreshToken: string) {
-  const calendar = google.calendar({ version: "v3", auth: createGoogleOauth(refreshToken) })
+  const calendar = google.calendar({ version: "v3", auth: createAuthenticatedGoogleOauth(refreshToken) })
 
   const startDate = appointment.start
   const endDate = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
@@ -44,7 +44,7 @@ interface DateTimeUnix {
 }
 
 export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: string) {
-  const calendar = google.calendar({ version: "v3", auth: createGoogleOauth(refreshToken) })
+  const calendar = google.calendar({ version: "v3", auth: createAuthenticatedGoogleOauth(refreshToken) })
   const {
     data: { items: calendars = [] },
   } = await calendar.calendarList.list({
