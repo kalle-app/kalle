@@ -17,3 +17,36 @@ $carousel-control-color: #000000;
 $carousel-indicator-active-bg: #000000;
 
 @import "bootstrap/scss/bootstrap.scss";
+
+.timeslot-select {
+  &.active {
+    border: 1px solid $primary !important;
+    background-color: $primary !important;
+  }
+  &:hover {
+    border: 1px solid $primary !important;
+    background-color: $primary !important;
+  }
+}
+
+$nice-dates-color-gray-dark: $secondary;
+
+.nice-dates-day {
+  &.-selected {
+    &:before {
+      background-color: $primary;
+    }
+    &:hover {
+      &:after {
+        border: 2px solid $primary;
+      }
+    }
+  }
+  &:hover {
+    &:after {
+      border: 2px solid $primary;
+    }
+  }
+}
+
+@import "react-nice-dates/src/style.scss";

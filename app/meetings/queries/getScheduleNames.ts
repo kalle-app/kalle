@@ -1,4 +1,4 @@
-import db, { Schedule } from "db"
+import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getScheduleNames(_ = null, ctx: Ctx) {

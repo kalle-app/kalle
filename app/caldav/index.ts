@@ -290,7 +290,10 @@ interface EventDetails {
   description: string
 }
 
-export async function createEvent(calendar: CalendarConnectionDetails, eventDetails: EventDetails) {
+export async function createCalDavEvent(
+  calendar: CalendarConnectionDetails,
+  eventDetails: EventDetails
+) {
   const dateNow = new Date()
   const uid = uuidv4()
   const data = `BEGIN:VCALENDAR

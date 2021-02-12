@@ -1,5 +1,5 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { useMutation, invalidateQuery } from "blitz"
+import { invalidateQuery, useMutation } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
@@ -12,7 +12,7 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
 
   const submitDeletion = async (calendarId: number) => {
-    const calendar = await deleteCalendar(calendarId)
+    await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
 
