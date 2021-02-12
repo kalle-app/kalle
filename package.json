@@ -66,7 +66,7 @@
     "react-final-form": "6.5.2",
     "react-loading-skeleton": "2.1.1",
     "react-nice-dates": "3.0.7",
-    "secure-e2ee": "0.2.0",
+    "secure-e2ee": "0.4.0",
     "secure-password": "4.0.0",
     "urllib": "2.36.1",
     "uuid": "8.3.2",
