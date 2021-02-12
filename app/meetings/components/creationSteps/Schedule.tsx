@@ -195,7 +195,7 @@ const ScheduleStep = (props: ScheduleProps) => {
         </Form.Group>
         <Form.Group controlId="select-schedule">
           <Form.Label>Select Schedule</Form.Label>
-          {props.schedulePresets.length == 0 ? (
+          {props.schedulePresets.length === 0 ? (
             <p>You dont have any Schedule presets, please add a Schedule first: </p>
           ) : (
             <Form.Control

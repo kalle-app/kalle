@@ -1,6 +1,6 @@
 import { DailySchedule, Schedule } from "@prisma/client"
 import getSchedules from "app/meetings/queries/getSchedules"
-import { dynamic, useQuery } from "blitz"
+import { useQuery } from "blitz"
 import React from "react"
 import { Card, Col, ListGroup, Row } from "react-bootstrap"
 

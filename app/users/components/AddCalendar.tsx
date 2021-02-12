@@ -69,14 +69,14 @@ const AddCalendar = (props: AddCalendarProps) => {
                 <option value="outlook">Microsoft Outlook</option>
               </Form.Control>
             </Form.Group>
-            {calendarType == "caldav" && <CalDavFormBody />}
-            {calendarType == "google" && <GoogleFormBody />}
-            {calendarType == "outlook" && <OutlookFormBody />}
+            {calendarType === "caldav" && <CalDavFormBody />}
+            {calendarType === "google" && <GoogleFormBody />}
+            {calendarType === "outlook" && <OutlookFormBody />}
             <div className="p-3 d-flex justify-content-end">
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel
               </Button>
-              {calendarType == "caldav" && (
+              {calendarType === "caldav" && (
                 <Button variant="primary" className="mx-1" type="submit">
                   Add
                 </Button>
