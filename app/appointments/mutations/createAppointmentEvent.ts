@@ -4,6 +4,7 @@ import db from "db"
 import passwordEncryptor from "app/users/password-encryptor"
 import { addMinutes } from "date-fns"
 import createGcalEvent from "../../googlecalendar/queries/createGcalEvent"
+import { getCalendarService } from "app/calendar-service"
 
 interface BookingDetails {
   meetingId: number
@@ -46,6 +47,7 @@ export default async function createAppointmentEventMutation(
       date: bookingDetails.date,
     },
   })
+  
   if (calendar.type === "GoogleCalendar") {
     const appointment = {
       start: bookingDetails.date,
