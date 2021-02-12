@@ -46,7 +46,7 @@ export default async function createAppointmentEventMutation(
       date: bookingDetails.date,
     },
   })
-  if (calendar.type === "Google Calendar") {
+  if (calendar.type === "GoogleCalendar") {
     const appointment = {
       start: bookingDetails.date,
       durationInMilliseconds: meeting.duration * 60 * 1000,

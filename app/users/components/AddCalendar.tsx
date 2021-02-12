@@ -38,7 +38,7 @@ const AddCalendar = (props: AddCalendarProps) => {
               const { fail } = await createCalendar({
                 name,
                 password,
-                type,
+                type: type === "google" ? "GoogleCalendar" : "CaldavDigest",
                 url,
                 username,
               })

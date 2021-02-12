@@ -1,10 +1,10 @@
-import db from "db"
+import db, { ConnectedCalendarType } from "db"
 import { Ctx } from "blitz"
 
 interface GoogleCalenderCredentials {
   name: string
   status: "active"
-  type: string
+  type: ConnectedCalendarType
   credentials: {
     access_token: string
     refresh_token: string

@@ -34,7 +34,7 @@ function OAuthCallbackPage() {
               credentials: { access_token, refresh_token },
               name: calendarName,
               status: "active",
-              type: "Google Calendar",
+              type: "GoogleCalendar",
             }).catch(() => setIsError(true))
           }
         })
