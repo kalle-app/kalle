@@ -199,7 +199,7 @@ const InfoSection = ({ title, description, link, buttonText }) => {
 
 const IntroSection = ({ user }) => {
   return (
-    <section style={{ backgroundColor: "#ffebe3" }}>
+    <section style={{ backgroundColor: "#FFEEE6" }}>
       <Container>
         <Row>
           <Col sm={7}>
@@ -218,7 +218,7 @@ const IntroSection = ({ user }) => {
             <h4 className="text-left">Let's get started: </h4>
           </Col>
         </Row>
-        <Row className="text-center">
+        <Row className="text-center pb-5">
           <InfoSection
             title="Connect a calendar"
             description="Kalle uses your calendars to show your invitees when you are available."
@@ -298,7 +298,7 @@ const MeetingOverviewBox = ({ meeting }) => {
 const OverviewSection = ({ meetings, appointments }) => {
   return (
     <section style={{ minHeight: "70vh" }}>
-      <Container className="pt-2">
+      <Container className="pt-4">
         <Row>
           <OverviewBox
             span={7}
