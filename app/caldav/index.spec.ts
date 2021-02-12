@@ -246,7 +246,7 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        const result = await createCalDavEvent(getCalendarConnection(), {
+        await createCalDavEvent(getCalendarConnection(), {
           title: "DummyEvent",
           start: date,
           durationInMilliseconds: 30 * 60 * 1000,
@@ -261,7 +261,6 @@ function test(calendarBackend: Backends) {
           location: "Frankfurt",
           description: "A description",
         })
-        expect(result).toEqual("success")
 
         const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))
 
