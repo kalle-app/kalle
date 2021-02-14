@@ -11,9 +11,11 @@ import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 
+import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
+
   return (
     <Card>
       {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
@@ -22,10 +24,7 @@ const CalendarList = () => {
         title="My Calendars"
         subtitle="Add Calendars that you want to connect to Kalle"
       />
-      <ConnectedCalendars
-        calendars={calendarEntries ? calendarEntries : []}
-        defaultCalendarId={0}
-      />
+      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
       <SectionFooter
         id="add-calendar-button"
         text="Add Calendar"
