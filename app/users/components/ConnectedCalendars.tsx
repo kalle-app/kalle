@@ -1,12 +1,12 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { useState } from "react"
-import { useMutation, invalidateQuery, useQuery } from "blitz"
+import { invalidateQuery, useMutation, useQuery } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
 import updateDefaultCalendar from "../mutations/updateDefaultCalendar"
 import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
+import { useState } from "react"
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
   defaultCalendarId: number
@@ -19,7 +19,7 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
   const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
 
   const submitDeletion = async (calendarId: number) => {
-    const calendar = await deleteCalendar(calendarId)
+    await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
   const onChange = (event) => {

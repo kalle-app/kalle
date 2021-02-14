@@ -17,8 +17,17 @@ const AllSchedules = () => {
                 {schedule.dailySchedules.map((dailySchedule: DailySchedule) => {
                   return (
                     <ListGroup.Item key={dailySchedule.day}>
-                      <b>{dailySchedule.day}: </b>
-                      {dailySchedule.startTime} - {dailySchedule.endTime}
+                      <Row>
+                        <Col sm={6}>
+                          <b>
+                            {dailySchedule.day.charAt(0).toUpperCase() + dailySchedule.day.slice(1)}
+                            :{" "}
+                          </b>
+                        </Col>
+                        <Col sm={6}>
+                          {dailySchedule.startTime} - {dailySchedule.endTime}
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   )
                 })}

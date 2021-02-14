@@ -46,6 +46,5 @@ export function computeAvailableSlots({
       cursor = collidingSlot.end
     }
   }
-
   return result
 }

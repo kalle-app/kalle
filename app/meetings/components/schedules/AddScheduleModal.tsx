@@ -103,7 +103,6 @@ const AddSchedule = (props: AddScheduleProps) => {
                       type="checkbox"
                       label="Block all day"
                       onChange={(e: any): void => {
-                        console.log("e in checkbox ", e.currentTarget.value)
                         scheduleChanged(!schedule[day].blocked, day, "blocked")
                       }}
                     />

@@ -1,4 +1,4 @@
-import db, { Meeting } from "db"
+import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getMeetings(_ = null, ctx: Ctx) {

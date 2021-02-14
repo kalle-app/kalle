@@ -7,7 +7,7 @@ $success: #015668;
 $danger: #ff304f;
 $info: #0f81c7;
 $warning: #0de2ea;
-$light: #e8e8e8;
+$light: #fff9f7;
 $dark: #000000;
 $enable-gradients: false;
 $spacer: 1rem;
@@ -17,3 +17,43 @@ $carousel-control-color: #000000;
 $carousel-indicator-active-bg: #000000;
 
 @import "bootstrap/scss/bootstrap.scss";
+
+.timeslot-select {
+  &.active {
+    border: 1px solid $primary !important;
+    background-color: $primary !important;
+  }
+  &:hover {
+    border: 1px solid $primary !important;
+    background-color: $primary !important;
+  }
+}
+
+$nice-dates-color-gray-dark: $secondary;
+
+.nice-dates-day {
+  &.-selected {
+    &:before {
+      background-color: $primary;
+    }
+    &:hover {
+      &:after {
+        border: 2px solid $primary;
+      }
+    }
+  }
+  &:hover {
+    &:after {
+      border: 2px solid $primary;
+    }
+  }
+}
+
+@import "react-nice-dates/src/style.scss";
+
+.hoverPrimary {
+  &:hover {
+    color: #fff;
+    background-color: $primary;
+  }
+}

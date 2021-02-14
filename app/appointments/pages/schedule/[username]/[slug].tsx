@@ -1,16 +1,16 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
+import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import getMeeting from "app/appointments/queries/getMeeting"
-import React, { Suspense, useEffect, useState } from "react"
-import { BlitzPage, useQuery, useParam, useMutation } from "blitz"
+import { BlitzPage, useQuery, useParam, useMutation, Link, invalidateQuery } from "blitz"
 import { DatePickerCalendar } from "react-nice-dates"
-import "react-nice-dates/build/style.css"
 import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
-import { Card, Row, Col, Button, Modal, Form } from "react-bootstrap"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import React, { Suspense, useEffect, useState } from "react"
+import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
-import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -19,14 +19,20 @@ interface SchedulerProps {
 
 const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, username }) => {
   const [meeting] = useQuery(getMeeting, { username: username, slug: meetingSlug })
-  const [selectedDay, setSelectedDay] = useState<Date>()
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date())
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
   const [notifictionTime, setNotificationTime] = useState(30)
   const [modalVisible, setModalVisible] = useState(false)
+  const user = useCurrentUser()
+  const [hideOccupied, setHideOccupied] = useState(false)
 
-  const [slots] = useQuery(getTimeSlots, { meetingSlug: meetingSlug, ownerName: username })
+  const [slots] = useQuery(getTimeSlots, {
+    meetingSlug: meetingSlug,
+    ownerName: username,
+    hideInviteeSlots: hideOccupied,
+  })
 
   useEffect(() => {
     if (selectedDay) {
@@ -43,7 +49,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     }
 
     setSelectedDay(firstSlot.start)
-  }, [slots, setSelectedDay])
+  }, [slots, selectedDay])
+
+  useEffect(() => {
+    invalidateQuery(getTimeSlots)
+  }, [hideOccupied])
 
   if (!meeting) {
     return <h2 className="text-center m-5">Meeting invalid :(</h2>
@@ -67,6 +77,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const onSubmit = async () => {
     if (!selectedTimeSlot) {
       alert("No timeslot selected")
+      return
+    }
+
+    if (selectedTimeSlot.start < new Date()) {
+      alert("Timeslot already passed :/")
       return
     }
 
@@ -96,14 +111,30 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                 <h4>{meeting.name.charAt(0).toUpperCase() + meeting.name.slice(1)}</h4>
                 <p>Description: {meeting.description}</p>
                 <p>Location: {meeting.location}</p>
+                <hr></hr>
+                {user ? (
+                  <Form>
+                    <Form.Check
+                      type="switch"
+                      id="custom-switch"
+                      label="Only display dates where I am available"
+                      value={String(hideOccupied)}
+                      onClick={() => setHideOccupied(!hideOccupied)}
+                    />
+                  </Form>
+                ) : (
+                  <p>
+                    <Link href="/login">Login</Link> to only display dates, where you are available!
+                  </p>
+                )}
                 <DatePickerCalendar
                   date={selectedDay}
                   onDateChange={onDateChange}
                   locale={enUS}
                   modifiers={{
                     disabled: (date) => {
-                      const isDateAvailable = slots.some((slot) =>
-                        areDatesOnSameDay(slot.start, date)
+                      const isDateAvailable = slots.some(
+                        (slot) => areDatesOnSameDay(slot.start, date) && slot.start > new Date()
                       )
                       return !isDateAvailable
                     },
@@ -111,12 +142,14 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                 />
               </Col>
               <Col md={6}>
-                <AvailableTimeSlotsSelection
-                  slots={slots}
-                  selectedDay={selectedDay}
-                  selectedTimeSlot={selectedTimeSlot}
-                  setSelectedTimeSlot={setSelectedTimeSlot}
-                />
+                <div style={{ maxHeight: "60vh", overflowY: "scroll" }}>
+                  <AvailableTimeSlotsSelection
+                    slots={slots}
+                    selectedDay={selectedDay}
+                    selectedTimeSlot={selectedTimeSlot}
+                    setSelectedTimeSlot={setSelectedTimeSlot}
+                  />
+                </div>
               </Col>
             </Row>
             <div className="p-3 d-flex justify-content-end">

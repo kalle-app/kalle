@@ -21,7 +21,7 @@ jobs:
         run: sudo chmod -R 777 test/baikal/
       - run: npm ci
       - run: npm run lint
-      - run: npm test -- --coverage
+      - run: npm test -- --coverage --forceExit
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
@@ -64,6 +64,7 @@ jobs:
           EMAIL_FROM: local-dev@kalle.app
           MODE: test
           NODE_ENV: e2etest
+          HOME_URL: http://localhost:3000
       - name: Process Coverage Report
         run: npm run cypress:collect-coverage
       - name: Coveralls

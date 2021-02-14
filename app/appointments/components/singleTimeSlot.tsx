@@ -18,7 +18,7 @@ const SingleTimeSlot = (props: SingleTimeSlotProps) => {
   return (
     <Button
       variant="outline-secondary"
-      className={"w-50 m-1 " + (isSelected ? "active" : "")}
+      className={"w-50 m-1 timeslot-select " + (isSelected ? "active" : "")}
       onClick={() => {
         setSelectedTimeSlot({ start, end })
       }}

@@ -1,4 +1,4 @@
-import db, { Meeting } from "db"
+import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getBookings(meetingId: number, ctx: Ctx) {
@@ -13,7 +13,7 @@ export default async function getBookings(meetingId: number, ctx: Ctx) {
     throw new Error("An error occured: Meeting not valid")
   }
 
-  if (ctx.session.userId != meeting.owner.id) {
+  if (ctx.session.userId !== meeting.owner.id) {
     throw new Error("An error occured: You are not authorized to see this information")
   }
 

@@ -1,39 +1,40 @@
-import { loginAs } from "../login"
-import { url } from "../support/url"
-import { johnDoe } from "../../db/seed-data"
+import { loginAs } from "../../login"
+import { url } from "../../support/url"
+import { johnDoe } from "../../../db/seed-data"
 
 const {
   calendars: { baikal },
 } = johnDoe
 
-function addCalendar(cal: Omit<typeof baikal, "encryptedPassword">) {
+function addCaldavCalendar(cal: Omit<typeof baikal, "encryptedPassword">) {
   loginAs(johnDoe)
 
-  cy.visit(url("/settings"))
+  cy.visit(url("/calendars"))
 
   cy.get("#add-calendar-button").click()
 
-  cy.get("#name").type(cal.name)
-  cy.get("#url").type(cal.caldavAddress)
-  cy.get("#type").select("CalDav")
-  cy.get("#username").type(cal.username)
-  cy.get("#password").type(cal.password)
+  cy.get("select").select("CalDav")
+
+  cy.get("#caldav-name").type(cal.name)
+  cy.get("#caldav-url").type(cal.caldavAddress)
+  cy.get("#caldav-username").type(cal.username)
+  cy.get("#caldav-password").type(cal.password)
 
   cy.get("#add-calendar").submit()
 }
 
 describe("Calendars", () => {
-  it("are shown in the settings page", () => {
+  it("are shown in the calendars page", () => {
     loginAs(johnDoe)
 
-    cy.visit(url("/settings"))
+    cy.visit(url("/calendars"))
 
     cy.contains(baikal.name)
   })
 
-  describe("when adding a valid calendar", () => {
+  describe("when adding a valid calDav calendar", () => {
     it("works", () => {
-      addCalendar({
+      addCaldavCalendar({
         ...baikal,
         name: "Test-Cal",
       })
@@ -48,7 +49,7 @@ describe("Calendars", () => {
         expect(str).to.eq("Couldn't connect successfully: unauthorized")
       })
 
-      addCalendar({
+      addCaldavCalendar({
         ...baikal,
         name: "Invalid",
         password: "invalid",
