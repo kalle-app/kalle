@@ -5,28 +5,36 @@ import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
 import updateDefaultCalendar from "../mutations/updateDefaultCalendar"
-import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 import { useState } from "react"
+import {
+  DefaultCalendarSelector,
+  SelectorType,
+} from "./DefaultCalendarSelector/DefaultCalendarSelector"
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
-  defaultCalendarId: number
 }
 
 const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
   const [validated, setValidated] = useState(false)
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
   const [changeDefaultCalendar] = useMutation(updateDefaultCalendar)
-  const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
 
   const submitDeletion = async (calendarId: number) => {
     await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
   const onChange = (event) => {
+    if (event.target.value === -1) return
     changeDefaultCalendar(parseInt(event.target.value))
   }
   var dropdownElements: Array<JSX.Element> = []
-  changeDefaultCalendar().then((el) => console.log(el))
+
+  dropdownElements.push(
+    <option key={-1} value={-1}>
+      Add Calendar
+    </option>
+  )
+
   props.calendars.forEach((calendar) => {
     dropdownElements.push(
       <option key={calendar.id} value={calendar.id}>
@@ -37,21 +45,10 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
 
   return (
     <div>
-      {props.calendars.length > 0 && (
-        <Form className="m-3" validated={validated} noValidate>
-          <Form.Group controlId="formName">
-            <Form.Label>Select your default calendar:</Form.Label>
-            <Form.Control
-              as="select"
-              name="defaultCalendar"
-              defaultValue={props.defaultCalendarId}
-              onChange={onChange}
-            >
-              {dropdownElements}
-            </Form.Control>
-          </Form.Group>
-        </Form>
-      )}
+      <DefaultCalendarSelector
+        type={SelectorType.settingsBased}
+        toNext={(res) => console.log(res)}
+      />
       <Table>
         <thead>
           <tr>
