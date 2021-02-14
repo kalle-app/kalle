@@ -4,7 +4,7 @@ import { Dropdown, FormControl } from "react-bootstrap"
 const CustomToggle = forwardRef<
   any,
   {
-    onClick(): void
+    onClick(e?: any): void
   }
 >(({ children, onClick }, ref) => (
   <a

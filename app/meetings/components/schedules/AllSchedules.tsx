@@ -24,7 +24,7 @@ const AllSchedules = () => {
                 })}
                 <ListGroup.Item>
                   <b>Timezone: </b>
-                  {schedule.timezone.toString()}
+                  {schedule.timezone?.toString()}
                 </ListGroup.Item>
               </ListGroup>
             </Card>
