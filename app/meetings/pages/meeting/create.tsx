@@ -1,5 +1,5 @@
 import { BlitzPage, Router, useMutation, useQuery } from "blitz"
-import React, { ReactElement, Suspense, useState } from "react"
+import React, { ReactElement, Suspense, useState, useEffect } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
@@ -15,6 +15,7 @@ import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import Meetings from "app/meetings/components/Meetings"
 
 enum Steps {
   General,
@@ -33,6 +34,7 @@ const initialMeeting: Meeting = {
   endDate: new Date(),
   location: "",
   scheduleId: 0,
+  defaultConnectedCalendarId: -1,
 }
 
 interface SuccessModalProps {
@@ -70,10 +72,9 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
   )
 }
 
+let meeting: Meeting = initialMeeting
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-
-  const [meeting, setMeeting] = useState(initialMeeting)
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
@@ -108,14 +109,13 @@ const InviteCreationContent = () => {
         return (
           <General
             toNext={(result) => {
-              setMeeting((oldMeeting) => ({
-                ...oldMeeting,
+              meeting = {
+                ...meeting,
                 name: result.name,
                 location: result.location,
                 description: result.description,
                 link: result.link,
-              }))
-
+              }
               next()
             }}
           />
@@ -125,14 +125,14 @@ const InviteCreationContent = () => {
           <ScheduleStep
             schedulePresets={schedulePresets!}
             toNext={(result) => {
-              setMeeting((oldMeeting) => ({
-                ...oldMeeting,
+              meeting = {
+                ...meeting,
                 startDate: result.startDate,
                 endDate: result.endDate,
                 scheduleId: result.scheduleId,
                 timezone: result.timezone,
                 duration: result.duration,
-              }))
+              }
               next()
             }}
             stepBack={stepBack}
@@ -141,7 +141,18 @@ const InviteCreationContent = () => {
       case Steps.Availability:
         return <Availability toNext={next} stepBack={stepBack} />
       case Steps.Advanced:
-        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} />
+        return (
+          <Advanced
+            onSubmit={(defaultCalendarId) => {
+              meeting = {
+                ...meeting,
+                defaultConnectedCalendarId: defaultCalendarId,
+              }
+              submitMeeting()
+            }}
+            stepBack={stepBack}
+          />
+        )
     }
   }
 
