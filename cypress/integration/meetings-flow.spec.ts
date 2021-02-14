@@ -1,11 +1,16 @@
 import { loginAs } from "../login"
 import { url } from "../support/url"
 import * as uuid from "uuid"
+import { addDays, format, isFriday, isSaturday } from "date-fns"
 
 import { johnDoe } from "../../db/seed-data"
 
 it("Meetings Flow", () => {
   const link = uuid.v4()
+  const date = new Date()
+  const dateToSelect = isFriday(date) || isSaturday(date) ? addDays(date, 3) : addDays(date, 1)
+  const dateStart = format(date, "dd.MM.y")
+  const dateEnd = format(addDays(date, 14), "dd.MM.y")
 
   loginAs(johnDoe)
 
@@ -20,8 +25,8 @@ it("Meetings Flow", () => {
 
   cy.get("#duration-30").click()
 
-  cy.get("#range-start").type("20.11.2020")
-  cy.get("#range-end").type("27.11.2020")
+  cy.get("#range-start").type(dateStart)
+  cy.get("#range-end").type(dateEnd)
 
   cy.contains("Add Schedule").click()
 
@@ -41,8 +46,8 @@ it("Meetings Flow", () => {
 
   cy.visit(url(`/schedule/${johnDoe.username}/${link}`))
 
-  cy.contains("23").click()
-  cy.contains("10:30-10:45").click()
+  cy.contains(format(dateToSelect, "d")).click()
+  cy.contains("10:30-11:00").click()
 
   cy.contains("Schedule!").click()
 
@@ -57,12 +62,12 @@ it("Meetings Flow", () => {
       items: [newestMail],
     } = response.body
 
-    cy.log(newestMail)
+    cy.log(response.body)
 
     expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
-      "New appointment: My Test Meeting - 10:30, 23.11.2020 mit john.doe"
+      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} mit john.doe`
     )
     expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
   })

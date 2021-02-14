@@ -19,16 +19,21 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
     <div className="text-center">
       <p className="mb-4">Please select a time slot.</p>
       <ul>
-        {selectedSlots.map((slot, index) => (
-          <li key={index} className="w-full d-flex justify-content-center">
-            <SingleTimeSlot
-              start={slot.start}
-              end={slot.end}
-              selectedTimeSlot={props.selectedTimeSlot}
-              setSelectedTimeSlot={props.setSelectedTimeSlot}
-            />
-          </li>
-        ))}
+        {selectedSlots.map((slot, index) => {
+          if (slot.start > new Date()) {
+            return (
+              <li key={index} className="w-full d-flex justify-content-center">
+                <SingleTimeSlot
+                  start={slot.start}
+                  end={slot.end}
+                  selectedTimeSlot={props.selectedTimeSlot}
+                  setSelectedTimeSlot={props.setSelectedTimeSlot}
+                />
+              </li>
+            )
+          }
+          return <></>
+        })}
       </ul>
     </div>
   )

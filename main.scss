@@ -7,7 +7,7 @@ $success: #015668;
 $danger: #ff304f;
 $info: #0f81c7;
 $warning: #0de2ea;
-$light: #e8e8e8;
+$light: #fff9f7;
 $dark: #000000;
 $enable-gradients: false;
 $spacer: 1rem;
@@ -50,3 +50,10 @@ $nice-dates-color-gray-dark: $secondary;
 }
 
 @import "react-nice-dates/src/style.scss";
+
+.hoverPrimary {
+  &:hover {
+    color: #fff;
+    background-color: $primary;
+  }
+}
