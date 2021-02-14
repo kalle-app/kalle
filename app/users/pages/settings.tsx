@@ -1,44 +1,18 @@
-import Layout from "app/layouts/Layout"
-import ConnectedCalendars from "app/users/components/ConnectedCalendars"
-import SectionHeader from "app/users/components/SectionHeader"
-import UserDataForm from "app/users/components/UserDataForm"
-import { BlitzPage, useQuery, useMutation, useRouter, invalidateQuery } from "blitz"
-import React, { Suspense, useState } from "react"
-import getConnectedCalendars from "../queries/getConnectedCalendars"
-import Card from "react-bootstrap/Card"
-import SectionFooter from "app/users/components/SectionFooter"
-import AddCalendarModal from "app/users/components/AddCalendar"
-import Skeleton from "react-loading-skeleton"
+import logoutMutation from "app/auth/mutations/logout"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import deleteUserMutation from "../mutations/deleteUser"
-import logoutMutation from "app/auth/mutations/logout"
-import { UpdateUserInput } from "../../auth/validations"
-import updateMutation from "../mutations/updateUserData"
+import Layout from "app/layouts/Layout"
+import SectionFooter from "app/users/components/SectionFooter"
+import SectionHeader from "app/users/components/SectionHeader"
+import UserDataForm from "app/users/components/UserDataForm"
 import getCurrentUser from "app/users/queries/getCurrentUser"
-
-const CalendarList = () => {
-  const [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
-
-  return (
-    <Card>
-      {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
-
-      <SectionHeader
-        title="My Calendars"
-        subtitle="Add Calendars that you want to connect to Kalle"
-      />
-      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
-      <SectionFooter
-        id="add-calendar-button"
-        text="Add Calendar"
-        variant="primary"
-        action={() => setShowAddCalendarModal(true)}
-      />
-    </Card>
-  )
-}
+import { BlitzPage, invalidateQuery, useMutation, useRouter } from "blitz"
+import { default as React, Suspense, useState } from "react"
+import Card from "react-bootstrap/Card"
+import Skeleton from "react-loading-skeleton"
+import { UpdateUserInput } from "../../auth/validations"
+import deleteUserMutation from "../mutations/deleteUser"
+import updateMutation from "../mutations/updateUserData"
 
 const PersonalInformation = () => {
   const [update] = useMutation(updateMutation)
@@ -125,7 +99,6 @@ const SettingsContent = () => {
 
   return (
     <>
-      <CalendarList />
       <PersonalInformation />
       <DangerZone />
     </>
