@@ -1,10 +1,8 @@
 import addConnectedCalendarMutation from "../mutations/addConnectedCalendar"
 import { invalidateQuery, useMutation } from "blitz"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
-import Form from "react-bootstrap/Form"
 import styles from "../styles/AddCalendar.module.css"
-import Card from "react-bootstrap/Card"
-import Button from "react-bootstrap/Button"
+import { Alert, Card, Form, Button } from "react-bootstrap"
 import { useState } from "react"
 import ConnectGoogleCalendarButton from "../../googlecalendar/components/ConnectGoogleCalendarButton"
 
@@ -92,6 +90,8 @@ const AddCalendar = (props: AddCalendarProps) => {
 }
 
 const CalDavFormBody = () => {
+  const [url, setUrl] = useState<string>("")
+
   return (
     <>
       <Form.Group controlId="formName">
@@ -104,8 +104,21 @@ const CalDavFormBody = () => {
       </Form.Group>
       <Form.Group controlId="formUrl">
         <Form.Label>Calendar URL</Form.Label>
-        <Form.Control id="caldav-url" name="url" type="url" />
+        <Form.Control
+          id="caldav-url"
+          name="url"
+          type="url"
+          onChange={(evt) => setUrl(evt.target.value)}
+        />
       </Form.Group>
+      {url.includes("remote.php") && !url.includes("remote.php/dav") && (
+        <Alert variant="info">
+          It seems that you're trying to connect a Nextcloud instance. Please use a URL of the
+          following form:
+          <br />
+          <code>{"/remote.php/dav/calendars/<username>/<calendar-name>"}</code>
+        </Alert>
+      )}
       <Form.Group controlId="formUsername">
         <Form.Label>Username</Form.Label>
         <Form.Control id="caldav-username" name="username" />
