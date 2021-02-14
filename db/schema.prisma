@@ -65,24 +65,27 @@ model ConnectedCalendar {
   ownerId           Int
   status            ConnectedCalendarStatus
   type              String
-  DefaultCalendar   DefaultCalendar[]
+  defaultCalendar   DefaultCalendar[]
+  Meeting           Meeting[]
 }
 
 model Meeting {
-  id          Int       @id @default(autoincrement())
-  name        String
-  link        String
-  owner       User      @relation(fields: [ownerName], references: [username])
-  ownerName   String
-  description String
-  duration    Int
-  timezone    Int
-  startDate   DateTime
-  endDate     DateTime
-  schedule    Schedule  @relation(fields: [scheduleId], references: [id])
-  scheduleId  Int
-  location    String
-  bookings    Booking[]
+  id                         Int               @id @default(autoincrement())
+  name                       String
+  link                       String
+  owner                      User              @relation(fields: [ownerName], references: [username])
+  ownerName                  String
+  description                String
+  duration                   Int
+  timezone                   Int
+  startDate                  DateTime
+  endDate                    DateTime
+  schedule                   Schedule          @relation(fields: [scheduleId], references: [id])
+  scheduleId                 Int
+  location                   String
+  bookings                   Booking[]
+  defaultConnectedCalendar   ConnectedCalendar @relation(fields: [defaultConnectedCalendarId], references: [id])
+  defaultConnectedCalendarId Int
 }
 
 model DailySchedule {
