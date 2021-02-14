@@ -16,7 +16,7 @@ const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
 
   const submitDeletion = async (meetingId: number) => {
-    const meeting = await deleteMeeting(meetingId)
+    await deleteMeeting(meetingId)
     invalidateQuery(getMeetings)
   }
 

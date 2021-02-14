@@ -8,7 +8,6 @@ export interface Appointment {
   durationInMilliseconds: number
   title: string
   description: string
-  method: string
   location?: string
   url?: string
   organiser: {

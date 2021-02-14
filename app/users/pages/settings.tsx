@@ -76,10 +76,9 @@ const DangerZone = () => {
   const router = useRouter()
   const [deleteUser] = useMutation(deleteUserMutation)
   const [logout] = useMutation(logoutMutation)
-  const user = useCurrentUser()
 
   const submitDeletion = async () => {
-    await deleteUser(user?.id)
+    await deleteUser()
     await logout()
     router.push("/")
   }

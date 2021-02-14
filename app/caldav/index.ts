@@ -2,6 +2,11 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 import { v4 as uuidv4 } from "uuid"
+import type { CalendarService } from "app/calendar-service"
+import { ConnectedCalendar } from "db"
+import passwordEncryptor from "app/users/password-encryptor"
+import { Appointment } from "app/appointments/types"
+import { addMilliseconds } from "date-fns"
 
 function ensureProtocolIsSpecified(url: string) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -262,7 +267,7 @@ export async function getTakenTimeSlots(
   calendar: CalendarConnectionDetails,
   start: Date,
   end: Date
-) {
+): Promise<ExternalEvent[]> {
   const response = await makeRequestTo(calendar, {
     headers: {
       Depth: 1,
@@ -281,19 +286,13 @@ export async function getTakenTimeSlots(
   return await icsFreeBusyToInternalFreeBusy(response.data.toString())
 }
 
-interface EventDetails {
-  name: string
-  timezone: number
-  start: Date
-  end: Date
-  location: string
-  description: string
-}
-
 export async function createCalDavEvent(
   calendar: CalendarConnectionDetails,
-  eventDetails: EventDetails
+  appointment: Appointment
 ) {
+  const start = appointment.start
+  const end = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
+
   const dateNow = new Date()
   const uid = uuidv4()
   const data = `BEGIN:VCALENDAR
@@ -301,15 +300,15 @@ VERSION:2.0
 PRODID:-//MailClient.VObject/8.0.3385.0
 BEGIN:VEVENT
 UID:${uid}
-DTSTART;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.start)}
-DTEND;TZID=Europe/Berlin:${formatDateAsICS(eventDetails.end)}
+DTSTART;TZID=Europe/Berlin:${formatDateAsICS(start)}
+DTEND;TZID=Europe/Berlin:${formatDateAsICS(end)}
 TRANSP:OPAQUE
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
 LAST-MODIFIED:${formatDateAsICS(dateNow)}
 DTSTAMP:${formatDateAsICS(dateNow)}
 CREATED:${formatDateAsICS(dateNow)}
-LOCATION:${eventDetails.location}
-SUMMARY:${eventDetails.name}
+LOCATION:${appointment.location}
+SUMMARY:${appointment.title}
 CLASS:PUBLIC
 END:VEVENT
 END:VCALENDAR\r\n`
@@ -321,5 +320,27 @@ END:VCALENDAR\r\n`
       Depth: 1,
     },
   })
-  return response.res.statusMessage === "Created" ? "success" : "failure"
+
+  if (response.res.statusMessage !== "Created") {
+    throw response.res
+  }
+}
+
+export async function getCalendarService(calendar: ConnectedCalendar): Promise<CalendarService> {
+  if (!calendar.encryptedPassword || !calendar.caldavAddress || !calendar.username) {
+    throw new Error("Some credentials for your calendar are missing.")
+  }
+
+  const connectionDetails: CalendarConnectionDetails = {
+    url: calendar.caldavAddress,
+    auth: {
+      username: calendar.username,
+      password: await passwordEncryptor.decrypt(calendar.encryptedPassword),
+      digest: calendar.type === "CaldavDigest",
+    },
+  }
+  return {
+    createEvent: (details) => createCalDavEvent(connectionDetails, details),
+    getTakenTimeSlots: (start, end) => getTakenTimeSlots(connectionDetails, start, end),
+  }
 }
