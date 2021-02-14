@@ -26,8 +26,7 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
     changeDefaultCalendar(parseInt(event.target.value))
   }
   var dropdownElements: Array<JSX.Element> = []
-
-  //if (props.defaultCalendarId === null) dropdownElements.push(<option key={-1} value={-1}>Kalender auswählen</option>);
+  changeDefaultCalendar().then((el) => console.log(el))
   props.calendars.forEach((calendar) => {
     dropdownElements.push(
       <option key={calendar.id} value={calendar.id}>

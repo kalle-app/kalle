@@ -8,6 +8,6 @@ export default async function getDefaultCalendarByUser(_ = null, ctx: Ctx) {
     where: { userId: ctx.session!.userId },
   })
 
-  if (!defaultCalendar) return null;
+  if (!defaultCalendar) return null
   return defaultCalendar.calendarId
 }
