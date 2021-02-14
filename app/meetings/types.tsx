@@ -22,4 +22,5 @@ export interface Meeting {
   endDate: Date
   location: string
   scheduleId: number
+  defaultConnectedCalendarId: number
 }
