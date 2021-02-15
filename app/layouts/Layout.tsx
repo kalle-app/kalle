@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import { Head } from "blitz"
 import NavBar from "app/components/Navbar"
+import "@fortawesome/fontawesome-svg-core/styles.css"
 
 type LayoutProps = {
   title?: string
