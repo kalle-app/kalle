@@ -27,11 +27,11 @@ const PublicContent = () => {
       <Container className="mt-5">
         <Row>
           <Col md={5}>
-            <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
-            <h4 className="p-4">
+            <h2 className="py-4">Haven't used Kalle to manage your Meetings?</h2>
+            <h4 className="py-4">
               Kalle helps you scheduling meetings with friends, colleagues and customers!
             </h4>
-            <div className="p-4">
+            <div className="py-4">
               <Link href="/signup">
                 <Button variant="outline-primary" className="m-1" size="lg" block>
                   Sign up now
@@ -39,12 +39,13 @@ const PublicContent = () => {
               </Link>
             </div>
           </Col>
-          <Col md={7} className="p-4">
+          <Col md={1}></Col>
+          <Col md={6} className="py-4">
             <img
               alt="meeting"
               src="/meeting_4.svg"
-              width="95%"
-              height="95%"
+              width="100%"
+              height="100%"
               className="d-inline-block align-top"
             />
           </Col>
