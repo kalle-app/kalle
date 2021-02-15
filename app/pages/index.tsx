@@ -175,23 +175,25 @@ const PublicContent = () => {
           </Col>
         </Row>
       </Container>
-      <hr
-        style={{
-          color: "#000000",
-          backgroundColor: "#000000",
-          height: 0.5,
-          borderColor: "#DA471F",
-        }}
-      />
-      <h5>Imprint</h5>
-      <p>
-        This Application is developed within the{" "}
-        <Link href="https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering-ba/lehrveranstaltung/wise-20-21-3166-trends-und-konzepte-dynamischer-web_anwendungen.html">
-          Trends and Concepts in Dynamic Web-Applications Seminar
-        </Link>{" "}
-        at the Hasso Plattner Institute. See the{" "}
-        <Link href="https://hpi.de/impressum.html">imprint</Link>.
-      </p>
+      <Container>
+        <hr
+          style={{
+            color: "#000000",
+            backgroundColor: "#000000",
+            height: 0.5,
+            borderColor: "#DA471F",
+          }}
+        />
+        <h5 className="text-center">Imprint</h5>
+        <p className="text-center">
+          This Application is developed within the{" "}
+          <Link href="https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering-ba/lehrveranstaltung/wise-20-21-3166-trends-und-konzepte-dynamischer-web_anwendungen.html">
+            Trends and Concepts in Dynamic Web-Applications Seminar
+          </Link>{" "}
+          at the Hasso Plattner Institute. See the{" "}
+          <Link href="https://hpi.de/impressum.html">imprint</Link>.
+        </p>
+      </Container>
     </main>
   )
 }
