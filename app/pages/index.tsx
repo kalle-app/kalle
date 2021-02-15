@@ -6,7 +6,7 @@ import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { format } from "date-fns"
 import { Booking, Meeting } from "db"
 import React, { Suspense } from "react"
-import { Card, Carousel, Col, Container, Row } from "react-bootstrap"
+import { Card, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
 import { CopyToClipboard } from "react-copy-to-clipboard"
@@ -24,9 +24,9 @@ const Content = () => {
 const PublicContent = () => {
   return (
     <main className="text">
-      <Container>
+      <Container className="mt-5">
         <Row>
-          <Col sm={5}>
+          <Col md={5}>
             <h2 className="p-4">Haven't used Kalle to manage your Meetings?</h2>
             <h4 className="p-4">
               Kalle helps you scheduling meetings with friends, colleagues and customers!
@@ -39,7 +39,7 @@ const PublicContent = () => {
               </Link>
             </div>
           </Col>
-          <Col sm={7}>
+          <Col md={7} className="p-4">
             <img
               alt="meeting"
               src="/meeting_4.svg"
@@ -49,34 +49,29 @@ const PublicContent = () => {
             />
           </Col>
         </Row>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <Row>
+        <Row className="pb-4">
           <Col sm={4}>
-            <Row>
-              <Col lg={12}>
-                <h4>1. Connect a calendar</h4>
-                <h6>You can connect your Google-, MS-Outlook-, and even CalDAV Calendars!</h6>
-              </Col>
-            </Row>
+            <div className="p-2">
+              <h4>1. Connect a calendar</h4>
+              <h6>You can connect your Google-, MS-Outlook-, and even CalDAV Calendars!</h6>
+            </div>
           </Col>
           <Col sm={4}>
-            <h4>2. Create a meeting link</h4>
-            <h6>With this link you can invite all your colleagues!</h6>
+            <div className="p-2">
+              <h4>2. Create a meeting link</h4>
+              <h6>With this link you can invite all your colleagues!</h6>
+            </div>
           </Col>
           <Col sm={4}>
-            <h4>3. Share it & meet!</h4>
-            <h6>
-              Your partner will pick an appointment from your available slots and you will get
-              notified!
-            </h6>
+            <div className="p-2">
+              <h4>3. Share it and meet!</h4>
+              <h6>
+                Your partner will pick an appointment from your available slots and you will get
+                notified!
+              </h6>
+            </div>
           </Col>
         </Row>
-        <br />
-        <br />
         <hr
           style={{
             color: "#000000",
@@ -85,97 +80,77 @@ const PublicContent = () => {
             borderColor: "#DA471F",
           }}
         />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <Row>
-          <Col style={{ display: "flex", justifyContent: "center" }}>
+        <Row className="py-4">
+          <Col
+            sm={6}
+            style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}
+          >
             <img
               alt="meeting"
               src="/clock.svg"
               width="auto"
               height="100px"
-              className="img-responsive d-inline-block align-top"
+              className="d-inline-block align-top m-2"
             />
+            <h2 className="text-center m-3">Time-management</h2>
+            <h5 className="text-center m-3">
+              With Kalle you will no longer have extensive chats to schedule a meeting, and instead
+              have more free time!
+            </h5>
           </Col>
-          <Col style={{ display: "flex", justifyContent: "center" }}>
+          <Col
+            sm={6}
+            style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}
+          >
             <img
               alt="meeting"
               src="/secure.svg"
               width="auto"
               height="100px"
-              className="d-inline-block align-top"
+              className="d-inline-block align-top m-2"
             />
-          </Col>
-        </Row>
-        <br />
-        <br />
-        <Row>
-          <Col>
-            <h2 className="text-center">Time-management</h2>
-            <br></br>
-            <h5 className="text-center">
-              With Kalle you will no longer have extensive chats to schedule a meeting, and instead
-              have more free time!
-            </h5>
-          </Col>
-          <Col>
-            <h2 className="text-center">Customizable</h2>
-            <br></br>
-            <h5 className="text-center">
+            <h2 className="text-center m-3">Customizable</h2>
+            <h5 className="text-center m-3">
               Feel that there are features missing? Make sure to check out the advances options. As
               we are Open source, you can even create new functionalities
             </h5>
           </Col>
         </Row>
-        <br />
-        <br />
-        <br />
-        <br />
-        <Row>
-          <Col style={{ display: "flex", justifyContent: "center" }}>
+        <Row className="pb-4">
+          <Col
+            sm={6}
+            style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}
+          >
             <img
               alt="meeting"
               src="/connect.svg"
               width="auto"
               height="100px"
-              className="img-responsive d-inline-block align-top"
+              className="d-inline-block align-top m-2"
             />
+            <h2 className="text-center m-3">Connectivity</h2>
+            <h5 className="text-center m-3">
+              You can connect many different calendars: CalDAV, Google Calendar, Oulook..
+            </h5>
           </Col>
-          <Col style={{ display: "flex", justifyContent: "center" }}>
+          <Col
+            sm={6}
+            style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}
+          >
             <img
               alt="meeting"
               src="/busy.svg"
               width="auto"
               height="100px"
-              className="d-inline-block align-top"
+              className="d-inline-block align-top m-2"
             />
-          </Col>
-        </Row>
-        <br />
-        <br />
-        <Row>
-          <Col>
-            <h2 className="text-center">Connectivity</h2>
-            <br></br>
-            <h5 className="text-center">
-              You can connect many different calendars: CalDAV, Google Calendar, Oulook..
-            </h5>
-          </Col>
-          <Col>
-            <h2 className="text-center">Busy?</h2>
-            <br></br>
-            <h5 className="text-center">
+            <h2 className="text-center m-3">Busy?</h2>
+            <h5 className="text-center m-3">
               Kalle automatically recognises when you are busy and will only show you free
               timeslots!
             </h5>
           </Col>
         </Row>
-      </Container>
-      <Container>
         <hr
           style={{
             color: "#000000",
@@ -184,15 +159,18 @@ const PublicContent = () => {
             borderColor: "#DA471F",
           }}
         />
-        <h5 className="text-center">Imprint</h5>
-        <p className="text-center">
-          This Application is developed within the{" "}
-          <Link href="https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering-ba/lehrveranstaltung/wise-20-21-3166-trends-und-konzepte-dynamischer-web_anwendungen.html">
-            Trends and Concepts in Dynamic Web-Applications Seminar
-          </Link>{" "}
-          at the Hasso Plattner Institute. See the{" "}
-          <Link href="https://hpi.de/impressum.html">imprint</Link>.
-        </p>
+        <div className="py-3">
+          <p className="text-center m-1">
+            This Application is developed within the{" "}
+            <Link href="https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering-ba/lehrveranstaltung/wise-20-21-3166-trends-und-konzepte-dynamischer-web_anwendungen.html">
+              Trends and Concepts in Dynamic Web-Applications Seminar
+            </Link>{" "}
+            at the Hasso Plattner Institute.
+          </p>
+          <p className="text-center">
+            See the <Link href="https://hpi.de/impressum.html">imprint</Link>.
+          </p>
+        </div>
       </Container>
     </main>
   )
