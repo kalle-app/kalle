@@ -41,3 +41,25 @@ export const UpdateUserInput = z.object({
     .max(100, { message: messages.long_password }),
 })
 export type UpdateUserInputType = z.infer<typeof UpdateUserInput>
+
+const Schedule = z.object({
+  blocked: z.boolean(),
+  start: z.string(),
+  end: z.string(),
+})
+
+const Schedules = z.object({
+  monday: Schedule,
+  tuesday: Schedule,
+  wednesday: Schedule,
+  thursday: Schedule,
+  friday: Schedule,
+  saturday: Schedule,
+  sunday: Schedule,
+})
+
+export const ScheduleInput = z.object({
+  name: z.string().min(1, { message: messages.no_name }),
+  schedule: Schedules,
+})
+export type ScheduleInputType = z.infer<typeof ScheduleInput>
