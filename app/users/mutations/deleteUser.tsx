@@ -1,26 +1,30 @@
 import db from "db"
 import { Ctx } from "blitz"
 
-export default async function deleteUser(userId: number, ctx: Ctx) {
+export default async function deleteOneSelf(_ = null, ctx: Ctx) {
   ctx.session.authorize()
 
-  let user = await db.user.findUnique({
-    where: { id: userId },
-  })
+  const userId = ctx.session.userId
 
-  const bookings = await db.booking.deleteMany({
+  await db.booking.deleteMany({
     where: {
       meeting: {
-        ownerName: user?.username,
+        owner: {
+          id: userId,
+        },
       },
     },
   })
 
-  const meetings = await db.meeting.deleteMany({
-    where: { ownerName: user?.username },
+  await db.meeting.deleteMany({
+    where: {
+      owner: {
+        id: userId,
+      },
+    },
   })
 
-  const dailySchedules = await db.dailySchedule.deleteMany({
+  await db.dailySchedule.deleteMany({
     where: {
       schedule: {
         ownerId: userId,
@@ -28,17 +32,17 @@ export default async function deleteUser(userId: number, ctx: Ctx) {
     },
   })
 
-  const schedules = await db.schedule.deleteMany({
+  await db.schedule.deleteMany({
     where: { ownerId: userId },
   })
 
-  const calendars = await db.connectedCalendar.deleteMany({
+  await db.connectedCalendar.deleteMany({
     where: { ownerId: userId },
   })
 
-  user = await db.user.delete({
+  await db.user.delete({
     where: { id: userId },
   })
 
-  return user
+  await ctx.session.revoke()
 }

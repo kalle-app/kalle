@@ -16,7 +16,7 @@ const AvailableTimeSlotsSelection = (props: AvailableSlotsProps) => {
   const [timeZone, setTimeZone] = useState<string>(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const { slots, selectedDay } = props
   const selectedSlots = selectedDay
-    ? slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay))
+    ? slots.filter((slot) => areDatesOnSameDay(slot.start, selectedDay) && slot.start > new Date())
     : []
 
   return (

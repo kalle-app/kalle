@@ -22,7 +22,7 @@ async function main() {
           name: johnDoe.calendars.baikal.name,
           username: johnDoe.calendars.baikal.username,
           status: "active",
-          type: "CalDav",
+          type: "CaldavDigest",
         },
       },
     },

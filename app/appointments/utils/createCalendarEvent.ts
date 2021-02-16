@@ -20,7 +20,6 @@ export function createCalendarEvent(appointment: Appointment): string {
     ],
     duration: durationToIcsDurationObject(appointment.durationInMilliseconds),
     title: appointment.title,
-    method: appointment.method,
     description: appointment.description,
     location: appointment.location,
     organizer: { name: appointment.organiser.name, email: appointment.organiser.email },

@@ -1,4 +1,4 @@
-import db from "db"
+import db, { ConnectedCalendarType } from "db"
 import { Ctx } from "blitz"
 import passwordEncryptor from "../password-encryptor"
 import { verifyConnectionDetails } from "app/caldav"
@@ -6,7 +6,7 @@ import { verifyConnectionDetails } from "app/caldav"
 interface CalendarCreate {
   name: string
   url: string
-  type: string
+  type: ConnectedCalendarType
   username: string
   password: string
 }

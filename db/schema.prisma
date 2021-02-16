@@ -45,6 +45,12 @@ enum ConnectedCalendarStatus {
   active
 }
 
+enum ConnectedCalendarType {
+  CaldavDigest
+  CaldavBasic
+  GoogleCalendar
+}
+
 model ConnectedCalendar {
   id                Int                     @id @default(autoincrement())
   name              String
@@ -55,7 +61,7 @@ model ConnectedCalendar {
   owner             User                    @relation(fields: [ownerId], references: [id])
   ownerId           Int
   status            ConnectedCalendarStatus
-  type              String
+  type              ConnectedCalendarType
 }
 
 model Meeting {
@@ -86,7 +92,7 @@ model DailySchedule {
 model Schedule {
   id             Int             @id @default(autoincrement())
   name           String
-  timezone             String
+  timezone       String
   dailySchedules DailySchedule[]
   owner          User            @relation(fields: [ownerId], references: [id])
   ownerId        Int

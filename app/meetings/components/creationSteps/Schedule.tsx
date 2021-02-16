@@ -8,7 +8,6 @@ import type { Schedule } from "db"
 import AddSchedule from "../schedules/AddScheduleModal"
 
 interface ScheduleFormResult {
-  timezone: number
   startDate: Date
   endDate: Date
   scheduleId: number
@@ -24,7 +23,6 @@ type ScheduleProps = {
 const ScheduleStep = (props: ScheduleProps) => {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
-  const [timezone, setTimezone] = useState<number>(0)
   const [duration, setDuration] = useState(30)
   const [scheduleId, setScheduleId] = useState<number | undefined>(props.schedulePresets[0]?.id)
   const [modalVisible, setModalVisibility] = useState(false)
@@ -50,13 +48,12 @@ const ScheduleStep = (props: ScheduleProps) => {
             endDate,
             startDate,
             scheduleId,
-            timezone,
             duration,
           })
         }}
       >
         <Form.Group controlId="duration">
-          <Form.Label>Duration</Form.Label>
+          <Form.Label className="mr-3">Duration</Form.Label>
           <ButtonGroup toggle>
             {[15, 30, 60].map((d) => (
               <ToggleButton

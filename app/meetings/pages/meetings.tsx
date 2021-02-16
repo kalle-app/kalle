@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import { Col, Row } from "react-bootstrap"
 
 const MeetingsContent = () => {
   const [meetings] = useQuery(getMeetings, null)
@@ -18,14 +19,18 @@ const MainContent = () => {
     return <AuthError />
   }
   return (
-    <div className="text-center">
-      <h3>All your active Meetings</h3>
+    <div className="">
+      <Row className="mb-3">
+        <Col md={8} className="text-left">
+          <h3>Your Meetings</h3>
+        </Col>
+        <Col md={4} className="text-md-right text-sm-left">
+          <Link href="/meeting/create">
+            <Button variant="primary">Create new Meeting</Button>
+          </Link>
+        </Col>
+      </Row>
       <MeetingsContent />
-      <Link href="/meeting/create">
-        <Button variant="primary" className="m-3">
-          Create new Meeting
-        </Button>
-      </Link>
     </div>
   )
 }
@@ -38,6 +43,6 @@ const MyMeetings: BlitzPage = () => {
   )
 }
 
-MyMeetings.getLayout = (page) => <Layout title="Meetings">{page}</Layout>
+MyMeetings.getLayout = (page) => <Layout title="Meetings | Kalle">{page}</Layout>
 
 export default MyMeetings

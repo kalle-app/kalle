@@ -50,7 +50,11 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
       <Modal.Header closeButton>
         <Modal.Title>Meeting successfully created!</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Your invitelink is: {props.meetingLink}</Modal.Body>
+      <Modal.Body>
+        Your invitelink is: {props.meetingLink}
+        <br></br>
+        Copy it and send it to your customers or friends
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => close()}>
           Close
@@ -126,6 +130,7 @@ const InviteCreationContent = () => {
                 endDate: result.endDate,
                 scheduleId: result.scheduleId,
                 timezone: result.timezone,
+                duration: result.duration,
               }))
               next()
             }}

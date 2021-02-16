@@ -4,6 +4,9 @@ import { Link, useMutation, invalidateQuery } from "blitz"
 import { getOrigin } from "utils/generalUtils"
 import deleteMeetingMutation from "../mutations/deleteMeeting"
 import getMeetings from "../queries/getMeetings"
+import { format } from "date-fns"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import { Geo, CalendarRange } from "react-bootstrap-icons"
 
 interface MeetingsProps {
   meetings: Meeting[]
@@ -13,7 +16,7 @@ const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
 
   const submitDeletion = async (meetingId: number) => {
-    const meeting = await deleteMeeting(meetingId)
+    await deleteMeeting(meetingId)
     invalidateQuery(getMeetings)
   }
 
@@ -23,90 +26,72 @@ const Meetings = (props: MeetingsProps) => {
   }
 
   return (
-    <ul>
+    <Row style={{ display: "flex", flexWrap: "wrap" }}>
       {meetings.map((meeting) => {
-        const end = meeting.endDateUTC.toString()
-        const start = meeting.startDateUTC.toString()
-
         const href = `/schedule/${meeting.ownerName}/${meeting.link}`
         const hrefToDisplay = getOrigin() + href
 
         return (
-          <Card
-            as="li"
-            key={meeting.id + meeting.ownerName + meeting.name}
-            id={"" + meeting.id}
-            className="p-3 my-5 text-left"
-          >
-            <h5 className="pb-3 font-weight-bold">{meeting.name}</h5>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">Description</p>
-              </Col>
-              <Col sm={8} className="my-auto pb-1">
-                <p className="my-auto">{meeting.description}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">Location</p>
-              </Col>
-              <Col sm={8} className="my-auto pb-1">
-                <p className="my-auto">{meeting.location}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">Duration</p>
-              </Col>
-              <Col sm={8} className="my-auto pb-1">
-                <p className="my-auto">{meeting.duration} Minutes</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">Start</p>
-              </Col>
-              <Col sm={8} className="my-auto pb-1">
-                <p className="my-auto">{start}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">End</p>
-              </Col>
-              <Col sm={8} className="my-auto pb-1">
-                <p className="my-auto">{end}</p>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="my-auto">
-                <p className="my-auto font-weight-bold">Link</p>
-              </Col>
-              <Col sm={8} className="my-auto">
-                <Link href={href}>
-                  <a className="my-auto">{hrefToDisplay}</a>
+          <Col md={4} style={{ display: "flex" }} className="my-1">
+            <Card
+              key={meeting.id + meeting.ownerName + meeting.name}
+              id={"" + meeting.id}
+              className="p-3 my-2 text-left shadow"
+              style={{ width: "100%" }}
+            >
+              <Row>
+                <Col xs={8}>
+                  <h5 className="font-weight-bold">
+                    {meeting.name} ({meeting.duration}min){" "}
+                  </h5>
+                </Col>
+                <Col xs={4}>
+                  <Button
+                    className="ml-3"
+                    variant="outline-danger"
+                    onClick={() => {
+                      submitDeletion(meeting.id)
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="mt-1">
+                <Col className="my-auto pb-1">
+                  <p className="my-auto">
+                    <CalendarRange className="mr-2"></CalendarRange>
+                    {format(meeting.startDateUTC, "dd.MM.yyy")} -{" "}
+                    {format(meeting.endDateUTC, "dd.MM.yyy")}
+                  </p>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="my-auto pb-1">
+                  <p className="my-auto">
+                    <Geo className="mr-2"></Geo>
+                    {meeting.location}
+                  </p>
+                </Col>
+              </Row>
+              <Row className="mt-1">
+                <Col>
+                  <p className="my-auto">{meeting.description}</p>
+                </Col>
+              </Row>
+              <div className="d-flex mt-4 justify-content-end">
+                <Link href={"/meeting/bookings/" + meeting.id}>
+                  <Button variant="outline-primary">View Bookings</Button>
                 </Link>
-              </Col>
-            </Row>
-            <div className="d-flex justify-content-end">
-              <Link href={"/meeting/bookings/" + meeting.id}>
-                <Button variant="outline-primary">View Bookings</Button>
-              </Link>
-              <Button
-                className="ml-3"
-                variant="outline-danger"
-                onClick={() => {
-                  submitDeletion(meeting.id)
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </Card>
+                <CopyToClipboard text={hrefToDisplay} className="ml-3">
+                  <Button variant="outline-primary">Copy Link</Button>
+                </CopyToClipboard>
+              </div>
+            </Card>
+          </Col>
         )
       })}
-    </ul>
+    </Row>
   )
 }
 
