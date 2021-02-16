@@ -65,7 +65,7 @@ const General = (props: GeneralProps) => {
           <Form.Label>Description</Form.Label>
           <Form.Control as="textarea" rows={3} name="description" />
         </Form.Group>
-        <Form.Group controlId="forLocation">
+        <Form.Group controlId="location">
           <Form.Label>Location</Form.Label>
           <Form.Control name="location" />
         </Form.Group>
