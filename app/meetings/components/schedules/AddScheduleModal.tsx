@@ -42,15 +42,14 @@ const AddSchedule = (props: AddScheduleProps) => {
   }
 
   const checkSchedules = (schedules) => {
-    let result = true
     for (const key in schedules) {
       if (!schedule[key].blocked) {
         if (!checkTime(schedule[key].start) || !checkTime(schedule[key].end)) {
-          result = false
+          return false
         }
       }
     }
-    return result
+    return true
   }
 
   const checkTime = (time) => {
