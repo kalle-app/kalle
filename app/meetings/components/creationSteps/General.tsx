@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 import { Form, Button } from "react-bootstrap"
 import { Link } from "blitz"
+import { useState } from "react"
+import { GeneralInformationInput } from "app/auth/validations"
 
 interface GeneralFormResult {
   name: string
@@ -15,6 +17,7 @@ type GeneralProps = {
 }
 
 const General = (props: GeneralProps) => {
+  const [message, setMessage] = useState("")
   return (
     <div className="p-3">
       <h4>General Information</h4>
@@ -25,11 +28,28 @@ const General = (props: GeneralProps) => {
           evt.preventDefault()
 
           const formData = new FormData(evt.currentTarget)
+          const name = formData.get("name") as string
+          const description = formData.get("description") as string
+          const link = formData.get("link") as string
+          const location = formData.get("location") as string
+
+          const parseResult = GeneralInformationInput.safeParse({
+            name,
+            description,
+            link,
+            location,
+          })
+
+          if (!parseResult.success) {
+            setMessage(parseResult.error.errors[0].message)
+            return
+          }
+
           props.toNext({
-            name: formData.get("name") as string,
-            description: formData.get("description") as string,
-            link: formData.get("link") as string,
-            location: formData.get("location") as string,
+            name: name,
+            description: description,
+            location: location,
+            link: link,
           })
         }}
       >
@@ -49,6 +69,7 @@ const General = (props: GeneralProps) => {
           <Form.Label>Location</Form.Label>
           <Form.Control name="location" />
         </Form.Group>
+        <Form.Text className="text-danger">{message}</Form.Text>
         <div className="p-3 d-flex justify-content-end">
           <Link href="/meetings">
             <Button className="mx-1">Cancel</Button>

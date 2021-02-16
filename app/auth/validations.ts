@@ -4,6 +4,9 @@ const messages = {
   no_name: "Please enter a name",
   no_username: "Please enter a username",
   no_password: "Please enter a password",
+  no_link: "Please enter an identifier for your link",
+  no_description: "Please enter a description",
+  no_location: "Please enter a location",
   short_username: "Username has to be at least 2 characters",
   invalid_email: "Please enter a valid email address",
   short_password: "Password must contain at least 10 characters",
@@ -75,3 +78,11 @@ export const AddCalendarInput = z.object({
   password: z.string().min(1, { message: messages.no_password }),
 })
 export type AddCalendarInputType = z.infer<typeof AddCalendarInput>
+
+export const GeneralInformationInput = z.object({
+  name: z.string().min(1, { message: messages.no_name }),
+  link: z.string().min(1, { message: messages.no_link }),
+  description: z.string().min(1, { message: messages.no_description }),
+  location: z.string().min(1, { message: messages.no_location }),
+})
+export type GeneralInformationInputType = z.infer<typeof GeneralInformationInput>
