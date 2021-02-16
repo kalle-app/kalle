@@ -129,7 +129,6 @@ const InviteCreationContent = () => {
                 startDate: result.startDate,
                 endDate: result.endDate,
                 scheduleId: result.scheduleId,
-                timezone: result.timezone,
                 duration: result.duration,
               }))
               next()

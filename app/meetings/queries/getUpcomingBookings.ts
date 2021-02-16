@@ -13,7 +13,7 @@ export default async function getBookings(span: number, ctx: Ctx) {
           },
         },
       },
-      date: {
+      startDateUTC: {
         gt: new Date(),
       },
     },
@@ -21,7 +21,7 @@ export default async function getBookings(span: number, ctx: Ctx) {
       meeting: true,
     },
     orderBy: {
-      date: "asc",
+      startDateUTC: "asc",
     },
     take: span,
   })
