@@ -2,10 +2,13 @@ import * as z from "zod"
 
 const messages = {
   no_name: "Please enter a name",
+  no_username: "Please enter a username",
+  no_password: "Please enter a password",
   short_username: "Username has to be at least 2 characters",
   invalid_email: "Please enter a valid email address",
   short_password: "Password must contain at least 10 characters",
   long_password: "Password cannot contain more than 100 characters",
+  invalid_url: "Please enter a valid url",
 }
 
 export const SignupInput = z.object({
@@ -63,3 +66,12 @@ export const ScheduleInput = z.object({
   schedule: Schedules,
 })
 export type ScheduleInputType = z.infer<typeof ScheduleInput>
+
+export const AddCalendarInput = z.object({
+  type: z.string(),
+  name: z.string().min(1, { message: messages.no_name }),
+  url: z.string().url({ message: messages.invalid_url }),
+  username: z.string().min(1, { message: messages.no_username }),
+  password: z.string().min(1, { message: messages.no_password }),
+})
+export type AddCalendarInputType = z.infer<typeof AddCalendarInput>
