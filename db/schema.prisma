@@ -13,31 +13,20 @@ generator client {
 // --------------------------------------
 
 model User {
-  id              Int                 @id @default(autoincrement())
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
-  name            String
-  username        String              @unique
-  email           String              @unique
-  hashedPassword  String?
-  role            String              @default("user")
-  sessions        Session[]
-  calendars       ConnectedCalendar[]
-  Meeting         Meeting[]
-  Schedule        Schedule[]
-  DefaultCalendar DefaultCalendar[]
-}
-
-model DefaultCalendar {
-  id         Int               @id @default(autoincrement())
-  userId     Int               @unique
-  user       User              @relation(fields: [userId], references: [id])
-  calendarId Int
-  calendar   ConnectedCalendar @relation(fields: [calendarId], references: [id])
+  id             Int       @default(autoincrement()) @id
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  name           String
+  username       String    @unique
+  email          String    @unique
+  hashedPassword String?
+  role           String    @default("user")
+  sessions       Session[]
+  calendars      ConnectedCalendar[]
 }
 
 model Session {
-  id                 Int       @id @default(autoincrement())
+  id                 Int       @default(autoincrement()) @id
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -61,61 +50,57 @@ enum ConnectedCalendarType {
 }
 
 model ConnectedCalendar {
-  id                Int                     @id @default(autoincrement())
-  name              String
-  caldavAddress     String?
-  username          String?
+  id  Int @id @default(autoincrement())
+  name String
+  caldavAddress String?
+  username String?
   encryptedPassword String?
-  refreshToken      String?
-  owner             User                    @relation(fields: [ownerId], references: [id])
-  ownerId           Int
-  status            ConnectedCalendarStatus
-  type              String
-  defaultCalendar   DefaultCalendar[]
-  Meeting           Meeting[]
+  refreshToken String?
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  status ConnectedCalendarStatus
+  type ConnectedCalendarType
 }
 
 model Meeting {
-  id                         Int               @id @default(autoincrement())
-  name                       String
-  link                       String
-  owner                      User              @relation(fields: [ownerName], references: [username])
-  ownerName                  String
-  description                String
-  duration                   Int
-  timezone                   Int
-  startDate                  DateTime
-  endDate                    DateTime
-  schedule                   Schedule          @relation(fields: [scheduleId], references: [id])
-  scheduleId                 Int
-  location                   String
-  bookings                   Booking[]
-  defaultConnectedCalendar   ConnectedCalendar @relation(fields: [defaultConnectedCalendarId], references: [id])
-  defaultConnectedCalendarId Int
+  id  Int @id @default(autoincrement())
+  name String
+  link String
+  owner User @relation(fields: [ownerName], references: [username])
+  ownerName String
+  description String
+  duration Int
+  timezone Int
+  startDate DateTime
+  endDate DateTime
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int
+  location String
+  bookings Booking[]
 }
 
 model DailySchedule {
-  id         Int      @id @default(autoincrement())
-  day        String
-  startTime  String
-  endTime    String
-  schedule   Schedule @relation(fields: [scheduleId], references: [id])
-  scheduleId Int
+    id Int @id @default(autoincrement())
+    day String
+    startTime String
+    endTime String
+    schedule Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId Int
 }
 
 model Schedule {
-  id             Int             @id @default(autoincrement())
-  name           String
+  id Int @id @default(autoincrement())
+  name String
   dailySchedules DailySchedule[]
-  owner          User            @relation(fields: [ownerId], references: [id])
-  ownerId        Int
-  Meeting        Meeting[]
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
 }
 
 model Booking {
-  id           Int      @id @default(autoincrement())
-  meeting      Meeting  @relation(fields: [meetingId], references: [id])
-  meetingId    Int
+  id Int @id @default(autoincrement())
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int
   inviteeEmail String
-  date         DateTime
+  date DateTime
 }
+  
