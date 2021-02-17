@@ -12,7 +12,7 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
   if (!owner) {
     throw new Error("Invariant failed: Owner does not exist.")
   }
-
+  console.log(meetingCreate)
   const meeting = await db.meeting.create({
     data: {
       name: meetingCreate.name,
@@ -28,6 +28,9 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       location: meetingCreate.location,
       owner: {
         connect: { username: owner.username },
+      },
+      defaultConnectedCalendar: {
+        connect: { id: meetingCreate.defaultConnectedCalendarId },
       },
     },
   })

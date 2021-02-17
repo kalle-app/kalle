@@ -11,6 +11,7 @@ import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 
+import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 const CalendarList = () => {
   const [calendarEntries] = useQuery(getConnectedCalendars, null)
   const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
