@@ -1,5 +1,5 @@
 import addConnectedCalendarMutation from "../mutations/addConnectedCalendar"
-import { invalidateQuery, useMutation } from "blitz"
+import { invalidateQuery, useMutation, Link } from "blitz"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import styles from "../styles/AddCalendar.module.css"
 import { Alert, Card, Form, Button } from "react-bootstrap"
@@ -95,6 +95,13 @@ const CalDavFormBody = () => {
   return (
     <>
       <Form.Group controlId="formName">
+        <Alert variant="danger">
+          The CalDav protocol requires us to save your CalDav credentials in a way that we can send
+          it in plain text to the host. We encrypt the password, but please be aware that this a
+          security risk as we theoretically could access the password in plain text. Check out
+          our&nbsp;
+          <Link href="https://github.com/kalle-app/kalle">source code</Link>.
+        </Alert>
         <Form.Label>Calendar name</Form.Label>
         <Form.Control
           id="caldav-name"
