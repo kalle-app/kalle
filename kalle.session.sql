@@ -1,1 +1,2 @@
-DELETE FROM public."DefaultCalendar"
+SELECT *
+FROM public."connectedCalendar"

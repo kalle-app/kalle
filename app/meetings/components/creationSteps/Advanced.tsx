@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap"
-
+import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import {
@@ -7,15 +7,17 @@ import {
   SelectorType,
 } from "../../../users/components/DefaultCalendarSelector/DefaultCalendarSelector"
 import getDefaultCalendarByUser from "../../../users/queries/getDefaultCalendarByUser"
-import { useQuery } from "blitz"
+import { useQuery, invoke } from "blitz"
 type AdvancedProps = {
   stepBack: () => void
   onSubmit: (defaultCalendarId: number) => void
 }
 const AdvancedStep = (props: AdvancedProps) => {
   let [getDefaultCalendar] = useQuery(getDefaultCalendarByUser, null)
-  if (!getDefaultCalendar) throw new Error("No Default Calendar")
-  let defaultCalendarId: number = getDefaultCalendar //= getDefaultCalendar!!;
+  const [defaultCalendarId, setDefaultCalendarId] = useState(
+    getDefaultCalendar ? getDefaultCalendar : -1
+  )
+
   return (
     <div className="p-3">
       <h4>Advanced Options</h4>
@@ -23,9 +25,7 @@ const AdvancedStep = (props: AdvancedProps) => {
       <DefaultCalendarSelector
         type={SelectorType.meetingBased}
         onChange={(selectedDefaultCalendarId) => {
-          console.log(selectedDefaultCalendarId)
-          defaultCalendarId = selectedDefaultCalendarId
-          console.log(defaultCalendarId)
+          setDefaultCalendarId(selectedDefaultCalendarId)
           //TODO: BELOW HANDLE WHEN MEETINGID IS -1
         }}
       />
@@ -35,13 +35,11 @@ const AdvancedStep = (props: AdvancedProps) => {
         </Button>
         <Button
           onClick={() => {
-            console.log("CREATE")
-
-            console.log(defaultCalendarId)
             props.onSubmit(defaultCalendarId)
           }}
           id="submit"
           className="mx-1"
+          disabled={!defaultCalendarId || defaultCalendarId === -1}
         >
           Submit
         </Button>

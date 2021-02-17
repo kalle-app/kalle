@@ -1,7 +1,8 @@
 import { Ctx } from "blitz"
 import db from "db"
 import { getCalendarService } from "app/calendar-service"
-
+import getDefaultConnectedCalendar from "../queries/getDefaultConnectedCalendar"
+import { useQuery } from "blitz"
 interface BookingDetails {
   meetingId: number
   inviteeEmail: string
@@ -25,7 +26,8 @@ export default async function createAppointmentEventMutation(
     throw new Error("An error occured: Meeting does not exist.")
   }
 
-  const [primaryCalendar] = meeting.owner.calendars
+  const primaryCalendar = await getDefaultConnectedCalendar(meeting.defaultConnectedCalendarId)
+
   if (!primaryCalendar) {
     throw new Error("An error occured: Owner doesn't have a connected calendar")
   }
