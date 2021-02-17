@@ -2,7 +2,7 @@ import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
 import React, { useState } from "react"
-import { Button, Col, Form, Modal } from "react-bootstrap"
+import { Alert, Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
 
 interface AddScheduleProps {
@@ -26,6 +26,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [createScheduleMutation] = useMutation(addSchedule)
   const [schedule, setSchedule] = useState(initialSchedule)
   const [name, setName] = useState("")
+  const [error, setError] = useState({ error: false, message: "" })
 
   const scheduleChanged = (value: any, day: string, type: string) => {
     let newDay = { ...schedule[day], [type]: value }
@@ -37,6 +38,11 @@ const AddSchedule = (props: AddScheduleProps) => {
 
   const nameChanged = (e: any) => {
     setName(e.currentTarget.value)
+  }
+
+  const closeModal = (): void => {
+    setError({ error: false, message: "" })
+    props.setVisibility(false)
   }
 
   const submit = () => {
@@ -65,10 +71,10 @@ const AddSchedule = (props: AddScheduleProps) => {
       .then(async (data) => {
         await invalidateQuery(getSchedules)
         await invalidateQuery(getScheduleNames)
-        props.setVisibility(false)
+        closeModal()
       })
       .catch((error) => {
-        alert(error)
+        setError({ error: true, message: error })
       })
   }
 
@@ -134,10 +140,13 @@ const AddSchedule = (props: AddScheduleProps) => {
               )
             })}
           </Form.Group>
+          {error.error && (
+            <Alert variant="danger">Couldn't add the schedule: {error.message}</Alert>
+          )}
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => props.setVisibility(false)}>
+        <Button variant="secondary" onClick={() => closeModal()}>
           Close
         </Button>
         <Button variant="primary" onClick={() => submit()}>

@@ -70,14 +70,38 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
   )
 }
 
+interface ErrorModalProps {
+  error: boolean
+  message: string
+  setError: (val: object) => void
+}
+
+const ErrorModal = (props: ErrorModalProps): ReactElement => {
+  return (
+    <Modal show={props.error} onHide={() => props.setError({ error: false, message: "" })}>
+      <Modal.Header closeButton>
+        <Modal.Title>Meeting could not be created!</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        An error occurred: {props.message}. Please change your input and try it again.
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => props.setError({ error: false, message: "" })}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-
   const [meeting, setMeeting] = useState(initialMeeting)
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
+  const [error, setError] = useState({ error: false, message: "" })
 
   if (!useCurrentUser()) {
     return <AuthError />
@@ -90,7 +114,7 @@ const InviteCreationContent = () => {
       setMeetingLink(link)
       setShow(true)
     } catch (error) {
-      alert(error)
+      setError({ error: true, message: error })
     }
   }
 
@@ -149,6 +173,7 @@ const InviteCreationContent = () => {
     <>
       <Card>{renderSwitch()}</Card>
       <SuccessModal show={showSuccess} setShow={setShow} meetingLink={meetingLink} />
+      <ErrorModal error={error.error} message={error.message} setError={setError} />
     </>
   )
 }

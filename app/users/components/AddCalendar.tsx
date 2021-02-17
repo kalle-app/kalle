@@ -13,6 +13,7 @@ interface AddCalendarProps {
 const AddCalendar = (props: AddCalendarProps) => {
   const [createCalendar] = useMutation(addConnectedCalendarMutation)
   const [calendarType, setCalendarType] = useState("caldav")
+  const [error, setError] = useState({ error: false, message: "" })
 
   return (
     <div className={styles.overlay}>
@@ -44,11 +45,11 @@ const AddCalendar = (props: AddCalendarProps) => {
               })
 
               if (fail) {
-                alert("Couldn't connect successfully: " + fail)
+                setError({ error: true, message: fail })
                 return
               } else {
+                setError({ error: false, message: "" })
                 await invalidateQuery(getConnectedCalendars)
-
                 props.onClose()
               }
             }}
@@ -72,6 +73,9 @@ const AddCalendar = (props: AddCalendarProps) => {
             {calendarType === "caldav" && <CalDavFormBody />}
             {calendarType === "google" && <GoogleFormBody />}
             {calendarType === "outlook" && <OutlookFormBody />}
+            {error.error && (
+              <Alert variant="danger">Couldn't connect successfully: {error.message}</Alert>
+            )}
             <div className="p-3 d-flex justify-content-end">
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel

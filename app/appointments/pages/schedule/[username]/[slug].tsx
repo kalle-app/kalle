@@ -8,9 +8,10 @@ import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import React, { Suspense, useEffect, useState } from "react"
-import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
+import { Alert, Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import { formatAs24HourClockString } from "app/time-utils/format"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -27,6 +28,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [modalVisible, setModalVisible] = useState(false)
   const user = useCurrentUser()
   const [hideOccupied, setHideOccupied] = useState(false)
+  const [warning, setWarning] = useState(false)
 
   const [slots] = useQuery(getTimeSlots, {
     meetingSlug: meetingSlug,
@@ -75,18 +77,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }
 
   const onSubmit = async () => {
-    if (!selectedTimeSlot) {
-      alert("No timeslot selected")
-      return
-    }
-
-    if (selectedTimeSlot.start < new Date()) {
-      alert("Timeslot already passed :/")
-      return
-    }
-
-    if (!email) {
-      alert("Email not set")
+    if (!selectedTimeSlot || selectedTimeSlot.start < new Date() || !email) {
+      setWarning(true)
       return
     }
 
@@ -160,11 +152,23 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
           </Card>
         </div>
       </div>
-      <Modal show={modalVisible} onHide={() => setModalVisible(false)}>
+      <Modal
+        show={modalVisible}
+        onHide={() => {
+          setWarning(false)
+          setModalVisible(false)
+        }}
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Enter your Emailadress</Modal.Title>
+          <Modal.Title>Finish your booking.</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {selectedTimeSlot && (
+            <p>
+              You are booking the slot {formatAs24HourClockString(selectedTimeSlot.start)}-
+              {formatAs24HourClockString(selectedTimeSlot.end)}.
+            </p>
+          )}
           You will receive a confirmation mail to this adress
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -188,6 +192,15 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
               />
             </Form.Group>
           </Form>
+          {warning && (
+            <Alert variant="danger">
+              {!selectedTimeSlot
+                ? "Please select a time slot first."
+                : selectedTimeSlot.start < new Date()
+                ? "Your selected time slot has already passed."
+                : "Please enter a valid e-mail"}
+            </Alert>
+          )}
           <Button variant="primary" onClick={() => onSubmit()} id="submit">
             Submit!
           </Button>
