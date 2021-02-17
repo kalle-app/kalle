@@ -34,12 +34,12 @@ it("Meetings Flow", () => {
 
   cy.get("#name").type(scheduleName)
 
+  cy.wait(5000)
+
   cy.contains("Save Schedule").click()
 
   cy.get("#select-schedule").select(scheduleName)
 
-  cy.get("#submit").click()
-  cy.get("#submit").click()
   cy.get("#submit").click()
 
   cy.contains(url(`/schedule/${johnDoe.username}/${link}`))
