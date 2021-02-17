@@ -30,10 +30,7 @@ export const DefaultCalendarSelector = (props: {
         changeDefaultCalendar(parseInt(event.target.value))
         break
       case SelectorType.meetingBased:
-        //
-        console.log(parseInt(event.target.value))
         props.onChange(parseInt(event.target.value))
-        console.log("Meetingbased")
     }
   }
   var dropdownElements: Array<JSX.Element> = []
