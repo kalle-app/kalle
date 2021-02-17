@@ -1,32 +1,63 @@
 import { ExternalEvent } from "app/caldav"
 import { google } from "googleapis"
-import { getGoogleClient } from "../helpers/GoogleClient"
-import updateCalendarCredentials from "../helpers/updateCalendarCredentials"
+import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
+import { Appointment } from "../appointments/types"
+import { ConnectedCalendar } from "db"
+import { CalendarService } from "app/calendar-service"
+import { addMilliseconds } from "date-fns"
+
+export async function createGcalEvent(appointment: Appointment, refreshToken: string) {
+  const calendar = google.calendar({
+    version: "v3",
+    auth: createAuthenticatedGoogleOauth(refreshToken),
+  })
+
+  const startDate = appointment.start
+  const endDate = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
+
+  await calendar.events.insert({
+    calendarId: "primary",
+    requestBody: {
+      summary: appointment.title,
+      location: appointment.location || "",
+      description: appointment.description,
+      start: {
+        dateTime: startDate.toISOString(),
+        timeZone: "Etc/UTC",
+      },
+      end: {
+        dateTime: endDate.toISOString(),
+      },
+      attendees: [{ email: appointment.owner.email }, { email: appointment.organiser.email }],
+      reminders: {
+        useDefault: true,
+      },
+    },
+  })
+}
 
 interface TimeSlotString {
   start: string
   end: string
 }
+
 interface DateTimeUnix {
   start: number
   end: number
 }
-interface GetFreeBusyScheduleArgs {
-  start: Date
-  end: Date
-  userId: number
-}
 
-export default async function getFreeBusySchedule({ start, end, userId }: GetFreeBusyScheduleArgs) {
-  await updateCalendarCredentials(userId)
-  const auth = getGoogleClient()
-  const calendar = google.calendar({ version: "v3", auth })
-  const calendars = await calendar.calendarList.list({
+export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: string) {
+  const calendar = google.calendar({
+    version: "v3",
+    auth: createAuthenticatedGoogleOauth(refreshToken),
+  })
+  const {
+    data: { items: calendars = [] },
+  } = await calendar.calendarList.list({
     minAccessRole: "owner",
   })
 
-  if (!calendars.data.items) return null
-  const calendarIDs: string[] = calendars.data.items.map((calendar) => calendar.id!)
+  const calendarIDs = calendars.map((calendar) => calendar.id!)
 
   const body = {
     timeMin: start.toISOString(),
@@ -107,4 +138,11 @@ function convertToExternalEvent(arr: DateTimeUnix[]): ExternalEvent[] {
       end: new Date(el.end * 1000),
     }
   })
+}
+
+export function getCalendarService(calendar: ConnectedCalendar): CalendarService {
+  return {
+    createEvent: (details) => createGcalEvent(details, calendar.refreshToken!),
+    getTakenTimeSlots: (start, end) => getTakenTimeSlots(start, end, calendar.refreshToken!),
+  }
 }

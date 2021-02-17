@@ -246,15 +246,21 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        const result = await createCalDavEvent(getCalendarConnection(), {
-          name: "DummyEvent",
-          timezone: 0,
+        await createCalDavEvent(getCalendarConnection(), {
+          title: "DummyEvent",
           start: date,
-          end: addMinutes(date, 30),
+          durationInMilliseconds: 30 * 60 * 1000,
+          organiser: {
+            email: "kalle@kalle.app",
+            name: "Kalle McFishface",
+          },
+          owner: {
+            email: "kalle@kalle.app",
+            name: "Kalle McFishface",
+          },
           location: "Frankfurt",
           description: "A description",
         })
-        expect(result).toEqual("success")
 
         const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))
 

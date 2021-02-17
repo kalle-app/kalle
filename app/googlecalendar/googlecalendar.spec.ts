@@ -1,4 +1,4 @@
-import { mergeArr } from "./queries/getFreeBusySchedule"
+import { mergeArr } from "./googlecalendar"
 
 describe("googlecalendar", () => {
   it("testMergeArray", () => {

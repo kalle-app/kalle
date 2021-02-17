@@ -1,5 +1,3 @@
-type TimeInterval = [start: string, end: string]
-
 export const Weekdays = [
   "monday",
   "tuesday",
