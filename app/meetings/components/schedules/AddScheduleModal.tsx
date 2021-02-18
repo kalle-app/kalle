@@ -44,7 +44,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const checkSchedules = (schedules) => {
     for (const key in schedules) {
       if (!schedule[key].blocked) {
-        if (!checkTime(schedule[key].start, schedule[key].end)) {
+        if (!compareTimes(schedule[key].start, schedule[key].end)) {
           return false
         }
       }
@@ -52,7 +52,7 @@ const AddSchedule = (props: AddScheduleProps) => {
     return true
   }
 
-  const checkTime = (startTime, endTime) => {
+  const compareTimes = (startTime, endTime) => {
     const start = parseTime(startTime)
     const end = parseTime(endTime)
     if (start !== [] && end !== []) {
