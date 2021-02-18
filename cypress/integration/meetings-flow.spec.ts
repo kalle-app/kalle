@@ -54,7 +54,7 @@ it("Meetings Flow", () => {
 
   cy.contains("Submit!").click()
 
-  cy.wait(1000)
+  cy.wait(5000)
 
   cy.request("http://localhost:8025/api/v2/messages").then((response) => {
     const {
@@ -66,7 +66,7 @@ it("Meetings Flow", () => {
     expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
-      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} mit john.doe`
+      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
     )
     expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
   })
