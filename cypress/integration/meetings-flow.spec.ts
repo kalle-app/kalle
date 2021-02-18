@@ -46,7 +46,7 @@ it("Meetings Flow", () => {
   cy.visit(url(`/schedule/${johnDoe.username}/${link}`))
 
   cy.contains(format(dateToSelect, "d")).click()
-  cy.contains("button", /10:30.*-11:00.*/)
+  cy.contains("button", /10:30.*-11:00.*/).click()
 
   cy.contains("Schedule!").click()
 
