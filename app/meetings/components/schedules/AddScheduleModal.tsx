@@ -4,6 +4,7 @@ import { invalidateQuery, useMutation } from "blitz"
 import React, { useState } from "react"
 import { Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
+import { ScheduleInput } from "app/auth/validations"
 
 interface AddScheduleProps {
   show: boolean
@@ -13,11 +14,11 @@ interface AddScheduleProps {
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 const initialSchedule = {
-  monday: { blocked: false, start: "9:00", end: "17:00" },
-  tuesday: { blocked: false, start: "9:00", end: "17:00" },
-  wednesday: { blocked: false, start: "9:00", end: "17:00" },
-  thursday: { blocked: false, start: "9:00", end: "17:00" },
-  friday: { blocked: false, start: "9:00", end: "17:00" },
+  monday: { blocked: false, start: "09:00", end: "17:00" },
+  tuesday: { blocked: false, start: "09:00", end: "17:00" },
+  wednesday: { blocked: false, start: "09:00", end: "17:00" },
+  thursday: { blocked: false, start: "09:00", end: "17:00" },
+  friday: { blocked: false, start: "09:00", end: "17:00" },
   saturday: { blocked: true, start: "", end: "" },
   sunday: { blocked: true, start: "", end: "" },
 }
@@ -26,6 +27,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [createScheduleMutation] = useMutation(addSchedule)
   const [schedule, setSchedule] = useState(initialSchedule)
   const [name, setName] = useState("")
+  const [message, setMessage] = useState("")
 
   const scheduleChanged = (value: any, day: string, type: string) => {
     let newDay = { ...schedule[day], [type]: value }
@@ -37,6 +39,48 @@ const AddSchedule = (props: AddScheduleProps) => {
 
   const nameChanged = (e: any) => {
     setName(e.currentTarget.value)
+  }
+
+  const checkSchedules = (schedules) => {
+    for (const key in schedules) {
+      if (!schedule[key].blocked) {
+        if (!compareTimes(schedule[key].start, schedule[key].end)) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  const compareTimes = (startTime, endTime) => {
+    const start = parseTime(startTime)
+    const end = parseTime(endTime)
+    if (start !== [] && end !== []) {
+      const startValue = parseInt(`${start[0]}${start[1]}`)
+      const endValue = parseInt(`${end[0]}${end[1]}`)
+      if (startValue <= endValue) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const parseTime = (time) => {
+    const parts = time.split(":")
+    if (parts.length === 2) {
+      if (parts[0].trim().length === 2 && parts[1].trim().length === 2) {
+        const hour = parseInt(time[0])
+        const minute = parseInt(time[1])
+        if (!Number.isNaN(hour) && !Number.isNaN(minute)) {
+          if (hour >= 0 && hour <= 23) {
+            if (minute >= 0 && minute <= 59) {
+              return [hour, minute]
+            }
+          }
+        }
+      }
+    }
+    return []
   }
 
   const submit = () => {
@@ -59,6 +103,18 @@ const AddSchedule = (props: AddScheduleProps) => {
           : [schedule.saturday.start, schedule.saturday.end],
         sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
       },
+    }
+
+    const parseResult = ScheduleInput.refine((data) => checkSchedules(data.schedule), {
+      message: "Please check the entered times. Expected is a format of hour:minutes, e.g. 09:30",
+    }).safeParse({
+      name,
+      schedule,
+    })
+
+    if (!parseResult.success) {
+      setMessage(parseResult.error.errors[0].message)
+      return
     }
 
     createScheduleMutation(postSchedule)
@@ -135,6 +191,7 @@ const AddSchedule = (props: AddScheduleProps) => {
             })}
           </Form.Group>
         </Form>
+        <Form.Text className="text-danger">{message}</Form.Text>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => props.setVisibility(false)}>

@@ -5,6 +5,7 @@ import styles from "../styles/AddCalendar.module.css"
 import { Alert, Card, Form, Button } from "react-bootstrap"
 import { useState } from "react"
 import ConnectGoogleCalendarButton from "../../googlecalendar/components/ConnectGoogleCalendarButton"
+import { AddCalendarInput } from "app/auth/validations"
 
 interface AddCalendarProps {
   onClose(): void
@@ -13,6 +14,7 @@ interface AddCalendarProps {
 const AddCalendar = (props: AddCalendarProps) => {
   const [createCalendar] = useMutation(addConnectedCalendarMutation)
   const [calendarType, setCalendarType] = useState("caldav")
+  const [message, setMessage] = useState("")
 
   return (
     <div className={styles.overlay}>
@@ -30,10 +32,23 @@ const AddCalendar = (props: AddCalendarProps) => {
               const form = new FormData(evt.currentTarget)
 
               const type = form.get("type") as string
-              const url = form.get("url") as string
               const name = form.get("name") as string
-              const password = form.get("password") as string
+              const url = form.get("url") as string
               const username = form.get("username") as string
+              const password = form.get("password") as string
+
+              const parseResult = AddCalendarInput.safeParse({
+                type,
+                url,
+                name,
+                password,
+                username,
+              })
+
+              if (!parseResult.success) {
+                setMessage(parseResult.error.errors[0].message)
+                return
+              }
 
               const { fail } = await createCalendar({
                 name,
@@ -72,6 +87,7 @@ const AddCalendar = (props: AddCalendarProps) => {
             {calendarType === "caldav" && <CalDavFormBody />}
             {calendarType === "google" && <GoogleFormBody />}
             {calendarType === "outlook" && <OutlookFormBody />}
+            <Form.Text className="text-danger">{message}</Form.Text>
             <div className="p-3 d-flex justify-content-end">
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel
