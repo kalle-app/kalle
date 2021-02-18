@@ -44,7 +44,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const checkSchedules = (schedules) => {
     for (const key in schedules) {
       if (!schedule[key].blocked) {
-        if (!checkTime(schedule[key].start) || !checkTime(schedule[key].end)) {
+        if (!checkTime(schedule[key].start, schedule[key].end)) {
           return false
         }
       }
@@ -52,22 +52,35 @@ const AddSchedule = (props: AddScheduleProps) => {
     return true
   }
 
-  const checkTime = (time) => {
-    const values = time.split(":")
-    if (values.length === 2) {
-      if (values[0].trim().length === 2 && values[1].trim().length === 2) {
-        const hour = parseInt(values[0])
-        const minute = parseInt(values[1])
+  const checkTime = (startTime, endTime) => {
+    const start = parseTime(startTime)
+    const end = parseTime(endTime)
+    if (start !== [] && end !== []) {
+      const startValue = parseInt(`${start[0]}${start[1]}`)
+      const endValue = parseInt(`${end[0]}${end[1]}`)
+      if (startValue <= endValue) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const parseTime = (time) => {
+    const parts = time.split(":")
+    if (parts.length === 2) {
+      if (parts[0].trim().length === 2 && parts[1].trim().length === 2) {
+        const hour = parseInt(time[0])
+        const minute = parseInt(time[1])
         if (!Number.isNaN(hour) && !Number.isNaN(minute)) {
           if (hour >= 0 && hour <= 23) {
             if (minute >= 0 && minute <= 59) {
-              return true
+              return [hour, minute]
             }
           }
         }
       }
     }
-    return false
+    return []
   }
 
   const submit = () => {
@@ -93,7 +106,7 @@ const AddSchedule = (props: AddScheduleProps) => {
     }
 
     const parseResult = ScheduleInput.refine((data) => checkSchedules(data.schedule), {
-      message: "Please check the entered times",
+      message: "Please check the entered times. Expected is a format of hour:minutes, e.g. 09:30",
     }).safeParse({
       name,
       schedule,
