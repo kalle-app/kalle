@@ -4,7 +4,7 @@ import getMeetings from "app/meetings/queries/getMeetings"
 import getUpcomingBookings from "app/meetings/queries/getUpcomingBookings"
 import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { format } from "date-fns"
-import { Booking, Meeting } from "db"
+import type { Meeting } from "db"
 import React, { Suspense } from "react"
 import { Card, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
@@ -195,7 +195,8 @@ const InfoSection = ({ title, description, link, buttonText }) => {
   )
 }
 
-const IntroSection = ({ user }) => {
+const IntroSection = () => {
+  const user = useCurrentUser()
   return (
     <section style={{ backgroundColor: "#FFEEE6" }}>
       <Container>
@@ -258,7 +259,7 @@ const OverviewBox = (props: { span; header; children }) => {
   )
 }
 
-const MeetingOverviewBox = ({ meeting }) => {
+const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
   const href = `/schedule/${meeting.ownerName}/${meeting.link}`
   const hrefToDisplay = getOrigin() + href
   return (
@@ -278,7 +279,7 @@ const MeetingOverviewBox = ({ meeting }) => {
         </Row>
         <Row className="mt-1">
           <Col className="my-auto pb-1">
-            <p className="my-auto">Active until: {format(meeting.endDate, "dd.MM.yyy")}</p>
+            <p className="my-auto">Active until: {format(meeting.endDateUTC, "dd.MM.yyy")}</p>
           </Col>
         </Row>
         <Row className="mt-4 justify-content-end">
@@ -296,7 +297,10 @@ const MeetingOverviewBox = ({ meeting }) => {
   )
 }
 
-const OverviewSection = ({ meetings, appointments }) => {
+const OverviewSection = () => {
+  const [meetings] = useQuery(getMeetings, null)
+  const [appointments] = useQuery(getUpcomingBookings, 10)
+
   return (
     <section style={{ minHeight: "70vh" }}>
       <Container className="pt-4">
@@ -318,25 +322,25 @@ const OverviewSection = ({ meetings, appointments }) => {
               </Row>
             }
           >
-            {meetings!.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
+            {meetings.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
             <Row style={{ display: "flex", flexWrap: "wrap" }}>
-              {meetings?.map((meeting: Meeting) => {
-                return <MeetingOverviewBox meeting={meeting} />
-              })}
+              {meetings.map((meeting) => (
+                <MeetingOverviewBox meeting={meeting} />
+              ))}
             </Row>
           </OverviewBox>
           <OverviewBox span={5} header={<h4>Upcoming appointments</h4>}>
             {appointments.length === 0 ? (
               <p className="text-center">No upcoming appointments</p>
             ) : (
-              appointments.map((appointment: Booking & { meeting: Meeting }) => {
+              appointments.map((appointment) => {
                 return (
                   <>
                     <Row className="py-2">
                       <Col xs={8}>
                         <Row>
                           <Col xs={5}>
-                            <b>{format(appointment.date, "dd.MM HH:mm")}</b>
+                            <b>{format(appointment.startDateUTC, "dd.MM HH:mm")}</b>
                           </Col>
                           <Col xs={7}>{appointment.meeting.name}</Col>
                         </Row>
@@ -366,14 +370,10 @@ const OverviewSection = ({ meetings, appointments }) => {
 }
 
 const PrivateContent = () => {
-  const user = useCurrentUser()
-  const [meetings] = useQuery(getMeetings, null)
-  const [appointments] = useQuery(getUpcomingBookings, 10)
-
   return (
     <main className="text">
-      <IntroSection user={user} />
-      <OverviewSection meetings={meetings} appointments={appointments} />
+      <IntroSection />
+      <OverviewSection />
       <ReactTooltip />
     </main>
   )

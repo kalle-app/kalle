@@ -34,7 +34,7 @@ async function getTakenSlots(
   const result = await Promise.all(
     trimDownToOneGoogleCal(calendars).map(async (calendar) => {
       const calendarService = await getCalendarService(calendar)
-      return await calendarService.getTakenTimeSlots(meeting.startDate, meeting.endDate)
+      return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })
   )
   const takenTimeSlots: ExternalEvent[] = []
@@ -92,13 +92,16 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: meeting.startDate,
-    end: meeting.endDate,
+    start: meeting.startDateUTC,
+    end: meeting.endDateUTC,
   }
 
   return computeAvailableSlots({
     between,
     durationInMilliseconds: meeting.duration * 60 * 1000,
-    takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
+    takenSlots: [
+      ...takenTimeSlots,
+      ...scheduleToTakenSlots(schedule, between, meeting.schedule.timezone),
+    ],
   })
 }

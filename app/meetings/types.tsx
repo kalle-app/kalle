@@ -15,7 +15,6 @@ export interface Meeting {
   link: string
   description: string
   duration: number
-  timezone: number
   startDate: Date
   endDate: Date
   location: string

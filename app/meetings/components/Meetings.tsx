@@ -61,8 +61,8 @@ const Meetings = (props: MeetingsProps) => {
                 <Col className="my-auto pb-1">
                   <p className="my-auto">
                     <CalendarRange className="mr-2"></CalendarRange>
-                    {format(meeting.startDate, "dd.MM.yyy")} -{" "}
-                    {format(meeting.endDate, "dd.MM.yyy")}
+                    {format(meeting.startDateUTC, "dd.MM.yyy")} -{" "}
+                    {format(meeting.endDateUTC, "dd.MM.yyy")}
                   </p>
                 </Col>
               </Row>

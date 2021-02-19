@@ -1,9 +1,11 @@
+import { SearchableDropdown } from "app/components/SearchableDropdown"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
+import timezones from "./tz"
 import { ScheduleInput } from "app/auth/validations"
 
 interface AddScheduleProps {
@@ -27,6 +29,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [createScheduleMutation] = useMutation(addSchedule)
   const [schedule, setSchedule] = useState(initialSchedule)
   const [name, setName] = useState("")
+  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [message, setMessage] = useState("")
 
   const scheduleChanged = (value: any, day: string, type: string) => {
@@ -83,25 +86,32 @@ const AddSchedule = (props: AddScheduleProps) => {
     return []
   }
 
-  const submit = () => {
-    let postSchedule = {
+  const submit = async () => {
+    const postSchedule = {
       name: name,
+      timezone,
       schedule: {
-        monday: schedule.monday.blocked ? ["", ""] : [schedule.monday.start, schedule.monday.end],
-        tuesday: schedule.tuesday.blocked
+        monday: (schedule.monday.blocked
           ? ["", ""]
-          : [schedule.tuesday.start, schedule.tuesday.end],
-        wednesday: schedule.wednesday.blocked
+          : [schedule.monday.start, schedule.monday.end]) as [start: string, end: string],
+        tuesday: (schedule.tuesday.blocked
           ? ["", ""]
-          : [schedule.wednesday.start, schedule.wednesday.end],
-        thursday: schedule.thursday.blocked
+          : [schedule.tuesday.start, schedule.tuesday.end]) as [start: string, end: string],
+        wednesday: (schedule.wednesday.blocked
           ? ["", ""]
-          : [schedule.thursday.start, schedule.thursday.end],
-        friday: schedule.friday.blocked ? ["", ""] : [schedule.friday.start, schedule.friday.end],
-        saturday: schedule.saturday.blocked
+          : [schedule.wednesday.start, schedule.wednesday.end]) as [start: string, end: string],
+        thursday: (schedule.thursday.blocked
           ? ["", ""]
-          : [schedule.saturday.start, schedule.saturday.end],
-        sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
+          : [schedule.thursday.start, schedule.thursday.end]) as [start: string, end: string],
+        friday: (schedule.friday.blocked
+          ? ["", ""]
+          : [schedule.friday.start, schedule.friday.end]) as [start: string, end: string],
+        saturday: (schedule.saturday.blocked
+          ? ["", ""]
+          : [schedule.saturday.start, schedule.saturday.end]) as [start: string, end: string],
+        sunday: (schedule.sunday.blocked
+          ? ["", ""]
+          : [schedule.sunday.start, schedule.sunday.end]) as [start: string, end: string],
       },
     }
 
@@ -117,7 +127,7 @@ const AddSchedule = (props: AddScheduleProps) => {
       return
     }
 
-    createScheduleMutation(postSchedule)
+    await createScheduleMutation(postSchedule)
       .then(async (data) => {
         await invalidateQuery(getSchedules)
         await invalidateQuery(getScheduleNames)
@@ -148,6 +158,14 @@ const AddSchedule = (props: AddScheduleProps) => {
             Please specify when you are generally available. Your invitees cannot pick a time slot
             outside of the provided window.
           </p>
+          <Form.Group>
+            <SearchableDropdown
+              description="Change time zone"
+              options={timezones}
+              onSelect={setTimezone}
+              value={timezone}
+            />
+          </Form.Group>
           <Form.Group controlId="days">
             {days.map((day) => {
               return (
@@ -178,7 +196,6 @@ const AddSchedule = (props: AddScheduleProps) => {
                     <Form.Label>&nbsp;</Form.Label>
                     {!schedule[day].blocked && (
                       <Form.Control
-                        // value={schedule.schedule[day][1]}
                         value={schedule[day].end}
                         onChange={(e) => {
                           scheduleChanged(e.currentTarget.value, day, "end")

@@ -19,9 +19,8 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       link: meetingCreate.link,
       description: meetingCreate.description,
       duration: meetingCreate.duration,
-      timezone: meetingCreate.timezone,
-      startDate: meetingCreate.startDate,
-      endDate: meetingCreate.endDate,
+      startDateUTC: meetingCreate.startDate,
+      endDateUTC: meetingCreate.endDate,
       schedule: {
         connect: { id: meetingCreate.scheduleId },
       },
