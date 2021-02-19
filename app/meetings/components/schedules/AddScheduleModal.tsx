@@ -91,21 +91,27 @@ const AddSchedule = (props: AddScheduleProps) => {
       name: name,
       timezone,
       schedule: {
-        monday: schedule.monday.blocked ? ["", ""] : [schedule.monday.start, schedule.monday.end],
-        tuesday: schedule.tuesday.blocked
+        monday: (schedule.monday.blocked
           ? ["", ""]
-          : [schedule.tuesday.start, schedule.tuesday.end],
-        wednesday: schedule.wednesday.blocked
+          : [schedule.monday.start, schedule.monday.end]) as [start: string, end: string],
+        tuesday: (schedule.tuesday.blocked
           ? ["", ""]
-          : [schedule.wednesday.start, schedule.wednesday.end],
-        thursday: schedule.thursday.blocked
+          : [schedule.tuesday.start, schedule.tuesday.end]) as [start: string, end: string],
+        wednesday: (schedule.wednesday.blocked
           ? ["", ""]
-          : [schedule.thursday.start, schedule.thursday.end],
-        friday: schedule.friday.blocked ? ["", ""] : [schedule.friday.start, schedule.friday.end],
-        saturday: schedule.saturday.blocked
+          : [schedule.wednesday.start, schedule.wednesday.end]) as [start: string, end: string],
+        thursday: (schedule.thursday.blocked
           ? ["", ""]
-          : [schedule.saturday.start, schedule.saturday.end],
-        sunday: schedule.sunday.blocked ? ["", ""] : [schedule.sunday.start, schedule.sunday.end],
+          : [schedule.thursday.start, schedule.thursday.end]) as [start: string, end: string],
+        friday: (schedule.friday.blocked
+          ? ["", ""]
+          : [schedule.friday.start, schedule.friday.end]) as [start: string, end: string],
+        saturday: (schedule.saturday.blocked
+          ? ["", ""]
+          : [schedule.saturday.start, schedule.saturday.end]) as [start: string, end: string],
+        sunday: (schedule.sunday.blocked
+          ? ["", ""]
+          : [schedule.sunday.start, schedule.sunday.end]) as [start: string, end: string],
       },
     }
 
