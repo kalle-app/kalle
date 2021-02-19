@@ -54,8 +54,8 @@ const SignupPage: BlitzPage = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Sign Up</h2>
         <Alert variant="danger">
-          Please notice that his application is solely for demonstration purposes. Do not use it at
-          this moment of time.
+          Please notice that his application is for demonstration purposes alone. Do not use it at
+          this moment.
         </Alert>
         <Form>
           <Form.Group controlId="fullName">
