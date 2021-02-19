@@ -6,7 +6,7 @@ import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { format } from "date-fns"
 import type { Meeting } from "db"
 import React, { Suspense } from "react"
-import { Card, Col, Container, Row } from "react-bootstrap"
+import { Alert, Card, Col, Container, Row } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
 import { CopyToClipboard } from "react-copy-to-clipboard"
@@ -161,6 +161,10 @@ const PublicContent = () => {
           }}
         />
         <div className="py-3">
+          <Alert variant="danger">
+            Please notice that his application is solely for demonstration purposes. Do not use it
+            at this moment of time.
+          </Alert>
           <p className="text-center m-1">
             This Application is developed within the{" "}
             <Link href="https://hpi.de/studium/lehrveranstaltungen/it-systems-engineering-ba/lehrveranstaltung/wise-20-21-3166-trends-und-konzepte-dynamischer-web_anwendungen.html">

@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import { SignupInput } from "app/auth/validations"
+import { Alert } from "react-bootstrap"
 
 const SignupPage: BlitzPage = () => {
   const router = useRouter()
@@ -52,6 +53,10 @@ const SignupPage: BlitzPage = () => {
     <div className="d-flex justify-content-center">
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Sign Up</h2>
+        <Alert variant="danger">
+          Please notice that his application is solely for demonstration purposes. Do not use it at
+          this moment of time.
+        </Alert>
         <Form>
           <Form.Group controlId="fullName">
             <Form.Label>Full name</Form.Label>
