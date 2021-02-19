@@ -162,8 +162,8 @@ const PublicContent = () => {
         />
         <div className="py-3">
           <Alert variant="danger">
-            Please notice that his application is solely for demonstration purposes. Do not use it
-            at this moment of time.
+            Please notice that his application is for demonstration purposes alone. Do not use it at
+            this moment.
           </Alert>
           <p className="text-center m-1">
             This Application is developed within the{" "}
