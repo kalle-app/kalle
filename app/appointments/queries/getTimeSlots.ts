@@ -1,6 +1,7 @@
 import { ExternalEvent } from "app/caldav"
 import { getCalendarService } from "app/calendar-service"
 import { Ctx } from "blitz"
+import { getDay, setHours, setMinutes } from "date-fns"
 import db, { ConnectedCalendar, DailySchedule, Meeting } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -25,6 +26,15 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
     caldavCalendars.push(googleCalendar)
   }
   return caldavCalendars
+}
+
+function applySchedule(date: Date, schedule: Schedule, type: "start" | "end") {
+  const specificSchedule = schedule[getDay(date)]
+  if (!specificSchedule) return date
+
+  let newDate = setHours(date, specificSchedule[type].hour)
+  newDate = setMinutes(newDate, specificSchedule[type].minute)
+  return newDate
 }
 
 async function getTakenSlots(
@@ -92,8 +102,8 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: meeting.startDateUTC,
-    end: meeting.endDateUTC,
+    start: applySchedule(meeting.startDateUTC, schedule, "start"),
+    end: applySchedule(meeting.endDateUTC, schedule, "end"),
   }
 
   return computeAvailableSlots({
