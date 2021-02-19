@@ -20,6 +20,7 @@ it("Meetings Flow", () => {
   cy.get("#name").type("My Test Meeting")
   cy.get("#link").type(link)
   cy.get("#description").type("Lorem ipsum, dolor sit amet.")
+  cy.get("#location").type("Berlin")
 
   cy.get("#submit").click()
 
