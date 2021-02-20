@@ -163,7 +163,7 @@ export interface ExternalEvent {
   end: Date
 }
 
-function formatDateAsICS(date: Date) {
+export function formatDateAsICS(date: Date) {
   return date.toISOString().replace(/-/g, "").replace(/:/g, "").split(".")[0] + "Z"
 }
 

@@ -1,10 +1,11 @@
 import addConnectedCalendarMutation from "../mutations/addConnectedCalendar"
-import { invalidateQuery, useMutation } from "blitz"
+import { invalidateQuery, useMutation, Link } from "blitz"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import styles from "../styles/AddCalendar.module.css"
 import { Alert, Card, Form, Button } from "react-bootstrap"
 import { useState } from "react"
 import ConnectGoogleCalendarButton from "../../googlecalendar/components/ConnectGoogleCalendarButton"
+import { AddCalendarInput } from "app/auth/validations"
 
 interface AddCalendarProps {
   onClose(): void
@@ -14,6 +15,7 @@ const AddCalendar = (props: AddCalendarProps) => {
   const [createCalendar] = useMutation(addConnectedCalendarMutation)
   const [calendarType, setCalendarType] = useState("caldav")
   const [error, setError] = useState({ error: false, message: "" })
+  const [message, setMessage] = useState("")
 
   return (
     <div className={styles.overlay}>
@@ -31,10 +33,23 @@ const AddCalendar = (props: AddCalendarProps) => {
               const form = new FormData(evt.currentTarget)
 
               const type = form.get("type") as string
-              const url = form.get("url") as string
               const name = form.get("name") as string
-              const password = form.get("password") as string
+              const url = form.get("url") as string
               const username = form.get("username") as string
+              const password = form.get("password") as string
+
+              const parseResult = AddCalendarInput.safeParse({
+                type,
+                url,
+                name,
+                password,
+                username,
+              })
+
+              if (!parseResult.success) {
+                setMessage(parseResult.error.errors[0].message)
+                return
+              }
 
               const { fail } = await createCalendar({
                 name,
@@ -76,6 +91,7 @@ const AddCalendar = (props: AddCalendarProps) => {
             {error.error && (
               <Alert variant="danger">Couldn't connect successfully: {error.message}</Alert>
             )}
+            <Form.Text className="text-danger">{message}</Form.Text>
             <div className="p-3 d-flex justify-content-end">
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel
@@ -99,6 +115,13 @@ const CalDavFormBody = () => {
   return (
     <>
       <Form.Group controlId="formName">
+        <Alert variant="danger">
+          The CalDav protocol requires us to save your CalDav credentials in a way that we can send
+          it in plain text to the host. We encrypt the password, but please be aware that this a
+          security risk as we theoretically could access the password in plain text. Check out
+          our&nbsp;
+          <Link href="https://github.com/kalle-app/kalle">source code</Link>.
+        </Alert>
         <Form.Label>Calendar name</Form.Label>
         <Form.Control
           id="caldav-name"

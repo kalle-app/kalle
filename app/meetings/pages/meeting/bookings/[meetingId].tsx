@@ -24,7 +24,7 @@ const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) 
       <p>{meeting?.description}</p>
       <ul>
         {bookings.map((booking) => {
-          const dateString = format(new Date(booking.date), "iiii, dd. LLLL y - H:mm")
+          const dateString = format(new Date(booking.startDateUTC), "iiii, dd. LLLL y - H:mm")
           return (
             <Card as="li" key={booking.id} id={"" + booking.id} className="p-3 my-5 text-left">
               <h5 className="pb-3 font-weight-bold">{dateString}</h5>

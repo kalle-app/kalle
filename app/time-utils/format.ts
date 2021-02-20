@@ -1,7 +1,5 @@
-function asTwoDigits(number: number) {
-  return ("0" + number).slice(-2)
-}
-
-export function formatAs24HourClockString(date: Date) {
-  return asTwoDigits(date.getHours()) + ":" + asTwoDigits(date.getMinutes())
+export function formatAs24HourClockString(date: Date, timeZone?: string) {
+  return new Intl.DateTimeFormat(undefined, { timeZone, timeStyle: "short", hour12: false }).format(
+    date
+  )
 }

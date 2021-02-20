@@ -19,7 +19,10 @@ const MainContent = () => {
   return (
     <>
       <Card>
-        <SectionHeader title="My Schedules" subtitle="View and Add new Schedule Presets" />
+        <SectionHeader
+          title="My Schedules"
+          subtitle="A schedule describes when you are generally available. No meeting can be booked outsite of those time windows."
+        />
         <AllSchedules />
         <SectionFooter
           variant="primary"

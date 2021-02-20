@@ -24,7 +24,6 @@ const initialMeeting: Meeting = {
   link: "",
   description: "",
   duration: 15,
-  timezone: 0,
   startDate: new Date(),
   endDate: new Date(),
   location: "",
@@ -157,7 +156,6 @@ const InviteCreationContent = () => {
                 startDate: result.startDate,
                 endDate: result.endDate,
                 scheduleId: result.scheduleId,
-                timezone: result.timezone,
                 duration: result.duration,
               }))
               setReadyForSubmission(true)

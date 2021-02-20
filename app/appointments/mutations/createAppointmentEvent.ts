@@ -1,4 +1,3 @@
-import { Ctx } from "blitz"
 import db from "db"
 import { getCalendarService } from "app/calendar-service"
 
@@ -8,10 +7,7 @@ interface BookingDetails {
   date: Date
 }
 
-export default async function createAppointmentEventMutation(
-  bookingDetails: BookingDetails,
-  ctx: Ctx
-) {
+export default async function createAppointmentEventMutation(bookingDetails: BookingDetails) {
   const meeting = await db.meeting.findFirst({
     where: { id: bookingDetails.meetingId },
     include: {
@@ -36,7 +32,7 @@ export default async function createAppointmentEventMutation(
         connect: { id: bookingDetails.meetingId },
       },
       inviteeEmail: bookingDetails.inviteeEmail,
-      date: bookingDetails.date,
+      startDateUTC: bookingDetails.date,
     },
   })
 

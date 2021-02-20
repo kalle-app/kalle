@@ -2,13 +2,15 @@ import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getMeetings(_ = null, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
+  ctx.session.authorize()
 
   const user = await db.user.findFirst({
     where: { id: ctx.session.userId },
   })
 
-  if (!user) return null
+  if (!user) {
+    throw new Error("couldn't find user")
+  }
 
   const meetings = await db.meeting.findMany({
     where: { ownerName: user.username },

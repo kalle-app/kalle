@@ -20,6 +20,7 @@ it("Meetings Flow", () => {
   cy.get("#name").type("My Test Meeting")
   cy.get("#link").type(link)
   cy.get("#description").type("Lorem ipsum, dolor sit amet.")
+  cy.get("#location").type("Berlin")
 
   cy.get("#submit").click()
 
@@ -43,11 +44,10 @@ it("Meetings Flow", () => {
   cy.get("#submit").click()
 
   cy.contains(url(`/schedule/${johnDoe.username}/${link}`))
-
   cy.visit(url(`/schedule/${johnDoe.username}/${link}`))
 
   cy.contains(format(dateToSelect, "d")).click()
-  cy.contains("10:30-11:00").click()
+  cy.contains("button", /10:30.*-11:00.*/).click()
 
   cy.contains("Schedule!").click()
 
@@ -55,7 +55,7 @@ it("Meetings Flow", () => {
 
   cy.contains("Submit!").click()
 
-  cy.wait(1000)
+  cy.wait(5000)
 
   cy.request("http://localhost:8025/api/v2/messages").then((response) => {
     const {
@@ -67,7 +67,7 @@ it("Meetings Flow", () => {
     expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
-      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} mit john.doe`
+      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
     )
     expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
   })

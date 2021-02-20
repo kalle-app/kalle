@@ -1,6 +1,9 @@
 import { ExternalEvent } from "app/caldav"
 import { getCalendarService } from "app/calendar-service"
+import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 import { Ctx } from "blitz"
+import { getDay, setHours, setMinutes } from "date-fns"
+import { utcToZonedTime } from "date-fns-tz"
 import db, { ConnectedCalendar, DailySchedule, Meeting } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -27,6 +30,21 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
   return caldavCalendars
 }
 
+function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
+  const specificSchedule = schedule[getDay(date)]
+  if (!specificSchedule) {
+    if (type === "end") {
+      return endOfLastWorkDayBefore(date, schedule, timezone)
+    } else {
+      return startOfFirstWorkDayAfter(date, schedule, timezone)
+    }
+  }
+
+  let newDate = setHours(date, specificSchedule[type].hour)
+  newDate = setMinutes(newDate, specificSchedule[type].minute)
+  return newDate
+}
+
 async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting
@@ -34,7 +52,7 @@ async function getTakenSlots(
   const result = await Promise.all(
     trimDownToOneGoogleCal(calendars).map(async (calendar) => {
       const calendarService = await getCalendarService(calendar)
-      return await calendarService.getTakenTimeSlots(meeting.startDate, meeting.endDate)
+      return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })
   )
   const takenTimeSlots: ExternalEvent[] = []
@@ -92,13 +110,26 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: meeting.startDate,
-    end: meeting.endDate,
+    start: applySchedule(
+      utcToZonedTime(meeting.startDateUTC, meeting.schedule.timezone),
+      schedule,
+      "start",
+      meeting.schedule.timezone
+    ),
+    end: applySchedule(
+      utcToZonedTime(meeting.endDateUTC, meeting.schedule.timezone),
+      schedule,
+      "end",
+      meeting.schedule.timezone
+    ),
   }
 
   return computeAvailableSlots({
     between,
     durationInMilliseconds: meeting.duration * 60 * 1000,
-    takenSlots: [...takenTimeSlots, ...scheduleToTakenSlots(schedule, between)],
+    takenSlots: [
+      ...takenTimeSlots,
+      ...scheduleToTakenSlots(schedule, between, meeting.schedule.timezone),
+    ],
   })
 }
