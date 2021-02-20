@@ -14,10 +14,17 @@ interface GeneralFormResult {
 
 type GeneralProps = {
   toNext: (result: GeneralFormResult) => void
+  userName: string
 }
 
 const General = (props: GeneralProps) => {
   const [message, setMessage] = useState("")
+  const [meetingLink, setMeetingLink] = useState("")
+
+  const updateMeetingLink = (input: string) => {
+    setMeetingLink(input.substr(props.userName.length + 1))
+  }
+
   return (
     <div className="p-3">
       <h4>General Information</h4>
@@ -30,7 +37,7 @@ const General = (props: GeneralProps) => {
           const formData = new FormData(evt.currentTarget)
           const name = formData.get("name") as string
           const description = formData.get("description") as string
-          const link = formData.get("link") as string
+          const link = meetingLink as string
           const location = formData.get("location") as string
 
           const parseResult = GeneralInformationInput.safeParse({
@@ -59,7 +66,13 @@ const General = (props: GeneralProps) => {
         </Form.Group>
         <Form.Group controlId="link">
           <Form.Label>Invite Link</Form.Label>
-          <Form.Control name="link" />
+          <Form.Control
+            name="link"
+            onChange={(event) => {
+              updateMeetingLink(event.currentTarget.value)
+            }}
+            value={props.userName + "/" + meetingLink}
+          />
         </Form.Group>
         <Form.Group controlId="description">
           <Form.Label>Description</Form.Label>

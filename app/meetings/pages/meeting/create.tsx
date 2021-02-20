@@ -77,8 +77,9 @@ const InviteCreationContent = () => {
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
+  const user = useCurrentUser()
 
-  if (!useCurrentUser()) {
+  if (!user) {
     return <AuthError />
   }
 
@@ -106,6 +107,7 @@ const InviteCreationContent = () => {
       case Steps.General:
         return (
           <General
+            userName={user.name.replace(/\s+/g, "-")}
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
