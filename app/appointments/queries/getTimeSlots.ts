@@ -1,5 +1,6 @@
 import { ExternalEvent } from "app/caldav"
 import { getCalendarService } from "app/calendar-service"
+import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 import { Ctx } from "blitz"
 import { getDay, setHours, setMinutes } from "date-fns"
 import { utcToZonedTime } from "date-fns-tz"
@@ -29,9 +30,15 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
   return caldavCalendars
 }
 
-function applySchedule(date: Date, schedule: Schedule, type: "start" | "end") {
+function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
   const specificSchedule = schedule[getDay(date)]
-  if (!specificSchedule) return date
+  if (!specificSchedule) {
+    if (type == "end") {
+      return endOfLastWorkDayBefore(date, schedule, timezone)
+    } else {
+      return startOfFirstWorkDayAfter(date, schedule, timezone)
+    }
+  }
 
   let newDate = setHours(date, specificSchedule[type].hour)
   newDate = setMinutes(newDate, specificSchedule[type].minute)
@@ -106,12 +113,14 @@ export default async function getTimeSlots(
     start: applySchedule(
       utcToZonedTime(meeting.startDateUTC, meeting.schedule.timezone),
       schedule,
-      "start"
+      "start",
+      meeting.schedule.timezone
     ),
     end: applySchedule(
       utcToZonedTime(meeting.endDateUTC, meeting.schedule.timezone),
       schedule,
-      "end"
+      "end",
+      meeting.schedule.timezone
     ),
   }
 

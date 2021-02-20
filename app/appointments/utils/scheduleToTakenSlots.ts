@@ -10,6 +10,7 @@ import {
   getDate,
 } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
+import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 
 export enum Days {
   "sunday",
@@ -55,52 +56,17 @@ export function scheduleToTakenSlots(
 
   const result: TimeSlot[] = []
 
-  function endOfLastWorkDayBefore(date: Date): Date {
-    while (true) {
-      date = subDays(date, 1)
-
-      const weekday = getDay(date)
-
-      if (schedule[weekday]) {
-        const time = schedule[weekday]!.end
-
-        return dateWithPartialTime(date, time, timezone)
-      }
-    }
-  }
-
-  function startOfFirstWorkDayAfter(date: Date): Date {
-    while (true) {
-      const weekday = getDay(date)
-
-      if (schedule[weekday]) {
-        const time = schedule[weekday]!.start
-
-        return dateWithPartialTime(date, time, timezone)
-      }
-
-      date = addDays(date, 1)
-    }
-  }
-
   let cursor = between.start
   while (cursor <= between.end) {
     const slot: TimeSlot = {
-      start: endOfLastWorkDayBefore(cursor),
-      end: startOfFirstWorkDayAfter(cursor),
+      start: endOfLastWorkDayBefore(cursor, schedule, timezone),
+      end: startOfFirstWorkDayAfter(cursor, schedule, timezone),
     }
 
     result.push(slot)
 
     cursor = addDays(slot.end, 1)
   }
-
-  const slot: TimeSlot = {
-    start: endOfLastWorkDayBefore(cursor),
-    end: addDays(cursor, 1),
-  }
-
-  result.push(slot)
 
   return result
 }

@@ -30,7 +30,6 @@ export function computeAvailableSlots({
   const result: TimeSlot[] = []
 
   const endOfSearch = new Date(+between.end - durationInMilliseconds)
-
   while (cursor <= endOfSearch) {
     const potentialSlot: TimeSlot = {
       start: cursor,
