@@ -32,7 +32,7 @@ const Meetings = (props: MeetingsProps) => {
         const hrefToDisplay = getOrigin() + href
 
         return (
-          <Col md={4} style={{ display: "flex" }} className="my-1">
+          <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
             <Card
               key={meeting.id + meeting.ownerName + meeting.name}
               id={"" + meeting.id}
@@ -40,14 +40,14 @@ const Meetings = (props: MeetingsProps) => {
               style={{ width: "100%" }}
             >
               <Row>
-                <Col xs={8}>
+                <Col xs={7}>
                   <h5 className="font-weight-bold">
                     {meeting.name} ({meeting.duration}min){" "}
                   </h5>
                 </Col>
-                <Col xs={4}>
+                <Col xs={5}>
                   <Button
-                    className="ml-3"
+                    className="float-right"
                     variant="outline-danger"
                     onClick={() => {
                       submitDeletion(meeting.id)

@@ -1,6 +1,9 @@
 import { ExternalEvent } from "app/caldav"
 import { getCalendarService } from "app/calendar-service"
+import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 import { Ctx } from "blitz"
+import { getDay, setHours, setMinutes } from "date-fns"
+import { utcToZonedTime } from "date-fns-tz"
 import db, { ConnectedCalendar, DailySchedule, Meeting } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -25,6 +28,21 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
     caldavCalendars.push(googleCalendar)
   }
   return caldavCalendars
+}
+
+function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
+  const specificSchedule = schedule[getDay(date)]
+  if (!specificSchedule) {
+    if (type === "end") {
+      return endOfLastWorkDayBefore(date, schedule, timezone)
+    } else {
+      return startOfFirstWorkDayAfter(date, schedule, timezone)
+    }
+  }
+
+  let newDate = setHours(date, specificSchedule[type].hour)
+  newDate = setMinutes(newDate, specificSchedule[type].minute)
+  return newDate
 }
 
 async function getTakenSlots(
@@ -92,8 +110,18 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: meeting.startDateUTC,
-    end: meeting.endDateUTC,
+    start: applySchedule(
+      utcToZonedTime(meeting.startDateUTC, meeting.schedule.timezone),
+      schedule,
+      "start",
+      meeting.schedule.timezone
+    ),
+    end: applySchedule(
+      utcToZonedTime(meeting.endDateUTC, meeting.schedule.timezone),
+      schedule,
+      "end",
+      meeting.schedule.timezone
+    ),
   }
 
   return computeAvailableSlots({

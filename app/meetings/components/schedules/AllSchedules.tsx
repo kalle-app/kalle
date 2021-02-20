@@ -31,8 +31,12 @@ const AllSchedules = () => {
                   )
                 })}
                 <ListGroup.Item>
-                  <b>Timezone: </b>
-                  {schedule.timezone}
+                  <Row>
+                    <Col sm={6}>
+                      <b>Timezone</b>
+                    </Col>
+                    <Col sm={6}>{schedule.timezone}</Col>
+                  </Row>
                 </ListGroup.Item>
               </ListGroup>
             </Card>
