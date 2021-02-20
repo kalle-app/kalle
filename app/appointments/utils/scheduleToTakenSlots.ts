@@ -1,14 +1,5 @@
 import { TimeSlot } from "../types"
-import {
-  subDays,
-  addDays,
-  getDay,
-  startOfMinute,
-  setMinutes,
-  setHours,
-  subMilliseconds,
-  getDate,
-} from "date-fns"
+import { addDays, startOfMinute, setMinutes, setHours, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
 import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 

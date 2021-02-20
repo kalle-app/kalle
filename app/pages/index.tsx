@@ -331,7 +331,7 @@ const OverviewSection = () => {
               </Row>
             }
           >
-            {meetings.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
+            {meetings.length === 0 ? <p className="text-center">No active meetings yet</p> : ""}
             <Row style={{ display: "flex", flexWrap: "wrap" }}>
               {meetings.map((meeting) => (
                 <MeetingOverviewBox meeting={meeting} />

@@ -33,7 +33,7 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
 function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
   const specificSchedule = schedule[getDay(date)]
   if (!specificSchedule) {
-    if (type == "end") {
+    if (type === "end") {
       return endOfLastWorkDayBefore(date, schedule, timezone)
     } else {
       return startOfFirstWorkDayAfter(date, schedule, timezone)
