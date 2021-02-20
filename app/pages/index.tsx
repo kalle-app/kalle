@@ -249,8 +249,8 @@ const IntroSection = () => {
 
 const OverviewBox = (props: { span; header; children }) => {
   return (
-    <Col sm={props.span} className="p-3">
-      <Col sm={12} className="p-3 rounded shadow">
+    <Col md={props.span} className="p-3">
+      <Col md={12} className="p-3 rounded shadow">
         <div>
           <div>
             {props.header}
@@ -267,7 +267,7 @@ const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
   const href = `/schedule/${meeting.ownerName}/${meeting.link}`
   const hrefToDisplay = getOrigin() + href
   return (
-    <Col md={6} className="my-1" style={{ display: "flex" }}>
+    <Col lg={6} className="my-1" style={{ display: "flex" }}>
       <Card
         key={meeting.id + meeting.ownerName + meeting.name}
         id={"" + meeting.id}
@@ -289,9 +289,14 @@ const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
         <Row className="mt-4 justify-content-end">
           <Col>
             <Link href={"/meeting/bookings/" + meeting.id}>
-              <Button variant="outline-primary">View Bookings</Button>
+              <Button variant="outline-primary" className="float-lg-right float-xl-none">
+                View Bookings
+              </Button>
             </Link>
-            <CopyToClipboard text={hrefToDisplay} className="ml-3">
+            <CopyToClipboard
+              text={hrefToDisplay}
+              className="ml-3 mt-lg-2 mt-xl-0 float-lg-right float-xl-none"
+            >
               <Button variant="outline-primary">Copy Link</Button>
             </CopyToClipboard>
           </Col>
@@ -326,7 +331,7 @@ const OverviewSection = () => {
               </Row>
             }
           >
-            {meetings.length == 0 ? <p className="text-center">No active meetings yet</p> : ""}
+            {meetings.length === 0 ? <p className="text-center">No active meetings yet</p> : ""}
             <Row style={{ display: "flex", flexWrap: "wrap" }}>
               {meetings.map((meeting) => (
                 <MeetingOverviewBox meeting={meeting} />

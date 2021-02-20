@@ -98,7 +98,7 @@ const ScheduleStep = (props: ScheduleProps) => {
         </Form.Group>
         <Form.Group controlId="select-schedule">
           <Form.Label>Select Schedule</Form.Label>
-          {props.schedulePresets.length == 0 ? (
+          {props.schedulePresets.length === 0 ? (
             <p>
               Please add a Schedule to continue with the creation of a meeting. A schedule sets your
               general availability.
