@@ -2,6 +2,7 @@ import { ExternalEvent } from "app/caldav"
 import { getCalendarService } from "app/calendar-service"
 import { Ctx } from "blitz"
 import { getDay, setHours, setMinutes } from "date-fns"
+import { utcToZonedTime } from "date-fns-tz"
 import db, { ConnectedCalendar, DailySchedule, Meeting } from "db"
 import { computeAvailableSlots } from "../utils/computeAvailableSlots"
 import {
@@ -102,8 +103,16 @@ export default async function getTimeSlots(
   }
 
   const between = {
-    start: applySchedule(meeting.startDateUTC, schedule, "start"),
-    end: applySchedule(meeting.endDateUTC, schedule, "end"),
+    start: applySchedule(
+      utcToZonedTime(meeting.startDateUTC, meeting.schedule.timezone),
+      schedule,
+      "start"
+    ),
+    end: applySchedule(
+      utcToZonedTime(meeting.endDateUTC, meeting.schedule.timezone),
+      schedule,
+      "end"
+    ),
   }
 
   return computeAvailableSlots({

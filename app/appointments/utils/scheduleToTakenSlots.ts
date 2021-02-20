@@ -7,6 +7,7 @@ import {
   setMinutes,
   setHours,
   subMilliseconds,
+  getDate,
 } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
 
@@ -83,7 +84,7 @@ export function scheduleToTakenSlots(
   }
 
   let cursor = between.start
-  while (cursor < between.end) {
+  while (cursor <= between.end) {
     const slot: TimeSlot = {
       start: endOfLastWorkDayBefore(cursor),
       end: startOfFirstWorkDayAfter(cursor),
@@ -93,6 +94,13 @@ export function scheduleToTakenSlots(
 
     cursor = addDays(slot.end, 1)
   }
+
+  const slot: TimeSlot = {
+    start: endOfLastWorkDayBefore(cursor),
+    end: addDays(cursor, 1),
+  }
+
+  result.push(slot)
 
   return result
 }
