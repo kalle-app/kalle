@@ -22,27 +22,34 @@ const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) 
     <>
       <h1>Bookings for "{meeting?.name}"</h1>
       <p>{meeting?.description}</p>
-      <ul>
+      <Row style={{ display: "flex", flexWrap: "wrap" }}>
         {bookings.map((booking) => {
           const dateString = format(new Date(booking.startDateUTC), "iiii, dd. LLLL y - H:mm")
           return (
-            <Card as="li" key={booking.id} id={"" + booking.id} className="p-3 my-5 text-left">
-              <h5 className="pb-3 font-weight-bold">{dateString}</h5>
-              <Row>
-                <Col sm={12} className="my-auto">
-                  <p className="my-auto font-weight-bold">Booked by: </p>
-                  <p className="my-auto">{booking.inviteeEmail}</p>
-                </Col>
-              </Row>
-              <div className="d-flex justify-content-end">
-                <Button className="ml-3" variant="outline-danger">
-                  Cancel Meeting
-                </Button>
-              </div>
-            </Card>
+            <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+              <Card
+                key={booking.id}
+                id={"" + booking.id}
+                className="p-3 my-2 text-left shadow"
+                style={{ width: "100%" }}
+              >
+                <h5 className="pb-3 font-weight-bold">{dateString}</h5>
+                <Row>
+                  <Col sm={12} className="my-auto">
+                    <p className="my-auto font-weight-bold">Booked by: </p>
+                    <p className="my-auto">{booking.inviteeEmail}</p>
+                  </Col>
+                </Row>
+                <div className="d-flex justify-content-end">
+                  <Button className="ml-3" variant="outline-danger">
+                    Cancel Meeting
+                  </Button>
+                </div>
+              </Card>
+            </Col>
           )
         })}
-      </ul>
+      </Row>
     </>
   )
 }
