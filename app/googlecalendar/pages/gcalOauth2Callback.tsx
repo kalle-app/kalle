@@ -30,8 +30,8 @@ function OAuthCallbackPage() {
 
   const SettingsLink = () => {
     return (
-      <Link href={"/settings"}>
-        <Button variant="secondary" href={"/settings"}>
+      <Link href={"/calendars"}>
+        <Button variant="secondary" href={"/calendars"}>
           Go to Calendar Settings
         </Button>
       </Link>

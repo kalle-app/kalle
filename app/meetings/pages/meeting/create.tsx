@@ -1,26 +1,22 @@
-import { BlitzPage, Router, useMutation, useQuery } from "blitz"
-import React, { ReactElement, Suspense, useState } from "react"
-import Advanced from "../../components/creationSteps/Advanced"
-import Availability from "../../components/creationSteps/Availability"
-import General from "../../components/creationSteps/General"
-import ScheduleStep from "../../components/creationSteps/Schedule"
-import { Meeting } from "app/meetings/types"
-import addMeetingMutation from "../../mutations/addMeeting"
-import Layout from "app/layouts/Layout"
-import Card from "react-bootstrap/Card"
-import { Button, Modal } from "react-bootstrap"
-import { CopyToClipboard } from "react-copy-to-clipboard"
-import { getOrigin } from "utils/generalUtils"
-import getScheduleNames from "app/meetings/queries/getScheduleNames"
-import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import Layout from "app/layouts/Layout"
+import getScheduleNames from "app/meetings/queries/getScheduleNames"
+import { Meeting } from "app/meetings/types"
+import { BlitzPage, Router, useMutation, useQuery } from "blitz"
+import React, { ReactElement, Suspense, useEffect, useState } from "react"
+import { Button, Modal } from "react-bootstrap"
+import Card from "react-bootstrap/Card"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import Skeleton from "react-loading-skeleton"
+import { getOrigin } from "utils/generalUtils"
+import General from "../../components/creationSteps/General"
+import ScheduleStep from "../../components/creationSteps/Schedule"
+import addMeetingMutation from "../../mutations/addMeeting"
 
 enum Steps {
   General,
   Schedule,
-  Availability,
-  Advanced,
 }
 
 const initialMeeting: Meeting = {
@@ -69,28 +65,60 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
   )
 }
 
+interface ErrorModalProps {
+  error: boolean
+  message: string
+  setError: (val: object) => void
+}
+
+const ErrorModal = (props: ErrorModalProps): ReactElement => {
+  return (
+    <Modal show={props.error} onHide={() => props.setError({ error: false, message: "" })}>
+      <Modal.Header closeButton>
+        <Modal.Title>Meeting could not be created!</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        An error occurred: {props.message}. Please change your input and try it again.
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => props.setError({ error: false, message: "" })}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+
 const InviteCreationContent = () => {
   const [step, setStep] = useState(Steps.General)
-
   const [meeting, setMeeting] = useState(initialMeeting)
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
+  const [error, setError] = useState({ error: false, message: "" })
+  const [readyForSubmission, setReadyForSubmission] = useState(false)
+
+  useEffect(() => {
+    if (readyForSubmission) {
+      const submitMeeting = async () => {
+        try {
+          const data = await createMeeting(meeting)
+          const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
+          setMeetingLink(link)
+          setShow(true)
+          setReadyForSubmission(false)
+        } catch (error) {
+          setReadyForSubmission(false)
+          setError({ error: true, message: error.message })
+        }
+      }
+      submitMeeting()
+    }
+  }, [readyForSubmission, meeting, createMeeting])
 
   if (!useCurrentUser()) {
     return <AuthError />
-  }
-
-  const submitMeeting = async () => {
-    try {
-      const data = await createMeeting(meeting)
-      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
-      setMeetingLink(link)
-      setShow(true)
-    } catch (error) {
-      alert(error)
-    }
   }
 
   const next = () => {
@@ -114,7 +142,6 @@ const InviteCreationContent = () => {
                 description: result.description,
                 link: result.link,
               }))
-
               next()
             }}
           />
@@ -123,7 +150,7 @@ const InviteCreationContent = () => {
         return (
           <ScheduleStep
             schedulePresets={schedulePresets!}
-            toNext={(result) => {
+            onSubmit={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 startDate: result.startDate,
@@ -131,15 +158,11 @@ const InviteCreationContent = () => {
                 scheduleId: result.scheduleId,
                 duration: result.duration,
               }))
-              next()
+              setReadyForSubmission(true)
             }}
             stepBack={stepBack}
           />
         )
-      case Steps.Availability:
-        return <Availability toNext={next} stepBack={stepBack} />
-      case Steps.Advanced:
-        return <Advanced onSubmit={submitMeeting} stepBack={stepBack} />
     }
   }
 
@@ -147,6 +170,7 @@ const InviteCreationContent = () => {
     <>
       <Card>{renderSwitch()}</Card>
       <SuccessModal show={showSuccess} setShow={setShow} meetingLink={meetingLink} />
+      <ErrorModal error={error.error} message={error.message} setError={setError} />
     </>
   )
 }

@@ -8,9 +8,10 @@ import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import type { TimeSlot } from "app/appointments/types"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
 import React, { Suspense, useEffect, useState } from "react"
-import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
+import { Alert, Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import { formatAs24HourClockString } from "app/time-utils/format"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -27,6 +28,9 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [modalVisible, setModalVisible] = useState(false)
   const user = useCurrentUser()
   const [hideOccupied, setHideOccupied] = useState(false)
+  const [warning, setWarning] = useState(false)
+  const [error, setError] = useState({ error: false, message: "" })
+  const [success, setSuccess] = useState(false)
 
   const [slots] = useQuery(getTimeSlots, {
     meetingSlug: meetingSlug,
@@ -56,11 +60,11 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }, [hideOccupied])
 
   if (!meeting) {
-    return <h2 className="text-center m-5">Meeting invalid :(</h2>
+    return <h2 className="text-center m-5">This meeting was deleted or is in the past.</h2>
   }
 
   if (!slots) {
-    return <h2 className="text-center m-5">No free slots available :(</h2>
+    return <h2 className="text-center m-5">There are no free slots available for this meeting.</h2>
   }
 
   if (!selectedDay) {
@@ -75,28 +79,23 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }
 
   const onSubmit = async () => {
-    if (!selectedTimeSlot) {
-      alert("No timeslot selected")
+    if (!selectedTimeSlot || selectedTimeSlot.start < new Date() || !email) {
+      setWarning(true)
       return
     }
 
-    if (selectedTimeSlot.start < new Date()) {
-      alert("Timeslot already passed :/")
-      return
+    try {
+      await bookAppointment({
+        meeting: meeting,
+        meetingOwnerName: username,
+        inviteeEmail: email,
+        startDate: selectedTimeSlot.start,
+        notificationTime: notifictionTime,
+      })
+      setSuccess(true)
+    } catch (e) {
+      setError({ error: true, message: e.message })
     }
-
-    if (!email) {
-      alert("Email not set")
-      return
-    }
-
-    await bookAppointment({
-      meeting: meeting,
-      meetingOwnerName: username,
-      inviteeEmail: email,
-      startDate: selectedTimeSlot.start,
-      notificationTime: notifictionTime,
-    })
   }
 
   return (
@@ -160,38 +159,76 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
           </Card>
         </div>
       </div>
-      <Modal show={modalVisible} onHide={() => setModalVisible(false)}>
+      <Modal
+        show={modalVisible}
+        onHide={() => {
+          setWarning(false)
+          setError({ error: false, message: "" })
+          setSuccess(false)
+          setModalVisible(false)
+        }}
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Enter your Emailadress</Modal.Title>
+          <Modal.Title>Finish your booking.</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          You will receive a confirmation mail to this adress
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Enter email"
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="formNotificationTime">
-              <Form.Label>
-                Select how many minutes before the appointment you want to be notified:
-              </Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="30min"
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-                  setNotificationTime(Number(e.currentTarget.value))
-                }
-              />
-            </Form.Group>
-          </Form>
-          <Button variant="primary" onClick={() => onSubmit()} id="submit">
-            Submit!
-          </Button>
-        </Modal.Body>
+        {!error.error && !success && (
+          <Modal.Body>
+            {selectedTimeSlot && (
+              <p>
+                You are booking the slot {formatAs24HourClockString(selectedTimeSlot.start)}-
+                {formatAs24HourClockString(selectedTimeSlot.end)}.
+              </p>
+            )}
+            You will receive a confirmation mail to this adress
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                    setEmail(e.currentTarget.value)
+                  }
+                />
+              </Form.Group>
+              <Form.Group controlId="formNotificationTime">
+                <Form.Label>
+                  Select how many minutes before the appointment you want to be notified:
+                </Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="30min"
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                    setNotificationTime(Number(e.currentTarget.value))
+                  }
+                />
+              </Form.Group>
+            </Form>
+            {warning && (
+              <Alert variant="danger">
+                {!selectedTimeSlot
+                  ? "Please select a time slot first."
+                  : selectedTimeSlot.start < new Date()
+                  ? "Your selected time slot has already passed."
+                  : "Please enter a valid e-mail"}
+              </Alert>
+            )}
+            <Button variant="primary" onClick={() => onSubmit()} id="submit">
+              Submit!
+            </Button>
+          </Modal.Body>
+        )}
+        {error.error && (
+          <Alert variant="danger">
+            Something went wrong: {error.message} Please edit your data and try again.
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success">
+            The slot has been booked! You will receive a confirmation e-mail with all details. You
+            can close this website now.
+          </Alert>
+        )}
       </Modal>
     </>
   )
