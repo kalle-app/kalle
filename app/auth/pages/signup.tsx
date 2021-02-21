@@ -41,8 +41,8 @@ const SignupPage: BlitzPage = () => {
       router.push("/")
     } catch (error) {
       const message = {
-        email_already_used: "This email is already being used",
-        username_already_used: "This username is already being used",
+        emailAlreadyUsed: "This email is already being used",
+        usernameAlreadyUsed: "This username is already being used",
       }[error.message]
 
       setMessage(message ?? "Sorry, we had an unexpected error. Please try again.")
