@@ -80,7 +80,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   }
 
   const onSubmit = async () => {
-    if (!selectedTimeSlot || selectedTimeSlot.start < new Date() || !email) {
+    if (!selectedTimeSlot || selectedTimeSlot.start < new Date()) {
       setMessage("Please select a time slot. The time slot must be in the future.")
       return
     }
