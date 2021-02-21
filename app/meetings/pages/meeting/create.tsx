@@ -1,4 +1,4 @@
-import { BlitzPage, Router, useMutation, useQuery } from "blitz"
+import { BlitzPage, Link, Router, useMutation, useQuery } from "blitz"
 import React, { ReactElement, Suspense, useState } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
@@ -15,6 +15,7 @@ import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
+import hasCalendar from "app/meetings/queries/hasCalendar"
 
 enum Steps {
   General,
@@ -78,9 +79,31 @@ const InviteCreationContent = () => {
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
   const user = useCurrentUser()
+  const [userHasCalendar] = useQuery(hasCalendar, null)
 
   if (!user) {
     return <AuthError />
+  }
+
+  if (!userHasCalendar) {
+    return (
+      <>
+        <h3>Whoa someone seems to be in a rush there</h3>
+        <h4>... but first things first!</h4>
+        <p>
+          In order to create a new meeting you should connect a calendar first. So make sure to head
+          over to the calendars page and add your personal calendars
+        </p>
+        <p>
+          <b>FAQ: Can't I just create a Meeting withou connecteing my calendar?</b>
+          Sorry this is a feature that is still in work. Currently we need to save appointments to
+          your calendar in order to prevent double bookings
+        </p>
+        <Link href="/calendars">
+          <Button variant="primary">To my Calendars</Button>
+        </Link>
+      </>
+    )
   }
 
   const submitMeeting = async () => {

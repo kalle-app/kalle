@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 import { Form, Button } from "react-bootstrap"
-import { Link } from "blitz"
-import { useState } from "react"
+import { Link, useQuery } from "blitz"
+import { useEffect, useState } from "react"
 import { GeneralInformationInput } from "app/auth/validations"
+import getDefaultLink from "app/meetings/queries/getDefaultLink"
 
 interface GeneralFormResult {
   name: string
@@ -20,6 +21,11 @@ type GeneralProps = {
 const General = (props: GeneralProps) => {
   const [message, setMessage] = useState("")
   const [meetingLink, setMeetingLink] = useState("")
+  const [defaultLink] = useQuery(getDefaultLink, null)
+
+  useEffect(() => {
+    setMeetingLink(defaultLink)
+  }, [])
 
   const updateMeetingLink = (input: string) => {
     setMeetingLink(input.substr(props.userName.length + 1))
