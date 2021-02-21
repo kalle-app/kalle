@@ -2,10 +2,7 @@ import { Button } from "react-bootstrap"
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
-import {
-  DefaultCalendarSelector,
-  SelectorType,
-} from "../../../users/components/DefaultCalendarSelector"
+import { DefaultCalendarSelector } from "../../../users/components/DefaultCalendarSelector"
 import getDefaultCalendarByUser from "../../../users/queries/getDefaultCalendarByUser"
 import { useQuery } from "blitz"
 type AdvancedProps = {
@@ -23,7 +20,6 @@ const AdvancedStep = (props: AdvancedProps) => {
       <h4>Advanced Options</h4>
       <p className="pb-3">Specify advanced options for you meeting</p>
       <DefaultCalendarSelector
-        type={SelectorType.meetingBased}
         onChange={(selectedDefaultCalendarId) => setDefaultCalendarId(selectedDefaultCalendarId)}
       />
       <div className="p-3 d-flex justify-content-end">

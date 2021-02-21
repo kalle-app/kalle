@@ -1,5 +1,5 @@
 import { BlitzPage, Router, useMutation, useQuery } from "blitz"
-import React, { ReactElement, Suspense, useState, useEffect } from "react"
+import React, { ReactElement, Suspense, useEffect, useState } from "react"
 import Advanced from "../../components/creationSteps/Advanced"
 import Availability from "../../components/creationSteps/Availability"
 import General from "../../components/creationSteps/General"
@@ -15,7 +15,6 @@ import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import Meetings from "app/meetings/components/Meetings"
 
 enum Steps {
   General,
@@ -72,27 +71,34 @@ const SuccessModal = (props: SuccessModalProps): ReactElement => {
   )
 }
 
-let meeting: Meeting = initialMeeting
+//let meeting: Meeting = initialMeeting
 const InviteCreationContent = () => {
+  const [meeting, setMeeting] = useState(initialMeeting)
+  const [shouldSubmit, setShouldSubmit] = useState(false)
   const [step, setStep] = useState(Steps.General)
   const [meetingLink, setMeetingLink] = useState("")
   const [showSuccess, setShow] = useState(false)
   const [createMeeting] = useMutation(addMeetingMutation)
   const [schedulePresets] = useQuery(getScheduleNames, null)
 
+  useEffect(() => {
+    if (shouldSubmit) {
+      const submitMeeting = async () => {
+        try {
+          const data = await createMeeting(meeting)
+          const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
+          setMeetingLink(link)
+          setShow(true)
+        } catch (error) {
+          alert(error)
+        }
+      }
+      submitMeeting()
+    }
+  }, [shouldSubmit, createMeeting, meeting])
+
   if (!useCurrentUser()) {
     return <AuthError />
-  }
-
-  const submitMeeting = async () => {
-    try {
-      const data = await createMeeting(meeting)
-      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
-      setMeetingLink(link)
-      setShow(true)
-    } catch (error) {
-      alert(error)
-    }
   }
 
   const next = () => {
@@ -109,13 +115,13 @@ const InviteCreationContent = () => {
         return (
           <General
             toNext={(result) => {
-              meeting = {
+              setMeeting({
                 ...meeting,
                 name: result.name,
                 location: result.location,
                 description: result.description,
                 link: result.link,
-              }
+              })
               next()
             }}
           />
@@ -125,14 +131,14 @@ const InviteCreationContent = () => {
           <ScheduleStep
             schedulePresets={schedulePresets!}
             toNext={(result) => {
-              meeting = {
+              setMeeting({
                 ...meeting,
                 startDate: result.startDate,
                 endDate: result.endDate,
                 scheduleId: result.scheduleId,
                 timezone: result.timezone,
                 duration: result.duration,
-              }
+              })
               next()
             }}
             stepBack={stepBack}
@@ -144,11 +150,11 @@ const InviteCreationContent = () => {
         return (
           <Advanced
             onSubmit={(defaultCalendarId) => {
-              meeting = {
+              setMeeting({
                 ...meeting,
                 defaultConnectedCalendarId: defaultCalendarId,
-              }
-              submitMeeting()
+              })
+              setShouldSubmit(true)
             }}
             stepBack={stepBack}
           />

@@ -1,48 +1,21 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { invalidateQuery, useMutation, useQuery } from "blitz"
+import { invalidateQuery, useMutation } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
-import Form from "react-bootstrap/Form"
-import updateDefaultCalendar from "../mutations/updateDefaultCalendar"
-import { useState } from "react"
-import { DefaultCalendarSelector, SelectorType } from "./DefaultCalendarSelector"
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
 }
 
 const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
-  const [validated, setValidated] = useState(false)
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
-  const [changeDefaultCalendar] = useMutation(updateDefaultCalendar)
-
   const submitDeletion = async (calendarId: number) => {
     await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }
-  const onChange = (event) => {
-    if (event.target.value === -1) return
-    changeDefaultCalendar(parseInt(event.target.value))
-  }
-  var dropdownElements: Array<JSX.Element> = []
-
-  dropdownElements.push(
-    <option key={-1} value={-1}>
-      Add Calendar
-    </option>
-  )
-
-  props.calendars.forEach((calendar) => {
-    dropdownElements.push(
-      <option key={calendar.id} value={calendar.id}>
-        {calendar.name}
-      </option>
-    )
-  })
 
   return (
     <div>
-      <DefaultCalendarSelector type={SelectorType.settingsBased} />
       <Table>
         <thead>
           <tr>

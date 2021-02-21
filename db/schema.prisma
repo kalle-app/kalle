@@ -70,7 +70,7 @@ model ConnectedCalendar {
   owner             User                    @relation(fields: [ownerId], references: [id])
   ownerId           Int
   status            ConnectedCalendarStatus
-  type              String
+  type              ConnectedCalendarType
   defaultCalendar   DefaultCalendar[]
   Meeting           Meeting[]
 }

@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from "blitz"
+import { useQuery } from "blitz"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
-import updateDefaultCalendar from "../mutations/updateDefaultCalendar"
 import { useState } from "react"
 import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 export enum SelectorType {
@@ -10,26 +9,19 @@ export enum SelectorType {
 }
 
 export const DefaultCalendarSelector = (props: {
-  type: SelectorType
-  onChange?: (selectedDefaultCalendarId: number) => void
+  state?: string
+  message?: string
+  onChange: (selectedDefaultCalendarId: number) => void
 }) => {
-  const [validated, setValidated] = useState(false)
-  const [changeDefaultCalendar] = useMutation(updateDefaultCalendar)
+  const [validated] = useState(false)
   const [getCalendars] = useQuery(getConnectedCalendars, null)
   const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
   const calendars = getCalendars
 
   const onChange = (event) => {
-    //this is needed because we need a defaultcalendar on a setting basis and on a meeting basis.
-    switch (props.type) {
-      case SelectorType.settingsBased:
-        if (event.target.value === -1) return
-        changeDefaultCalendar(parseInt(event.target.value))
-        break
-      case SelectorType.meetingBased:
-        props.onChange(parseInt(event.target.value))
-    }
+    props.onChange(parseInt(event.target.value))
   }
+
   var dropdownElements: Array<JSX.Element> = []
 
   dropdownElements.push(
@@ -60,6 +52,7 @@ export const DefaultCalendarSelector = (props: {
             >
               {dropdownElements}
             </Form.Control>
+            <Form.Text className={props.state + " mb-4"}>{props.message}</Form.Text>
           </Form.Group>
         </Form>
       )}

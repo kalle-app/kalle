@@ -1,2 +1,2 @@
 SELECT *
-FROM public."connectedCalendar"
+FROM public."ConnectedCalendar"
