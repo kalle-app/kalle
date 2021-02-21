@@ -5,9 +5,9 @@ import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import {
   DefaultCalendarSelector,
   SelectorType,
-} from "../../../users/components/DefaultCalendarSelector/DefaultCalendarSelector"
+} from "../../../users/components/DefaultCalendarSelector"
 import getDefaultCalendarByUser from "../../../users/queries/getDefaultCalendarByUser"
-import { useQuery, invoke } from "blitz"
+import { useQuery } from "blitz"
 type AdvancedProps = {
   stepBack: () => void
   onSubmit: (defaultCalendarId: number) => void
@@ -24,10 +24,7 @@ const AdvancedStep = (props: AdvancedProps) => {
       <p className="pb-3">Specify advanced options for you meeting</p>
       <DefaultCalendarSelector
         type={SelectorType.meetingBased}
-        onChange={(selectedDefaultCalendarId) => {
-          setDefaultCalendarId(selectedDefaultCalendarId)
-          //TODO: BELOW HANDLE WHEN MEETINGID IS -1
-        }}
+        onChange={(selectedDefaultCalendarId) => setDefaultCalendarId(selectedDefaultCalendarId)}
       />
       <div className="p-3 d-flex justify-content-end">
         <Button onClick={props.stepBack} type="submit" className="mx-1">

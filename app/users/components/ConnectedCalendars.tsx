@@ -6,10 +6,7 @@ import getConnectedCalendars from "../queries/getConnectedCalendars"
 import Form from "react-bootstrap/Form"
 import updateDefaultCalendar from "../mutations/updateDefaultCalendar"
 import { useState } from "react"
-import {
-  DefaultCalendarSelector,
-  SelectorType,
-} from "./DefaultCalendarSelector/DefaultCalendarSelector"
+import { DefaultCalendarSelector, SelectorType } from "./DefaultCalendarSelector"
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
 }
@@ -45,10 +42,7 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
 
   return (
     <div>
-      <DefaultCalendarSelector
-        type={SelectorType.settingsBased}
-        toNext={(res) => console.log(res)}
-      />
+      <DefaultCalendarSelector type={SelectorType.settingsBased} />
       <Table>
         <thead>
           <tr>
