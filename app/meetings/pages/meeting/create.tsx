@@ -13,10 +13,12 @@ import { getOrigin } from "utils/generalUtils"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
+import Advanced from "../../components/creationSteps/Advanced"
 
 enum Steps {
   General,
   Schedule,
+  Advanced,
 }
 
 const initialMeeting: Meeting = {
@@ -28,6 +30,7 @@ const initialMeeting: Meeting = {
   endDate: new Date(),
   location: "",
   scheduleId: 0,
+  defaultConnectedCalendarId: -1,
 }
 
 interface SuccessModalProps {
@@ -150,7 +153,7 @@ const InviteCreationContent = () => {
         return (
           <ScheduleStep
             schedulePresets={schedulePresets!}
-            onSubmit={(result) => {
+            toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 startDate: result.startDate,
@@ -158,6 +161,19 @@ const InviteCreationContent = () => {
                 scheduleId: result.scheduleId,
                 duration: result.duration,
               }))
+              next()
+            }}
+            stepBack={stepBack}
+          />
+        )
+      case Steps.Advanced:
+        return (
+          <Advanced
+            onSubmit={(defaultCalendarId) => {
+              setMeeting({
+                ...meeting,
+                defaultConnectedCalendarId: defaultCalendarId,
+              })
               setReadyForSubmission(true)
             }}
             stepBack={stepBack}

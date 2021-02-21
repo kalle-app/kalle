@@ -16,7 +16,7 @@ interface ScheduleFormResult {
 
 type ScheduleProps = {
   stepBack: () => void
-  onSubmit: (result: ScheduleFormResult) => void
+  toNext: (result: ScheduleFormResult) => void
   schedulePresets: Schedule[]
 }
 
@@ -44,7 +44,7 @@ const ScheduleStep = (props: ScheduleProps) => {
             return
           }
 
-          props.onSubmit({
+          props.toNext({
             endDate,
             startDate,
             scheduleId,
@@ -134,7 +134,7 @@ const ScheduleStep = (props: ScheduleProps) => {
             className="mx-1"
             disabled={!startDate || !endDate || !scheduleId}
           >
-            Submit
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
           </Button>
         </div>
         <AddSchedule show={modalVisible} setVisibility={setModalVisibility} />

@@ -28,6 +28,9 @@ export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
       owner: {
         connect: { username: owner.username },
       },
+      defaultConnectedCalendar: {
+        connect: { id: meetingCreate.defaultConnectedCalendarId },
+      },
     },
   })
 
