@@ -1,17 +1,18 @@
 import AvailableTimeSlotsSelection from "app/appointments/components/availableTimeSlotsSelection"
 import bookAppointmentMutation from "app/appointments/mutations/bookAppointment"
 import getMeeting from "app/appointments/queries/getMeeting"
-import { BlitzPage, useQuery, useParam, useMutation, Link, invalidateQuery } from "blitz"
-import { DatePickerCalendar } from "react-nice-dates"
-import { enUS } from "date-fns/locale"
 import getTimeSlots from "app/appointments/queries/getTimeSlots"
 import type { TimeSlot } from "app/appointments/types"
+import { BookingInput } from "app/auth/validations"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { areDatesOnSameDay } from "app/time-utils/comparison"
+import { formatAs24HourClockString } from "app/time-utils/format"
+import { BlitzPage, invalidateQuery, Link, useMutation, useParam, useQuery } from "blitz"
+import { enUS } from "date-fns/locale"
 import React, { Suspense, useEffect, useState } from "react"
 import { Alert, Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
-import { formatAs24HourClockString } from "app/time-utils/format"
+import { DatePickerCalendar } from "react-nice-dates"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -24,13 +25,13 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot>()
   const [bookAppointment] = useMutation(bookAppointmentMutation)
   const [email, setEmail] = useState("")
-  const [notifictionTime, setNotificationTime] = useState(30)
+  const [notificationTime, setNotificationTime] = useState(30)
   const [modalVisible, setModalVisible] = useState(false)
   const user = useCurrentUser()
   const [hideOccupied, setHideOccupied] = useState(false)
-  const [warning, setWarning] = useState(false)
   const [error, setError] = useState({ error: false, message: "" })
   const [success, setSuccess] = useState(false)
+  const [message, setMessage] = useState("")
 
   const [slots] = useQuery(getTimeSlots, {
     meetingSlug: meetingSlug,
@@ -80,7 +81,16 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
 
   const onSubmit = async () => {
     if (!selectedTimeSlot || selectedTimeSlot.start < new Date() || !email) {
-      setWarning(true)
+      setMessage("Please select a time slot. The time slot must be in the future.")
+      return
+    }
+    const parseResult = BookingInput.safeParse({
+      email,
+      notificationTime,
+    })
+
+    if (!parseResult.success) {
+      setMessage(parseResult.error.errors[0].message)
       return
     }
 
@@ -90,7 +100,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
         meetingOwnerName: username,
         inviteeEmail: email,
         startDate: selectedTimeSlot.start,
-        notificationTime: notifictionTime,
+        notificationTime: notificationTime,
       })
       setSuccess(true)
     } catch (e) {
@@ -162,8 +172,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
       <Modal
         show={modalVisible}
         onHide={() => {
-          setWarning(false)
           setError({ error: false, message: "" })
+          setMessage("")
           setSuccess(false)
           setModalVisible(false)
         }}
@@ -203,16 +213,8 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                   }
                 />
               </Form.Group>
+              <Form.Text className="text-danger mb-4">{message}</Form.Text>
             </Form>
-            {warning && (
-              <Alert variant="danger">
-                {!selectedTimeSlot
-                  ? "Please select a time slot first."
-                  : selectedTimeSlot.start < new Date()
-                  ? "Your selected time slot has already passed."
-                  : "Please enter a valid e-mail"}
-              </Alert>
-            )}
             <Button variant="primary" onClick={() => onSubmit()} id="submit">
               Submit!
             </Button>

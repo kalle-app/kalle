@@ -12,6 +12,7 @@ const messages = {
   short_password: "Password must contain at least 10 characters",
   long_password: "Password cannot contain more than 100 characters",
   invalid_url: "Please enter a valid url",
+  invalid_notification_minutes: "Please leve this field blank or enter a positive number.",
 }
 
 export const SignupInput = z.object({
@@ -86,3 +87,9 @@ export const GeneralInformationInput = z.object({
   location: z.string().min(1, { message: messages.no_location }),
 })
 export type GeneralInformationInputType = z.infer<typeof GeneralInformationInput>
+
+export const BookingInput = z.object({
+  email: z.string().email({ message: messages.invalid_email }),
+  notificationTime: z.number().nonnegative({ message: messages.invalid_notification_minutes }),
+})
+export type BookingInputType = z.infer<typeof BookingInput>
