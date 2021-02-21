@@ -26,9 +26,9 @@ export default async function signup(input: SignupInputType, ctx: Ctx) {
     return user
   } catch (error) {
     if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-      throw new Error("email_already_used")
+      throw new Error("emailAlreadyUsed")
     } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
-      throw new Error("username_already_used")
+      throw new Error("usernameAlreadyUsed")
     } else {
       throw error
     }
