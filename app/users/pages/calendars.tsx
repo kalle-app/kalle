@@ -11,10 +11,7 @@ import { useCurrentUser } from "app/hooks/useCurrentUser"
 import MyCalendars from "app/users/components/MyCalendars"
 import CalendarSettings from "app/users/components/CalendarSettings"
 
-const CalendarList = () => {
-  const [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
-
+const CalendarOverview = () => {
   return (
     <div>
       <MyCalendars />
@@ -30,7 +27,7 @@ const CalendarsContent = () => {
 
   return (
     <>
-      <CalendarList />
+      <CalendarOverview />
     </>
   )
 }
