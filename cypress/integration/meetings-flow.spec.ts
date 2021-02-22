@@ -7,6 +7,7 @@ import { johnDoe } from "../../db/seed-data"
 
 it("Meetings Flow", () => {
   const link = uuid.v4()
+  const meetingName = `My Test Meeting-${Math.floor(Math.random() * 10000)}`
   const date = new Date()
   const dateToSelect = isFriday(date) || isSaturday(date) ? addDays(date, 3) : addDays(date, 1)
   const dateStart = format(date, "dd.MM.y")
@@ -17,7 +18,7 @@ it("Meetings Flow", () => {
   cy.visit(url("/meetings"))
 
   cy.contains("Create new Meeting").click()
-  cy.get("#name").type("My Test Meeting")
+  cy.get("#name").type(meetingName)
   cy.get("#link").type(link)
   cy.get("#description").type("Lorem ipsum, dolor sit amet.")
   cy.get("#location").type("Berlin")
@@ -67,8 +68,15 @@ it("Meetings Flow", () => {
     expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(
-      `New appointment: My Test Meeting - 10:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
+      `New appointment: ${meetingName} - 10:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
     )
     expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
   })
+
+  cy.visit(url(`/meetings`))
+  cy.contains(meetingName)
+  cy.get(`button[id="booking-btn-${meetingName}"]`).click()
+  cy.contains("Lorem ipsum, dolor sit amet.")
+  cy.contains(format(dateToSelect, "d"))
+  cy.contains("test-receiver@kalle.app")
 })
