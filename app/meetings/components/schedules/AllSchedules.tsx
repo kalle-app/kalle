@@ -53,11 +53,15 @@ const AllSchedules = () => {
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
-                    {message !== "" && (
-                      <Alert variant="danger" className="mt-2">
-                        {message}
-                      </Alert>
-                    )}
+                    <Col className="d-flex justify-content-center">
+                      {message !== "" && (
+                        <Alert variant="danger" className="mt-2">
+                          {message}
+                        </Alert>
+                      )}
+                    </Col>
+                  </Row>
+                  <Row>
                     <Col className="d-flex justify-content-center">
                       <Button
                         variant="outline-danger"
