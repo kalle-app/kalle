@@ -1,4 +1,5 @@
-import { Card, Row, Col, Button } from "react-bootstrap"
+import { Card, Row, Col, Button, Alert } from "react-bootstrap"
+import { useState } from "react"
 import type { Meeting } from "db"
 import { Link, useMutation, invalidateQuery } from "blitz"
 import { getOrigin } from "utils/generalUtils"
@@ -14,10 +15,15 @@ interface MeetingsProps {
 
 const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
+  const [message, setMessage] = useState("")
 
   const submitDeletion = async (meetingId: number) => {
-    await deleteMeeting(meetingId)
-    invalidateQuery(getMeetings)
+    const result = await deleteMeeting(meetingId)
+    if (result === "error") {
+      setMessage("There are still active bookings")
+    } else {
+      invalidateQuery(getMeetings)
+    }
   }
 
   const { meetings } = props
@@ -79,6 +85,11 @@ const Meetings = (props: MeetingsProps) => {
                   <p className="my-auto">{meeting.description}</p>
                 </Col>
               </Row>
+              {message !== "" && (
+                <Alert variant="danger" className="mt-4">
+                  {message}
+                </Alert>
+              )}
               <div className="d-flex mt-4 justify-content-end">
                 <Link href={"/meeting/bookings/" + meeting.id}>
                   <Button variant="outline-primary">View Bookings</Button>

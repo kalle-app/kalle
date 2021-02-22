@@ -12,9 +12,15 @@ export default async function deleteMeeting(meetingId: number, ctx: Ctx) {
     throw new Error("Invariant failed: Owner does not exist.")
   }
 
-  const meeting = await db.meeting.delete({
-    where: { id: meetingId },
+  const bookings = await db.booking.findMany({
+    where: { meetingId: meetingId },
   })
 
-  return meeting
+  if (bookings.length === 0) {
+    await db.meeting.delete({
+      where: { id: meetingId },
+    })
+    return "success"
+  }
+  return "error"
 }
