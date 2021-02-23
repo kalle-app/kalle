@@ -15,11 +15,13 @@ interface MeetingsProps {
 
 const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
+  const [activeMeeting, setActiveMeeting] = useState(0)
   const [message, setMessage] = useState("")
 
   const submitDeletion = async (meetingId: number) => {
     const result = await deleteMeeting(meetingId)
     if (result === "error") {
+      setActiveMeeting(meetingId)
       setMessage("There are still active bookings")
     } else {
       invalidateQuery(getMeetings)
@@ -85,7 +87,7 @@ const Meetings = (props: MeetingsProps) => {
                   <p className="my-auto">{meeting.description}</p>
                 </Col>
               </Row>
-              {message !== "" && (
+              {activeMeeting === meeting.id && message !== "" && (
                 <Alert variant="danger" className="mt-4">
                   {message}
                 </Alert>

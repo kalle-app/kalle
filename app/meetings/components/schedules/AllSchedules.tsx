@@ -7,11 +7,13 @@ import deleteScheduleMutation from "../../mutations/deleteSchedule"
 const AllSchedules = () => {
   const [schedules] = useQuery(getSchedules, null)
   const [deleteMeeting] = useMutation(deleteScheduleMutation)
+  const [activeSchedule, setActiveSchedule] = useState(0)
   const [message, setMessage] = useState("")
 
   const submitDeletion = async (scheduleId: number) => {
     const result = await deleteMeeting(scheduleId)
     if (result === "error") {
+      setActiveSchedule(scheduleId)
       setMessage("There are still meetings with this schedule")
     } else {
       invalidateQuery(getSchedules)
@@ -54,7 +56,7 @@ const AllSchedules = () => {
                 <ListGroup.Item>
                   <Row>
                     <Col className="d-flex justify-content-center">
-                      {message !== "" && (
+                      {activeSchedule === schedule.id && message !== "" && (
                         <Alert variant="danger" className="mt-2">
                           {message}
                         </Alert>
