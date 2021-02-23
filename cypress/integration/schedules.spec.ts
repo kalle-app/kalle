@@ -16,8 +16,9 @@ it("Schedules", () => {
 
   cy.visit(url("/schedules"))
   const name = uuid.v4()
+  const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   createDefaultSchedule(name)
-  cy.contains(name).parent().contains("Timezone").parent().parent().contains("Europe/Berlin")
+  cy.contains(name).parent().contains("Timezone").parent().parent().contains(clientTimeZone)
   cy.contains(name).parent().contains("Friday:").parent().parent().contains("9:00 - 17:00")
   cy.contains(name).parent().contains("Saturday").should("not.exist")
   //TODO test schedule delition, once implemented
