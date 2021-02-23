@@ -3,7 +3,7 @@ import { SearchableDropdown } from "app/components/SearchableDropdown"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import getSchedules from "app/meetings/queries/getSchedules"
 import { invalidateQuery, useMutation } from "blitz"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Alert, Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
 import timezones from "./tz"
@@ -21,8 +21,8 @@ const initialSchedule = {
   wednesday: { blocked: false, start: "09:00", end: "17:00" },
   thursday: { blocked: false, start: "09:00", end: "17:00" },
   friday: { blocked: false, start: "09:00", end: "17:00" },
-  saturday: { blocked: true, start: "", end: "" },
-  sunday: { blocked: true, start: "", end: "" },
+  saturday: { blocked: true, start: "09:00", end: "17:00" },
+  sunday: { blocked: true, start: "09:00", end: "17:00" },
 }
 
 const AddSchedule = (props: AddScheduleProps) => {
@@ -47,6 +47,9 @@ const AddSchedule = (props: AddScheduleProps) => {
 
   const closeModal = (): void => {
     setError({ error: false, message: "" })
+    setName("")
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    setSchedule(initialSchedule)
     props.setVisibility(false)
   }
 
@@ -145,7 +148,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   }
 
   return (
-    <Modal show={props.show} onHide={() => props.setVisibility(false)}>
+    <Modal show={props.show} onHide={() => closeModal()}>
       <Modal.Header closeButton>
         <Modal.Title>Add a new Schedule</Modal.Title>
       </Modal.Header>
@@ -191,7 +194,7 @@ const AddSchedule = (props: AddScheduleProps) => {
                     <Form.Label>&nbsp;</Form.Label>
                     {!schedule[day].blocked && (
                       <Form.Control
-                        value={schedule[day].start === "" ? "09:00" : schedule[day].start}
+                        value={schedule[day].start}
                         onChange={(e) => {
                           scheduleChanged(e.currentTarget.value, day, "start")
                         }}
@@ -202,7 +205,7 @@ const AddSchedule = (props: AddScheduleProps) => {
                     <Form.Label>&nbsp;</Form.Label>
                     {!schedule[day].blocked && (
                       <Form.Control
-                        value={schedule[day].end === "" ? "17:00" : schedule[day].end}
+                        value={schedule[day].end}
                         onChange={(e) => {
                           scheduleChanged(e.currentTarget.value, day, "end")
                         }}
