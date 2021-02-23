@@ -191,7 +191,7 @@ const AddSchedule = (props: AddScheduleProps) => {
                     <Form.Label>&nbsp;</Form.Label>
                     {!schedule[day].blocked && (
                       <Form.Control
-                        value={schedule[day].start}
+                        value={schedule[day].start === "" ? "09:00" : schedule[day].start}
                         onChange={(e) => {
                           scheduleChanged(e.currentTarget.value, day, "start")
                         }}
@@ -202,7 +202,7 @@ const AddSchedule = (props: AddScheduleProps) => {
                     <Form.Label>&nbsp;</Form.Label>
                     {!schedule[day].blocked && (
                       <Form.Control
-                        value={schedule[day].end}
+                        value={schedule[day].end === "" ? "17:00" : schedule[day].end}
                         onChange={(e) => {
                           scheduleChanged(e.currentTarget.value, day, "end")
                         }}
