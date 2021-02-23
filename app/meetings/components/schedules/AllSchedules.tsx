@@ -1,10 +1,25 @@
 import getSchedules from "app/meetings/queries/getSchedules"
-import { useQuery } from "blitz"
-import React from "react"
-import { Card, Col, ListGroup, Row } from "react-bootstrap"
+import { useQuery, useMutation, invalidateQuery } from "blitz"
+import React, { useState } from "react"
+import { Card, Col, ListGroup, Row, Button, Alert } from "react-bootstrap"
+import deleteScheduleMutation from "../../mutations/deleteSchedule"
 
 const AllSchedules = () => {
   const [schedules] = useQuery(getSchedules, null)
+  const [deleteMeeting] = useMutation(deleteScheduleMutation)
+  const [activeSchedule, setActiveSchedule] = useState(0)
+  const [message, setMessage] = useState("")
+
+  const submitDeletion = async (scheduleId: number) => {
+    const result = await deleteMeeting(scheduleId)
+    if (result === "error") {
+      setActiveSchedule(scheduleId)
+      setMessage("There are still meetings with this schedule")
+    } else {
+      invalidateQuery(getSchedules)
+    }
+  }
+
   return (
     <Row>
       {schedules.map((schedule) => {
@@ -36,6 +51,29 @@ const AllSchedules = () => {
                       <b>Timezone</b>
                     </Col>
                     <Col sm={6}>{schedule.timezone}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col className="d-flex justify-content-center">
+                      {activeSchedule === schedule.id && message !== "" && (
+                        <Alert variant="danger" className="mt-2">
+                          {message}
+                        </Alert>
+                      )}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="d-flex justify-content-center">
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => {
+                          submitDeletion(schedule.id)
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Col>
                   </Row>
                 </ListGroup.Item>
               </ListGroup>
