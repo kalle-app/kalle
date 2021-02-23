@@ -31,15 +31,9 @@ it("Meetings Flow", () => {
   cy.get("#range-start").type(dateStart)
   cy.get("#range-end").type(dateEnd)
 
-  cy.contains("Add Schedule").click()
-
   const scheduleName = uuid.v4()
 
   createDefaultSchedule(scheduleName)
-
-  cy.get("#name").type(scheduleName)
-
-  cy.contains("Save Schedule").click()
 
   cy.get("#select-schedule").select(scheduleName)
 
