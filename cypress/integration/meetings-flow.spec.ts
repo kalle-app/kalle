@@ -4,6 +4,7 @@ import * as uuid from "uuid"
 import { addDays, format, isFriday, isSaturday } from "date-fns"
 
 import { johnDoe } from "../../db/seed-data"
+import { createDefaultSchedule } from "./schedules.spec"
 
 it("Meetings Flow", () => {
   const link = uuid.v4()
@@ -34,9 +35,9 @@ it("Meetings Flow", () => {
 
   const scheduleName = uuid.v4()
 
-  cy.get("#name").type(scheduleName)
+  createDefaultSchedule(scheduleName)
 
-  cy.wait(5000)
+  cy.get("#name").type(scheduleName)
 
   cy.contains("Save Schedule").click()
 
