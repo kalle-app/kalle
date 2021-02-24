@@ -11,21 +11,9 @@ export function createDefaultSchedule(scheduleName: string): void {
   cy.contains("Save Schedule").click()
 }
 
-it("Schedules", () => {
-  loginAs(johnDoe)
-
-  cy.visit(url("/schedules"))
-  const name = uuid.v4()
-  const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  createDefaultSchedule(name)
-  cy.contains(name).parent().contains("Timezone").parent().parent().contains(clientTimeZone)
-  cy.contains(name).parent().contains("Friday:").parent().parent().contains("9:00 - 17:00")
-  cy.contains(name).parent().contains("Saturday").should("not.exist")
-  //TODO test schedule delition, once implemented
-
-  const nameOfNotDefaultSchedule = uuid.v4()
+export function createCostumSchedule(scheduleName: string): void {
   cy.contains("Add Schedule").click()
-  cy.get("#name").type(nameOfNotDefaultSchedule)
+  cy.get("#name").type(scheduleName)
   cy.wait(2000)
   cy.get("form").within(() => {
     cy.get(".dropdown").get("a").click()
@@ -35,18 +23,39 @@ it("Schedules", () => {
     cy.contains("Friday").parent().parent().find('input[value="09:00"]').type("{selectall}07:00")
     cy.contains("Saturday").parent().parent().find('[type="checkbox"]').uncheck()
   })
-  cy.contains("Save Schedule").click()
-  cy.contains(nameOfNotDefaultSchedule)
-    .parent()
-    .contains("Timezone")
-    .parent()
-    .parent()
-    .contains("Asia/Seoul")
-  cy.contains(nameOfNotDefaultSchedule)
-    .parent()
-    .contains("Friday:")
-    .parent()
-    .parent()
-    .contains("7:00 - 17:00")
-  cy.contains(nameOfNotDefaultSchedule).parent().contains("Saturday")
+}
+
+describe("Schedules", () => {
+  it("Create default schedule", () => {
+    loginAs(johnDoe)
+    cy.visit(url("/schedules"))
+    const nameDefault = uuid.v4()
+    const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    createDefaultSchedule(nameDefault)
+    cy.contains(nameDefault)
+      .parent()
+      .contains("Timezone")
+      .parent()
+      .parent()
+      .contains(clientTimeZone)
+    cy.contains(nameDefault).parent().contains("Friday:").parent().parent().contains("9:00 - 17:00")
+    cy.contains(nameDefault).parent().contains("Saturday").should("not.exist")
+  })
+  it("Create costum schedule", () => {
+    loginAs(johnDoe)
+    cy.visit(url("/schedules"))
+    const nameCostum = uuid.v4()
+    createCostumSchedule(nameCostum)
+    cy.contains("Save Schedule").click()
+    cy.contains(nameCostum).parent().contains("Timezone").parent().parent().contains("Asia/Seoul")
+    cy.contains(nameCostum).parent().contains("Friday:").parent().parent().contains("7:00 - 17:00")
+    cy.contains(nameCostum).parent().contains("Saturday")
+  })
+  it("Delete default schedule", () => {
+    loginAs(johnDoe)
+    cy.visit(url("/schedules"))
+    const nameDefault = uuid.v4()
+    createDefaultSchedule(nameDefault)
+    // add deletion
+  })
 })
