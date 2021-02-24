@@ -23,6 +23,7 @@ export function createCostumSchedule(scheduleName: string): void {
     cy.contains("Friday").parent().parent().find('input[value="09:00"]').type("{selectall}07:00")
     cy.contains("Saturday").parent().parent().find('[type="checkbox"]').uncheck()
   })
+  cy.contains("Save Schedule").click()
 }
 
 describe("Schedules", () => {
@@ -46,7 +47,6 @@ describe("Schedules", () => {
     cy.visit(url("/schedules"))
     const nameCostum = uuid.v4()
     createCostumSchedule(nameCostum)
-    cy.contains("Save Schedule").click()
     cy.contains(nameCostum).parent().contains("Timezone").parent().parent().contains("Asia/Seoul")
     cy.contains(nameCostum).parent().contains("Friday:").parent().parent().contains("7:00 - 17:00")
     cy.contains(nameCostum).parent().contains("Saturday")
@@ -56,6 +56,9 @@ describe("Schedules", () => {
     cy.visit(url("/schedules"))
     const nameDefault = uuid.v4()
     createDefaultSchedule(nameDefault)
-    // add deletion
+    cy.contains(nameDefault)
+    cy.get("#delete-" + nameDefault).click()
+    cy.wait(2000)
+    cy.contains(nameDefault).should("not.exist")
   })
 })
