@@ -7,7 +7,7 @@ describe("A Google Calendar", () => {
     loginAs(johnDoe)
     cy.visit(url("/calendars"))
     cy.get("#add-calendar-button").click()
-    cy.get("select").select("Google Calendar")
+    cy.get("select").eq(0).select("Google Calendar")
   })
   it("offers link to Google login ", () => {
     cy.get("#google-login-button")
