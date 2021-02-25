@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "cypress:open": "cypress open --env host=localhost,port=3000",
-    "cypress:collect-coverage": "mv .nyc_output/out.json out.json.old && cat out.json.old  | cypress/rewrite-coverage-sources.js > .nyc_output/out.json && npx nyc report --reporter=lcov --exclude .blitz",
+    "cypress:collect-coverage": "mv .nyc_output/out.json out.json.old && cat out.json.old  | cypress/rewrite-coverage-sources.js > .nyc_output/out.json && npx nyc report --reporter=lcov --exclude .blitz && printf \"%s\" \"$(< coverage/lcov.info)\" > coverage/lcov.info",
     "db:seed": "ts-node db/seed.ts"
   },
   "engines": {
