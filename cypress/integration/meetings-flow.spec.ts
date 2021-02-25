@@ -70,6 +70,10 @@ it("Meetings Flow", () => {
 
   cy.visit(url(`/meetings`))
   cy.contains(meetingName)
+
+  cy.contains(meetingName).parent().parent().contains("Delete").click()
+  cy.contains(meetingName).parent().parent().parent().contains("There are still active bookings")
+
   cy.get(`button[id="booking-btn-${meetingName}"]`).click()
   cy.contains("Lorem ipsum, dolor sit amet.")
   cy.contains(format(dateToSelect, "d"))
