@@ -1,5 +1,3 @@
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import { Meeting } from "app/meetings/types"
@@ -117,10 +115,6 @@ const InviteCreationContent = () => {
     }
   }, [readyForSubmission, meeting, createMeeting])
 
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
-
   const next = () => {
     setStep((oldStep) => oldStep + 1)
   }
@@ -183,6 +177,7 @@ const Create: BlitzPage = () => {
   )
 }
 
+Create.authenticate = true
 Create.getLayout = (page) => <Layout title="Create a Meeting">{page}</Layout>
 
 export default Create

@@ -94,6 +94,7 @@ const GcalOAuth2Callback: BlitzPage = () => {
   )
 }
 
+GcalOAuth2Callback.authenticate = trues
 GcalOAuth2Callback.getLayout = (page) => <Layout title="Add your Google Calendar">{page}</Layout>
 
 export default GcalOAuth2Callback

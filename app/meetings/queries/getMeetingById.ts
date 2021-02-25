@@ -1,14 +1,21 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { Ctx, NotFoundError } from "blitz"
 
 export default async function getMeetingById(meetingId: number, ctx: Ctx) {
-  console.log("meetingid: ", meetingId, " ctx: ", ctx)
+  ctx.session.$authorize()
 
   const meeting = await db.meeting.findFirst({
     where: {
       id: meetingId,
+      owner: {
+        id: ctx.session.userId,
+      },
     },
   })
+
+  if (!meeting) {
+    throw new NotFoundError()
+  }
 
   return meeting
 }

@@ -7,17 +7,12 @@ import SectionHeader from "app/users/components/SectionHeader"
 import SectionFooter from "app/users/components/SectionFooter"
 import AllSchedules from "../components/schedules/AllSchedules"
 import Skeleton from "react-loading-skeleton"
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 
-const MainContent = () => {
+const Schedules: BlitzPage = () => {
   const [modalVisible, showOverlay] = useState(false)
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
 
   return (
-    <>
+    <Suspense fallback={<Skeleton count={10} />}>
       <Card>
         <SectionHeader
           title="My Schedules"
@@ -32,18 +27,11 @@ const MainContent = () => {
         />
       </Card>
       <AddSchedule show={modalVisible} setVisibility={showOverlay} />
-    </>
-  )
-}
-
-const Schedules: BlitzPage = () => {
-  return (
-    <Suspense fallback={<Skeleton count={10} />}>
-      <MainContent />
     </Suspense>
   )
 }
 
+Schedules.authenticate = true
 Schedules.getLayout = (page) => <Layout title="Schedules">{page}</Layout>
 
 export default Schedules
