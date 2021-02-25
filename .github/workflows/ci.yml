@@ -65,8 +65,6 @@ jobs:
           MODE: test
           NODE_ENV: e2etest
           HOME_URL: http://localhost:3000
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Process Coverage Report
         run: npm run cypress:collect-coverage
       - name: Coveralls
