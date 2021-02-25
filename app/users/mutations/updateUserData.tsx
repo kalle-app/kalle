@@ -1,5 +1,5 @@
 import db from "db"
-import { Ctx, resolver } from "blitz"
+import { resolver } from "blitz"
 import { UpdateUserInput } from "../../auth/validations"
 import { hashPassword } from "app/auth/auth-utils"
 
