@@ -12,7 +12,7 @@ interface CalendarCreate {
 }
 
 export default async function addConnectedCalendar(calendarCreate: CalendarCreate, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const owner = await db.user.findFirst({
     where: { id: ctx.session.userId },

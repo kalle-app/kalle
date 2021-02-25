@@ -96,7 +96,7 @@ export default async function getTimeSlots(
   let takenTimeSlots = await getTakenSlots(calendars, meeting)
 
   if (hideInviteeSlots) {
-    ctx.session.authorize()
+    ctx.session.$authorize()
     const invitee = await db.user.findFirst({
       where: { id: ctx.session.userId },
       include: { calendars: true },

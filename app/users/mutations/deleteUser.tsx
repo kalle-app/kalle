@@ -2,7 +2,7 @@ import db from "db"
 import { Ctx } from "blitz"
 
 export default async function deleteOneSelf(_ = null, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const userId = ctx.session.userId
 
@@ -44,5 +44,5 @@ export default async function deleteOneSelf(_ = null, ctx: Ctx) {
     where: { id: userId },
   })
 
-  await ctx.session.revoke()
+  await ctx.session.$revoke()
 }

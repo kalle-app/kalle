@@ -3,7 +3,7 @@ import { Ctx } from "blitz"
 import { Meeting } from "app/meetings/types"
 
 export default async function addMeeting(meetingCreate: Meeting, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const owner = await db.user.findFirst({
     where: { id: ctx.session.userId },

@@ -2,7 +2,7 @@ import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getBookings(meetingId: number, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const meeting = await db.meeting.findFirst({
     where: { id: meetingId },

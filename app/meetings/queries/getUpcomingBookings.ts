@@ -2,7 +2,7 @@ import db from "db"
 import { Ctx } from "blitz"
 
 export default async function getBookings(span: number, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const bookings = await db.booking.findMany({
     where: {

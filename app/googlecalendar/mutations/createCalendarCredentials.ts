@@ -12,7 +12,7 @@ export default async function addGoogleCalendarCredentials(
   { name, status, oauthCode }: GoogleCalenderCredentials,
   ctx: Ctx
 ) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const oauth2Client = createGoogleOauth()
   const { tokens } = await oauth2Client.getToken(oauthCode)

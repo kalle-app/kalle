@@ -4,7 +4,7 @@ import { UpdateUserInput, UpdateUserInputType } from "../../auth/validations"
 import { hashPassword } from "app/auth/auth-utils"
 
 export default async function updateUserData(input: UpdateUserInputType, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const { name, email, password } = UpdateUserInput.parse(input)
   const hashedPassword = await hashPassword(password)
