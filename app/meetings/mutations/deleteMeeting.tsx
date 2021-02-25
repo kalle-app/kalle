@@ -1,26 +1,26 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { NotFoundError, resolver } from "blitz"
+import * as z from "zod"
 
-export default async function deleteMeeting(meetingId: number, ctx: Ctx) {
-  ctx.session.$authorize()
-
-  const owner = await db.user.findFirst({
-    where: { id: ctx.session.userId },
-  })
-
-  if (!owner) {
-    throw new Error("Invariant failed: Owner does not exist.")
-  }
-
-  const bookings = await db.booking.findMany({
-    where: { meetingId: meetingId },
-  })
-
-  if (bookings.length === 0) {
-    await db.meeting.delete({
-      where: { id: meetingId },
+export default resolver.pipe(
+  resolver.zod(z.number()),
+  resolver.authorize(),
+  async (meetingId, ctx) => {
+    const meeting = await db.meeting.findFirst({
+      where: { id: meetingId, owner: { id: ctx.session.userId } },
+      include: { bookings: true },
     })
-    return "success"
+
+    if (!meeting) {
+      throw new NotFoundError()
+    }
+
+    const isAlreadyBooked = meeting.bookings.length > 0
+    if (isAlreadyBooked) {
+      return "error"
+    }
+
+    await db.booking.deleteMany({ where: { meetingId } })
+    await db.meeting.delete({ where: { id: meetingId } })
   }
-  return "error"
-}
+)

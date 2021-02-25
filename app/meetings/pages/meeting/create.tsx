@@ -8,6 +8,7 @@ import Card from "react-bootstrap/Card"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import Skeleton from "react-loading-skeleton"
 import { getOrigin } from "utils/generalUtils"
+import * as z from "zod"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
@@ -17,7 +18,7 @@ enum Steps {
   Schedule,
 }
 
-const initialMeeting: Meeting = {
+const initialMeeting: z.TypeOf<typeof Meeting> = {
   name: "",
   link: "",
   description: "",

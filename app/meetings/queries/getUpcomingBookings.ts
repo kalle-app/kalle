@@ -1,10 +1,9 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
+import * as z from "zod"
 
-export default async function getBookings(span: number, ctx: Ctx) {
-  ctx.session.$authorize()
-
-  const bookings = await db.booking.findMany({
+export default resolver.pipe(resolver.zod(z.number()), resolver.authorize(), async (take, ctx) => {
+  return await db.booking.findMany({
     where: {
       meeting: {
         owner: {
@@ -23,8 +22,6 @@ export default async function getBookings(span: number, ctx: Ctx) {
     orderBy: {
       startDateUTC: "asc",
     },
-    take: span,
+    take,
   })
-
-  return bookings
-}
+})
