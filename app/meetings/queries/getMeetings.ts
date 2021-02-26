@@ -1,8 +1,27 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { Ctx, resolver } from "blitz"
+import * as z from "zod"
+
+resolver.pipe(
+  resolver.zod(z.number()),
+  resolver.authorize(),
+  async (meetingId, ctx) => {
+    return await db.booking.findMany({
+      where: {
+        meetingId,
+        meeting: {
+          owner: {
+            id: ctx.session.userId,
+          },
+        },
+      },
+    })
+  }
+)
+
 
 export default async function getMeetings(_ = null, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const user = await db.user.findFirst({
     where: { id: ctx.session.userId },

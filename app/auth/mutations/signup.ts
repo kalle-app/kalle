@@ -1,36 +1,36 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
 import { hashPassword } from "app/auth/auth-utils"
-import { SignupInput, SignupInputType } from "app/auth/validations"
+import { SignupInput } from "app/auth/validations"
 
-export default async function signup(input: SignupInputType, ctx: Ctx) {
-  // This throws an error if input is invalid
-  const { name, username, email, password } = SignupInput.parse(input)
+export default resolver.pipe(
+  resolver.zod(SignupInput),
+  async ({ username, name, password, email }, ctx) => {
+    const hashedPassword = await hashPassword(password)
 
-  const hashedPassword = await hashPassword(password)
+    try {
+      const user = await db.user.create({
+        data: {
+          name: name,
+          username: username,
+          email: email.toLowerCase(),
+          hashedPassword,
+          role: "user",
+        },
+        select: { id: true, name: true, email: true, role: true },
+      })
 
-  try {
-    const user = await db.user.create({
-      data: {
-        name: name,
-        username: username,
-        email: email.toLowerCase(),
-        hashedPassword,
-        role: "user",
-      },
-      select: { id: true, name: true, email: true, role: true },
-    })
+      await ctx.session!.$create({ userId: user.id, roles: [user.role] })
 
-    await ctx.session!.create({ userId: user.id, roles: [user.role] })
-
-    return user
-  } catch (error) {
-    if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-      throw new Error("emailAlreadyUsed")
-    } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
-      throw new Error("usernameAlreadyUsed")
-    } else {
-      throw error
+      return user
+    } catch (error) {
+      if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+        throw new Error("emailAlreadyUsed")
+      } else if (error.code === "P2002" && error.meta?.target?.includes("username")) {
+        throw new Error("usernameAlreadyUsed")
+      } else {
+        throw error
+      }
     }
   }
-}
+)

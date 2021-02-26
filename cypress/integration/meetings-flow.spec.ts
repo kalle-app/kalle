@@ -64,6 +64,7 @@ it("Meetings Flow", () => {
 
     cy.log(response.body)
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(newestMail).to.exist
 
     expect(newestMail.Content.Headers.Subject[0]).to.equal(

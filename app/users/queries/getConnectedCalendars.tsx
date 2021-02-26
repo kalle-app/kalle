@@ -1,10 +1,8 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
 
-export default async function getConnectedCalendars(_ = null, ctx: Ctx) {
-  ctx.session.authorize()
-
-  const calendars = await db.connectedCalendar.findMany({
+export default resolver.pipe(resolver.authorize(), async (_ = null, ctx) => {
+  return await db.connectedCalendar.findMany({
     where: { ownerId: ctx.session.userId },
     select: {
       caldavAddress: true,
@@ -18,6 +16,4 @@ export default async function getConnectedCalendars(_ = null, ctx: Ctx) {
       refreshToken: true,
     },
   })
-
-  return calendars
-}
+})

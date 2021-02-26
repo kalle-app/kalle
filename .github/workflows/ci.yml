@@ -50,7 +50,7 @@ jobs:
           install: false
           record: true
           env: host=localhost,port=3000
-          start: npx concurrently 'blitz start --production --port 3000' 'quirrel'
+          start: npx concurrently 'blitz start --port 3000' 'quirrel'
           wait-on: "http://localhost:3000"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

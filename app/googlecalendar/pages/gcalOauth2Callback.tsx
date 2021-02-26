@@ -21,7 +21,7 @@ function OAuthCallbackPage() {
         throw new Error(`Google Authentication failed with Code ${code}. Please try again.`)
       }
 
-      await addGoogleCalendarCredentials({ oauthCode: code, name: calendarName, status: "active" })
+      await addGoogleCalendarCredentials({ oauthCode: code, name: calendarName })
       setIsCalendarAdded(true)
     } catch (error) {
       setIsError(true)
@@ -94,6 +94,7 @@ const GcalOAuth2Callback: BlitzPage = () => {
   )
 }
 
+GcalOAuth2Callback.authenticate = true
 GcalOAuth2Callback.getLayout = (page) => <Layout title="Add your Google Calendar">{page}</Layout>
 
 export default GcalOAuth2Callback

@@ -4,7 +4,7 @@ import {
   verifyConnectionDetails,
   createCalDavEvent,
   formatDateAsICS,
-} from "./"
+} from "."
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
