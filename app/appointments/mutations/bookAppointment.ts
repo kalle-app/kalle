@@ -1,7 +1,7 @@
 import { NotFoundError, resolver } from "blitz"
 import db from "db"
 import { addMinutes, subMinutes } from "date-fns"
-import reminderQueue from "../../api/queues/reminders"
+import reminderQueue from "../api/queues/reminders"
 import * as z from "zod"
 import { getCalendarService } from "app/calendar-service"
 import { getEmailService } from "../../email"
