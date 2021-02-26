@@ -23,9 +23,14 @@ const BookingsContent = () => {
         {bookings.map((booking) => {
           const dateString = format(new Date(booking.startDateUTC), "iiii, dd. LLLL y - H:mm")
           return (
-            <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+            <Col
+              key={booking.id + "bookingView"}
+              sm={6}
+              lg={4}
+              style={{ display: "flex" }}
+              className="my-1"
+            >
               <Card
-                key={booking.id}
                 id={"" + booking.id}
                 className="p-3 my-2 text-left shadow"
                 style={{ width: "100%" }}
