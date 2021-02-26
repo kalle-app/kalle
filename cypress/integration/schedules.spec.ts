@@ -19,7 +19,13 @@ describe("Schedules", () => {
       .parent()
       .contains(clientTimeZone)
     cy.contains(nameDefault).parent().contains("Friday:").parent().parent().contains("9:00 - 17:00")
-    cy.contains(nameDefault).parent().contains("Saturday").should("not.exist")
+    cy.contains(nameDefault)
+      .parent()
+      .contains("Saturday")
+      .parent()
+      .parent()
+      .contains("9:00 - 17:00")
+      .should("not.exist")
   })
   it("Create costum schedule", () => {
     loginAs(johnDoe)
@@ -28,7 +34,7 @@ describe("Schedules", () => {
     createCostumSchedule(nameCostum)
     cy.contains(nameCostum).parent().contains("Timezone").parent().parent().contains("Asia/Seoul")
     cy.contains(nameCostum).parent().contains("Friday:").parent().parent().contains("7:00 - 17:00")
-    cy.contains(nameCostum).parent().contains("Saturday")
+    cy.contains(nameCostum).parent().contains("Saturday").parent().parent().contains("9:00 - 17:00")
   })
   it("Delete default schedule", () => {
     loginAs(johnDoe)
