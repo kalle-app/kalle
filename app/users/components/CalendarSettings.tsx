@@ -30,7 +30,10 @@ const CalendarSettings = () => {
 
   return (
     <Card className="mt-4">
-      <SectionHeader title="Calendar Settings" subtitle="Change your calendar related settings" />
+      <SectionHeader
+        title="Calendar Settings"
+        subtitle="Change your calender, where youre bookings should be added by default"
+      />
       <DefaultCalendarSelector
         onChange={(selectedDefaultCalendarId) => {
           setCalendarSettings({

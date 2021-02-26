@@ -55,18 +55,17 @@ const LoginPage: BlitzPage = () => {
           <Form.Text className="text-danger mb-4">{message}</Form.Text>
         </Form>
         <Row>
-          <Col>
-            <Button id="login" variant="primary" onClick={processLogin}>
+          <Col xs={8}>
+            Not registered yet?{" "}
+            <Link href="/signup">
+              <a className="text-nowrap">Sign up</a>
+            </Link>{" "}
+            now!
+          </Col>
+          <Col xs={4} className="d-flex justify-content-end">
+            <Button id="login" variant="success" onClick={processLogin}>
               Log In
             </Button>
-          </Col>
-          <Col className="my-auto">
-            <p className="my-auto d-flex justify-content-end">or</p>
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <Link href="/signup">
-              <Button variant="outline-primary">Sign Up</Button>
-            </Link>
           </Col>
         </Row>
       </div>

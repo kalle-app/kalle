@@ -14,10 +14,10 @@ import { Card } from "react-bootstrap"
 
 const CalendarOverview = () => {
   return (
-    <Card>
+    <>
       <MyCalendars />
       <CalendarSettings />
-    </Card>
+    </>
   )
 }
 
