@@ -43,7 +43,7 @@ export const DefaultCalendarSelector = (props: {
       {calendars.length > 0 && (
         <Form className="m-3" validated={validated} noValidate>
           <Form.Group controlId="formName">
-            <Form.Label>Select your default calendar:</Form.Label>
+            <Form.Label>Select calendar where your bookings should be added to:</Form.Label>
             <Form.Control
               as="select"
               name="defaultCalendar"

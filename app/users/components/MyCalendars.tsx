@@ -17,7 +17,7 @@ const MyCalendars = () => {
 
       <SectionHeader
         title="My Calendars"
-        subtitle="Add Calendars that you want to connect to Kalle"
+        subtitle="Add Calendars that you want to connect to Kalle. These could be your private calendars or your calendars from work. We currently support CalDav, Google Calendar and Microsoft Outlook Calendars"
       />
       <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
       <SectionFooter

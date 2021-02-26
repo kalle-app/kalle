@@ -1,11 +1,13 @@
 import { Button } from "react-bootstrap"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
 import { DefaultCalendarSelector } from "../../../users/components/DefaultCalendarSelector"
 import getDefaultCalendarByUser from "../../../users/queries/getDefaultCalendarByUser"
 import { useQuery } from "blitz"
+import { Meeting } from "app/meetings/types"
 type AdvancedProps = {
+  initialMeeting: Meeting
   stepBack: () => void
   onSubmit: (defaultCalendarId: number) => void
 }
@@ -14,6 +16,10 @@ const AdvancedStep = (props: AdvancedProps) => {
   const [defaultCalendarId, setDefaultCalendarId] = useState(
     getDefaultCalendar ? getDefaultCalendar : -1
   )
+
+  useEffect(() => {
+    setDefaultCalendarId(props.initialMeeting.defaultConnectedCalendarId)
+  }, [])
 
   return (
     <div className="p-3">

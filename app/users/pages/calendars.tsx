@@ -10,13 +10,14 @@ import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import MyCalendars from "app/users/components/MyCalendars"
 import CalendarSettings from "app/users/components/CalendarSettings"
+import { Card } from "react-bootstrap"
 
 const CalendarOverview = () => {
   return (
-    <div>
+    <Card>
       <MyCalendars />
       <CalendarSettings />
-    </div>
+    </Card>
   )
 }
 

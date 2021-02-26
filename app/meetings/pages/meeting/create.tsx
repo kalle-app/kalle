@@ -3,12 +3,13 @@ import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import { Meeting } from "app/meetings/types"
-import { BlitzPage, Router, useMutation, useQuery } from "blitz"
+import { BlitzPage, Link, Router, useMutation, useQuery } from "blitz"
 import React, { ReactElement, Suspense, useEffect, useState } from "react"
 import { Button, Modal } from "react-bootstrap"
 import Card from "react-bootstrap/Card"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import Skeleton from "react-loading-skeleton"
+import hasCalendar from "app/meetings/queries/hasCalendar"
 import { getOrigin } from "utils/generalUtils"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
@@ -101,6 +102,8 @@ const InviteCreationContent = () => {
   const [schedulePresets] = useQuery(getScheduleNames, null)
   const [error, setError] = useState({ error: false, message: "" })
   const [readyForSubmission, setReadyForSubmission] = useState(false)
+  const user = useCurrentUser()
+  const [userHasCalendar] = useQuery(hasCalendar, null)
 
   useEffect(() => {
     if (readyForSubmission) {
@@ -120,8 +123,40 @@ const InviteCreationContent = () => {
     }
   }, [readyForSubmission, meeting, createMeeting])
 
-  if (!useCurrentUser()) {
+  if (!user) {
     return <AuthError />
+  }
+
+  if (!userHasCalendar) {
+    return (
+      <>
+        <h3>Whoa someone seems to be in a rush there</h3>
+        <h4>... but first things first!</h4>
+        <p>
+          In order to create a new meeting you should connect a calendar first. So make sure to head
+          over to the calendars page and add your personal calendars
+        </p>
+        <p>
+          <b>FAQ: Can't I just create a Meeting withou connecteing my calendar?</b>
+          Sorry this is a feature that is still in work. Currently we need to save appointments to
+          your calendar in order to prevent double bookings
+        </p>
+        <Link href="/calendars">
+          <Button variant="primary">To my Calendars</Button>
+        </Link>
+      </>
+    )
+  }
+
+  const submitMeeting = async () => {
+    try {
+      const data = await createMeeting(meeting)
+      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
+      setMeetingLink(link)
+      setShow(true)
+    } catch (error) {
+      alert(error)
+    }
   }
 
   const next = () => {
@@ -137,6 +172,8 @@ const InviteCreationContent = () => {
       case Steps.General:
         return (
           <General
+            initialMeeting={meeting}
+            userName={user.name.replace(/\s+/g, "-")}
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
@@ -152,6 +189,7 @@ const InviteCreationContent = () => {
       case Steps.Schedule:
         return (
           <ScheduleStep
+            initialMeeting={meeting}
             schedulePresets={schedulePresets!}
             toNext={(result) => {
               setMeeting((oldMeeting) => ({
@@ -169,6 +207,7 @@ const InviteCreationContent = () => {
       case Steps.Advanced:
         return (
           <Advanced
+            initialMeeting={meeting}
             onSubmit={(defaultCalendarId) => {
               setMeeting({
                 ...meeting,
