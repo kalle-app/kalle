@@ -2,7 +2,7 @@ import { loginAs } from "../login"
 import { createMeeting } from "../meeting"
 import { url } from "../support/url"
 import * as uuid from "uuid"
-import { addDays, format, isFriday, isSaturday } from "date-fns"
+import { addDays, addMonths, format, isFriday, isSaturday } from "date-fns"
 
 import { johnDoe } from "../../db/seed-data"
 
@@ -22,8 +22,10 @@ describe("Meetings Flow", () => {
     cy.visit(url(`/schedule/${johnDoe.username}/${meetingLink}`))
     cy.wait(4000)
     const date = new Date()
-    const dateToSelect = isFriday(date) || isSaturday(date) ? addDays(date, 3) : addDays(date, 1)
-    cy.contains(format(dateToSelect, "d")).click()
+    const dateToSelect = addMonths(date, 1).setDate(15)
+    cy.get(".nice-dates-navigation_next").click()
+    cy.wait(4000)
+    cy.get(".nice-dates-grid").contains("15").click()
     cy.wait(2000)
     cy.contains("button", /10:30.*-11:00.*/).click()
     cy.contains("Schedule!").click()

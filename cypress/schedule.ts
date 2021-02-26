@@ -19,3 +19,14 @@ export function createCostumSchedule(scheduleName: string): void {
   })
   cy.contains("Save Schedule").click()
 }
+
+export function createFullSchedule(scheduleName: string): void {
+  cy.contains("Add Schedule").click()
+  cy.get("#name").type(scheduleName)
+  cy.wait(2000)
+  cy.get("form").within(() => {
+    cy.contains("Saturday").parent().parent().find('[type="checkbox"]').uncheck()
+    cy.contains("Sunday").parent().parent().find('[type="checkbox"]').uncheck()
+  })
+  cy.contains("Save Schedule").click()
+}
