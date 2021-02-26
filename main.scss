@@ -3,7 +3,7 @@
 $headings-font-family: Quicksand;
 $primary: #ff550b;
 $secondary: #303030;
-$success: #015668;
+$success: #4db193;
 $danger: #ff304f;
 $info: #0f81c7;
 $warning: #0de2ea;
@@ -56,4 +56,18 @@ $nice-dates-color-gray-dark: $secondary;
     color: #fff;
     background-color: $primary;
   }
+}
+
+._2Jtxm.stepDone ._2kL0S {
+  color: #fff !important;
+  background-color: $success !important;
+}
+
+._2Jtxm.stepDone._35Ago ._2kL0S {
+  color: #fff !important;
+  background-color: $success !important;
+}
+
+._2Jtxm._35Ago ._2kL0S {
+  background-color: $primary !important;
 }

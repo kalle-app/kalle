@@ -35,8 +35,6 @@ const General = (props: GeneralProps) => {
 
   return (
     <div className="p-3">
-      <h4>General Information</h4>
-      <p className="pb-3">Add basic information about the meeting</p>
       <Form
         className="m-3"
         onSubmit={(evt) => {
@@ -68,6 +66,8 @@ const General = (props: GeneralProps) => {
           })
         }}
       >
+        <h4>General Information</h4>
+        <p className="pb-2">Add basic information about the meeting</p>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
           <Form.Control defaultValue={props.initialMeeting.name} name="name" />

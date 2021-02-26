@@ -22,20 +22,21 @@ const AdvancedStep = (props: AdvancedProps) => {
   }, [])
 
   return (
-    <div className="p-3">
+    <div className="p-3 m-3">
       <h4>Advanced Options</h4>
       <p className="pb-3">Specify advanced options for you meeting</p>
       <DefaultCalendarSelector
         onChange={(selectedDefaultCalendarId) => setDefaultCalendarId(selectedDefaultCalendarId)}
       />
       <div className="p-3 d-flex justify-content-end">
-        <Button onClick={props.stepBack} type="submit" className="mx-1">
+        <Button onClick={props.stepBack} className="mx-1">
           <FontAwesomeIcon icon={faAngleDoubleLeft} />
         </Button>
         <Button
           onClick={() => {
             props.onSubmit(defaultCalendarId)
           }}
+          variant="success"
           id="submit"
           className="mx-1"
           disabled={!defaultCalendarId || defaultCalendarId === -1}

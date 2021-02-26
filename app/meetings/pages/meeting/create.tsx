@@ -15,6 +15,7 @@ import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Advanced from "../../components/creationSteps/Advanced"
+import "react-step-progress/dist/index.css"
 
 enum Steps {
   General,
@@ -221,9 +222,51 @@ const InviteCreationContent = () => {
     }
   }
 
+  const getColor = (stepNumber: number) => {
+    switch (stepNumber) {
+      case 1: {
+        if (step == Steps.Schedule || step == Steps.Advanced) {
+          return "stepDone"
+        } else {
+          return "_35Ago"
+        }
+      }
+      case 2: {
+        if (step == Steps.Advanced) {
+          return " _35Ago stepDone"
+        } else if (step == Steps.Schedule) {
+          return "_35Ago"
+        }
+        return ""
+      }
+      case 3: {
+        if (step == Steps.Advanced) {
+          return "_35Ago"
+        }
+        return ""
+      }
+    }
+  }
+
   return (
     <>
-      <Card>{renderSwitch()}</Card>
+      <Card>
+        <ul className="_1Lo2h mt-4 mb-5">
+          <li className={"_2Jtxm " + getColor(1)}>
+            <span className="_2kL0S">1</span>
+            <div className="_1hzhf ">Set Information</div>
+          </li>
+          <li className={"_2Jtxm " + getColor(2)}>
+            <span className="_2kL0S">2</span>
+            <div className="_1hzhf ">Set Schedule</div>
+          </li>
+          <li className={"_2Jtxm " + getColor(3)}>
+            <span className="_2kL0S">3</span>
+            <div className="_1hzhf ">Set Options</div>
+          </li>
+        </ul>
+        {renderSwitch()}
+      </Card>
       <SuccessModal show={showSuccess} setShow={setShow} meetingLink={meetingLink} />
       <ErrorModal error={error.error} message={error.message} setError={setError} />
     </>

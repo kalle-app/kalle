@@ -46,8 +46,6 @@ const ScheduleStep = (props: ScheduleProps) => {
 
   return (
     <div className="p-3">
-      <h4>Schedule</h4>
-      <p className="pb-3">Adjust the schedule for your meeting</p>
       <Form
         autoComplete="off"
         className="m-3"
@@ -70,6 +68,8 @@ const ScheduleStep = (props: ScheduleProps) => {
           })
         }}
       >
+        <h4>Schedule</h4>
+        <p className="pb-3">Adjust the schedule for your meeting</p>
         <Form.Row>
           <Form.Group as={Col} md="6" lg="5" xl="4" controlId="duration">
             <Form.Label className="mr-3">Duration</Form.Label>
