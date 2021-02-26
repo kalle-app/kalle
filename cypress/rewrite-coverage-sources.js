@@ -7,8 +7,8 @@ const rootDir = resolve(join(__dirname, "..")) + sep
 function rewritePath(path) {
   path = path.replace(rootDir, "")
 
-  path = path.replace(join(".blitz", "caches", "dev") + sep, "")
-  path = path.replace(join(".blitz", "caches", "build") + sep, "")
+  path = path.replace(join(".blitz", "dev") + sep, "")
+  path = path.replace(join(".blitz", "build") + sep, "")
 
   if (path.startsWith(join("app", "_resolvers"))) {
     path = path.replace("_resolvers" + sep, "")

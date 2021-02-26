@@ -1,29 +1,22 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
+import * as z from "zod"
 
-export default async function deleteSchedule(scheduleId: number, ctx: Ctx) {
-  ctx.session.authorize()
-
-  const owner = await db.user.findFirst({
-    where: { id: ctx.session.userId },
-  })
-
-  if (!owner) {
-    throw new Error("Invariant failed: Owner does not exist.")
-  }
-
-  const meetings = await db.meeting.findMany({
+export default resolver.pipe(resolver.zod(z.number()), resolver.authorize(), async (scheduleId) => {
+  const meetingsDependingOnSchedule = await db.meeting.count({
     where: { scheduleId: scheduleId },
   })
 
-  if (meetings.length === 0) {
-    await db.dailySchedule.deleteMany({
-      where: { scheduleId: scheduleId },
-    })
-    await db.schedule.delete({
-      where: { id: scheduleId },
-    })
-    return "success"
+  if (meetingsDependingOnSchedule > 0) {
+    return "error"
   }
-  return "error"
-}
+
+  await db.dailySchedule.deleteMany({
+    where: { scheduleId: scheduleId },
+  })
+  await db.schedule.delete({
+    where: { id: scheduleId },
+  })
+
+  return "success"
+})

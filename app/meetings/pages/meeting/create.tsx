@@ -1,5 +1,3 @@
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
 import { Meeting } from "app/meetings/types"
@@ -10,6 +8,7 @@ import Card from "react-bootstrap/Card"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import Skeleton from "react-loading-skeleton"
 import { getOrigin } from "utils/generalUtils"
+import * as z from "zod"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
@@ -19,7 +18,7 @@ enum Steps {
   Schedule,
 }
 
-const initialMeeting: Meeting = {
+const initialMeeting: z.TypeOf<typeof Meeting> = {
   name: "",
   link: "",
   description: "",
@@ -117,10 +116,6 @@ const InviteCreationContent = () => {
     }
   }, [readyForSubmission, meeting, createMeeting])
 
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
-
   const next = () => {
     setStep((oldStep) => oldStep + 1)
   }
@@ -183,6 +178,7 @@ const Create: BlitzPage = () => {
   )
 }
 
+Create.authenticate = true
 Create.getLayout = (page) => <Layout title="Create a Meeting">{page}</Layout>
 
 export default Create

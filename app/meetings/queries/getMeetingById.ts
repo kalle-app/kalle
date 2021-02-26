@@ -1,14 +1,24 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { NotFoundError, resolver } from "blitz"
+import * as z from "zod"
 
-export default async function getMeetingById(meetingId: number, ctx: Ctx) {
-  console.log("meetingid: ", meetingId, " ctx: ", ctx)
+export default resolver.pipe(
+  resolver.zod(z.number()),
+  resolver.authorize(),
+  async (meetingId, ctx) => {
+    const meeting = await db.meeting.findFirst({
+      where: {
+        id: meetingId,
+        owner: {
+          id: ctx.session.userId,
+        },
+      },
+    })
 
-  const meeting = await db.meeting.findFirst({
-    where: {
-      id: meetingId,
-    },
-  })
+    if (!meeting) {
+      throw new NotFoundError()
+    }
 
-  return meeting
-}
+    return meeting
+  }
+)

@@ -1,21 +1,20 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
+import * as z from "zod"
 
-export default async function getBookings(meetingId: number, ctx: Ctx) {
-  ctx.session.authorize()
-
-  const meeting = await db.meeting.findFirst({
-    where: { id: meetingId },
-    include: { owner: true, bookings: true },
-  })
-
-  if (!meeting || !meeting.owner) {
-    throw new Error("An error occured: Meeting not valid")
+export default resolver.pipe(
+  resolver.zod(z.number()),
+  resolver.authorize(),
+  async (meetingId, ctx) => {
+    return await db.booking.findMany({
+      where: {
+        meetingId,
+        meeting: {
+          owner: {
+            id: ctx.session.userId,
+          },
+        },
+      },
+    })
   }
-
-  if (ctx.session.userId !== meeting.owner.id) {
-    throw new Error("An error occured: You are not authorized to see this information")
-  }
-
-  return meeting.bookings
-}
+)

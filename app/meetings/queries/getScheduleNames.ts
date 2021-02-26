@@ -1,12 +1,11 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
 
-export default async function getScheduleNames(_ = null, ctx: Ctx) {
-  if (!ctx.session?.userId) return null
-
-  const schedules = await db.schedule.findMany({
-    where: { ownerId: ctx.session.userId },
+export default resolver.pipe(resolver.authorize(), async (_ = null, ctx) => {
+  return await db.schedule.findMany({
+    where: {
+      ownerId: ctx.session.userId,
+    },
+    select: { id: true, timezone: true, name: true },
   })
-
-  return schedules
-}
+})
