@@ -25,7 +25,7 @@ describe("Meetings Flow", () => {
     const dateToSelect = isFriday(date) || isSaturday(date) ? addDays(date, 3) : addDays(date, 1)
     cy.contains(format(dateToSelect, "d")).click()
     cy.wait(2000)
-    cy.contains("button", /11:30.*-12:00.*/).click()
+    cy.contains("button", /10:30.*-11:00.*/).click()
     cy.contains("Schedule!").click()
     cy.get("#formBasicEmail").type("test-receiver@kalle.app")
     cy.contains("Submit!").click()
@@ -38,7 +38,7 @@ describe("Meetings Flow", () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(newestMail).to.exist
       expect(newestMail.Content.Headers.Subject[0]).to.equal(
-        `New appointment: ${meetingName} - 11:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
+        `New appointment: ${meetingName} - 10:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
       )
       expect(newestMail.Content.Headers.To[0]).to.equal("test-receiver@kalle.app")
     })
