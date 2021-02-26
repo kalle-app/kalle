@@ -2,7 +2,7 @@ import { loginAs } from "../login"
 import { createMeeting } from "../meeting"
 import { url } from "../support/url"
 import * as uuid from "uuid"
-import { addDays, addMonths, format, isFriday, isSaturday } from "date-fns"
+import { addMonths, format } from "date-fns"
 
 import { johnDoe } from "../../db/seed-data"
 
