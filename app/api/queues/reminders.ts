@@ -1,6 +1,6 @@
-import { Appointment } from "app/appointments/types"
 import { getEmailService } from "app/email"
 import { Queue } from "quirrel/blitz"
+import db, { Booking } from "db"
 
 function asTwoDigit(n: number): string {
   const s = n.toString()
@@ -11,32 +11,40 @@ function asTwoDigit(n: number): string {
   return s
 }
 
-export default Queue(
-  "api/queues/reminders",
-  async ({ appointment }: { appointment: Appointment }) => {
-    // We create new dates here because date currently is not serialized properly on enqueuing
-    const start = new Date(appointment.start)
-    await getEmailService().send({
-      template: "notification",
-      message: {
-        to: appointment.owner.email,
-      },
-      locals: {
-        appointment: {
-          ...appointment,
-          start: {
-            hour: start.getHours(),
-            minute: asTwoDigit(start.getMinutes()),
-            day: start.getDate(),
-            month: start.getMonth() + 1,
-            year: start.getFullYear(),
-          },
-          duration: {
-            hours: Math.floor(appointment.durationInMilliseconds / (60 * 1000) / 60),
-            minutes: (appointment.durationInMilliseconds / (60 * 1000)) % 60,
-          },
+export default Queue("api/queues/reminders", async (bookingId: Booking["id"]) => {
+  const booking = await db.booking.findUnique({
+    where: { id: bookingId },
+    include: { meeting: { include: { owner: true } } },
+  })
+  if (!booking) {
+    return
+  }
+
+  await getEmailService().send({
+    template: "notification",
+    message: {
+      to: booking.meeting.owner.email,
+    },
+    locals: {
+      appointment: {
+        title: booking.meeting.name,
+        organiser: {
+          name: booking.meeting.ownerName,
+        },
+        location: booking.meeting.location,
+        description: booking.meeting.description,
+        start: {
+          hour: booking.startDateUTC.getHours(),
+          minute: asTwoDigit(booking.startDateUTC.getMinutes()),
+          day: booking.startDateUTC.getDate(),
+          month: booking.startDateUTC.getMonth() + 1,
+          year: booking.startDateUTC.getFullYear(),
+        },
+        duration: {
+          hours: Math.floor(booking.meeting.duration / 60),
+          minutes: booking.meeting.duration % 60,
         },
       },
-    })
-  }
-)
+    },
+  })
+})

@@ -101,7 +101,6 @@ export default resolver.pipe(
     z.object({
       meetingId: z.number(),
       inviteeEmail: z.string(),
-      meetingOwnerName: z.string(),
       startDate: z.date(),
       notificationTime: z.number(),
     })
@@ -126,31 +125,26 @@ export default resolver.pipe(
       throw new Error("meeting not found")
     }
 
-    const appointment = {
-      appointment: {
-        start: bookingInfo.startDate,
-        durationInMilliseconds: meeting.duration * 60 * 1000,
-        title: meeting.name,
-        description: meeting.description ?? "Description",
-        method: "request",
-        location: meeting.location,
-        url: "www.kalle.app",
-        organiser: {
-          name: bookingInfo.meetingOwnerName,
-          email: meetingFromDb.owner.email,
-        },
-        owner: {
-          name: bookingInfo.inviteeEmail.split("@")[0],
-          email: bookingInfo.inviteeEmail,
-        },
+    await sendConfirmationMail({
+      start: bookingInfo.startDate,
+      durationInMilliseconds: meeting.duration * 60 * 1000,
+      title: meeting.name,
+      description: meeting.description ?? "Description",
+      location: meeting.location,
+      url: "www.kalle.app",
+      organiser: {
+        name: meeting.ownerName,
+        email: meetingFromDb.owner.email,
       },
-    }
-
-    await sendConfirmationMail(appointment.appointment)
+      owner: {
+        name: bookingInfo.inviteeEmail.split("@")[0],
+        email: bookingInfo.inviteeEmail,
+      },
+    })
 
     const startTime = subMinutes(bookingInfo.startDate, bookingInfo.notificationTime)
     if (startTime > addMinutes(new Date(), 30)) {
-      await reminderQueue.enqueue(appointment, { runAt: startTime })
+      await reminderQueue.enqueue(booking.id, { runAt: startTime })
     }
 
     return booking
