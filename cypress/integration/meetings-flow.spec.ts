@@ -1,6 +1,5 @@
 import { loginAs } from "../login"
 import { createMeeting } from "../meeting"
-import { createDefaultSchedule } from "../schedule"
 import { url } from "../support/url"
 import * as uuid from "uuid"
 import { addDays, format, isFriday, isSaturday } from "date-fns"
@@ -36,6 +35,7 @@ describe("Meetings Flow", () => {
         items: [newestMail],
       } = response.body
       cy.log(response.body)
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(newestMail).to.exist
       expect(newestMail.Content.Headers.Subject[0]).to.equal(
         `New appointment: ${meetingName} - 11:30, ${format(dateToSelect, "dd.MM.y")} with john.doe`
