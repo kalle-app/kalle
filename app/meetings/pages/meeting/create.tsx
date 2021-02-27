@@ -138,7 +138,7 @@ const InviteCreationContent = () => {
           over to the calendars page and add your personal calendars
         </p>
         <p>
-          <b>FAQ: Can't I just create a Meeting withou connecteing my calendar?</b>
+          <b>FAQ: Can't I just create a Meeting without connecting my calendar?</b>
           Sorry this is a feature that is still in work. Currently we need to save appointments to
           your calendar in order to prevent double bookings
         </p>
