@@ -11,13 +11,14 @@ export enum SelectorType {
 export const DefaultCalendarSelector = (props: {
   state?: string
   message?: string
+  information?: string
   onChange: (selectedDefaultCalendarId: number) => void
 }) => {
   const [validated] = useState(false)
   const [getCalendars] = useQuery(getConnectedCalendars, null)
   const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
   const calendars = getCalendars
-  console.log(defaultCalendarId)
+
   const onChange = (event) => {
     props.onChange(parseInt(event.target.value))
   }
@@ -53,6 +54,7 @@ export const DefaultCalendarSelector = (props: {
               {dropdownElements}
             </Form.Control>
             <Form.Text className={props.state + " mb-4"}>{props.message}</Form.Text>
+            <Form.Text className={"mb-4"}>{props.information}</Form.Text>
           </Form.Group>
         </Form>
       )}

@@ -16,7 +16,9 @@ const AdvancedStep = (props: AdvancedProps) => {
   const [defaultCalendarId, setDefaultCalendarId] = useState(
     getDefaultCalendar ? getDefaultCalendar : -1
   )
-
+  if (props.initialMeeting.defaultConnectedCalendarId !== -1) {
+    setDefaultCalendarId(defaultCalendarId)
+  }
   useEffect(() => {
     setDefaultCalendarId(props.initialMeeting.defaultConnectedCalendarId)
   }, [])
@@ -27,6 +29,7 @@ const AdvancedStep = (props: AdvancedProps) => {
       <p className="pb-3">Specify advanced options for you meeting</p>
       <DefaultCalendarSelector
         onChange={(selectedDefaultCalendarId) => setDefaultCalendarId(selectedDefaultCalendarId)}
+        information="You can change your default calendar here or just click on 'submit' to leave it to default."
       />
       <div className="p-3 d-flex justify-content-end">
         <Button onClick={props.stepBack} className="mx-1">
