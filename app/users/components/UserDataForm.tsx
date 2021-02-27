@@ -35,7 +35,7 @@ const UserDataForm = (props: UserDataFormProps) => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" onChange={(e) => props.setPassword(e.target.value)} />
         </Form.Group>
-        <Form.Group as={Col} controlId="formPassword">
+        <Form.Group as={Col} controlId="formRepeatPassword">
           <Form.Label>Repeat Password</Form.Label>
           <Form.Control type="password" onChange={(e) => props.setRepeatPassword(e.target.value)} />
         </Form.Group>
