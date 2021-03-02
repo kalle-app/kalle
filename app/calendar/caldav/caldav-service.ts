@@ -261,18 +261,38 @@ async function icsFreeBusyToInternalFreeBusy(ics: string): Promise<ExternalEvent
   return _.sortBy(internalFreeBusy, "start")
 }
 
-// currently not working on baikal's default calender
-export async function getTakenTimeSlots(
-  calendar: CalendarConnectionDetails,
-  start: Date,
-  end: Date
-): Promise<ExternalEvent[]> {
-  const response = await makeRequestTo(calendar, {
-    headers: {
-      Depth: 1,
-    },
-    method: "REPORT",
-    data: `
+export class CaldavService implements CalendarService {
+  constructor(private readonly calendar: CalendarConnectionDetails) {}
+
+  public static async fromConnectedCalendar(calendar: ConnectedCalendar) {
+    if (!calendar.encryptedPassword || !calendar.caldavAddress || !calendar.username) {
+      throw new Error("Some credentials for your calendar are missing.")
+    }
+
+    const connectionDetails: CalendarConnectionDetails = {
+      url: calendar.caldavAddress,
+      auth: {
+        username: calendar.username,
+        password: await passwordEncryptor.decrypt(calendar.encryptedPassword),
+        digest: calendar.type === "CaldavDigest",
+      },
+    }
+
+    return new CaldavService(connectionDetails)
+  }
+
+  private makeRequest(opts: Parameters<typeof makeRequestTo>[1]) {
+    return makeRequestTo(this.calendar, opts)
+  }
+
+  // currently not working on baikal's default calender
+  public async getTakenTimeSlots(start: Date, end: Date): Promise<ExternalEvent[]> {
+    const response = await this.makeRequest({
+      headers: {
+        Depth: 1,
+      },
+      method: "REPORT",
+      data: `
       <?xml version="1.0"?>
       <c:free-busy-query xmlns:c="urn:ietf:params:xml:ns:caldav">
         <c:time-range
@@ -280,66 +300,45 @@ export async function getTakenTimeSlots(
           end="${formatDateAsICS(end)}"
         />
       </c:free-busy-query>`.trim(),
-  })
+    })
 
-  return await icsFreeBusyToInternalFreeBusy(response.data.toString())
-}
-
-export async function createCalDavEvent(
-  calendar: CalendarConnectionDetails,
-  booking: CreateEventBooking
-) {
-  const start = booking.startDateUTC
-  const end = addMinutes(booking.startDateUTC, booking.meeting.duration)
-
-  const dateNow = new Date()
-  const uid = uuidv4()
-  const data = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//MailClient.VObject/8.0.3385.0
-BEGIN:VEVENT
-UID:${uid}
-DTSTART;TZID=Europe/Berlin:${formatDateAsICS(start)}
-DTEND;TZID=Europe/Berlin:${formatDateAsICS(end)}
-TRANSP:OPAQUE
-X-MICROSOFT-CDO-BUSYSTATUS:BUSY
-LAST-MODIFIED:${formatDateAsICS(dateNow)}
-DTSTAMP:${formatDateAsICS(dateNow)}
-CREATED:${formatDateAsICS(dateNow)}
-LOCATION:${booking.meeting.location}
-SUMMARY:${booking.meeting.name}
-CLASS:PUBLIC
-END:VEVENT
-END:VCALENDAR\r\n`
-  const response = await makeRequestTo(calendar, {
-    data: data,
-    method: "PUT",
-    urlExtension: uid + ".ics",
-    headers: {
-      Depth: 1,
-    },
-  })
-
-  if (response.res.statusMessage !== "Created") {
-    throw response.res
-  }
-}
-
-export async function getCalendarService(calendar: ConnectedCalendar): Promise<CalendarService> {
-  if (!calendar.encryptedPassword || !calendar.caldavAddress || !calendar.username) {
-    throw new Error("Some credentials for your calendar are missing.")
+    return await icsFreeBusyToInternalFreeBusy(response.data.toString())
   }
 
-  const connectionDetails: CalendarConnectionDetails = {
-    url: calendar.caldavAddress,
-    auth: {
-      username: calendar.username,
-      password: await passwordEncryptor.decrypt(calendar.encryptedPassword),
-      digest: calendar.type === "CaldavDigest",
-    },
-  }
-  return {
-    createEvent: (details) => createCalDavEvent(connectionDetails, details),
-    getTakenTimeSlots: (start, end) => getTakenTimeSlots(connectionDetails, start, end),
+  public async createEvent(booking: CreateEventBooking) {
+    const start = booking.startDateUTC
+    const end = addMinutes(booking.startDateUTC, booking.meeting.duration)
+
+    const dateNow = new Date()
+    const uid = uuidv4()
+    const data = `BEGIN:VCALENDAR
+  VERSION:2.0
+  PRODID:-//MailClient.VObject/8.0.3385.0
+  BEGIN:VEVENT
+  UID:${uid}
+  DTSTART;TZID=Europe/Berlin:${formatDateAsICS(start)}
+  DTEND;TZID=Europe/Berlin:${formatDateAsICS(end)}
+  TRANSP:OPAQUE
+  X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+  LAST-MODIFIED:${formatDateAsICS(dateNow)}
+  DTSTAMP:${formatDateAsICS(dateNow)}
+  CREATED:${formatDateAsICS(dateNow)}
+  LOCATION:${booking.meeting.location}
+  SUMMARY:${booking.meeting.name}
+  CLASS:PUBLIC
+  END:VEVENT
+  END:VCALENDAR\r\n`
+    const response = await makeRequestTo(this.calendar, {
+      data: data,
+      method: "PUT",
+      urlExtension: uid + ".ics",
+      headers: {
+        Depth: 1,
+      },
+    })
+
+    if (response.res.statusMessage !== "Created") {
+      throw response.res
+    }
   }
 }

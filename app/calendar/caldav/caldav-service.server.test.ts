@@ -1,9 +1,8 @@
 import {
-  getTakenTimeSlots,
   getEvents,
   verifyConnectionDetails,
-  createCalDavEvent,
   formatDateAsICS,
+  CaldavService,
 } from "./caldav-service"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
@@ -97,6 +96,10 @@ function test(calendarBackend: Backends) {
       })
     }
 
+    function getCaldavService() {
+      return new CaldavService(getCalendarConnection())
+    }
+
     describe("auth test", () => {
       describe("when given invalid credentials", () => {
         it("returns unauthorized", async () => {
@@ -176,8 +179,7 @@ function test(calendarBackend: Backends) {
 
     describe("freeBusy", () => {
       it("without events", async () => {
-        const result = await getTakenTimeSlots(
-          getCalendarConnection(),
+        const result = await getCaldavService().getTakenTimeSlots(
           new Date("2020-11-16T00:00:00.000Z"),
           new Date("2020-11-21T00:00:00.000Z")
         )
@@ -185,8 +187,7 @@ function test(calendarBackend: Backends) {
         expect(result).toEqual(expected)
       })
       it("with events", async () => {
-        const result = await getTakenTimeSlots(
-          getCalendarConnection(),
+        const result = await getCaldavService().getTakenTimeSlots(
           new Date("2020-11-23T00:00:00.000Z"),
           new Date("2020-11-28T00:00:00.000Z")
         )
@@ -252,7 +253,7 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        await createCalDavEvent(getCalendarConnection(), {
+        await getCaldavService().createEvent({
           startDateUTC: date,
           meeting: {
             location: "Frankfurt",

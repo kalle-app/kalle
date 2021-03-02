@@ -1,5 +1,5 @@
 import { Booking, ConnectedCalendar, Meeting, User } from "db"
-import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./caldav/caldav-service"
+import { ExternalEvent, CaldavService } from "./caldav/caldav-service"
 import { getCalendarService as getGoogleCalendarService } from "app/calendar/googlecalendar/googlecalendar"
 
 export type CreateEventBooking = Pick<Booking, "startDateUTC" | "inviteeEmail"> & {
@@ -18,7 +18,7 @@ export async function getCalendarService(
   switch (connectedCalendar.type) {
     case "CaldavBasic":
     case "CaldavDigest":
-      return await getCalDavCalendarService(connectedCalendar)
+      return await CaldavService.fromConnectedCalendar(connectedCalendar)
     case "GoogleCalendar":
       return getGoogleCalendarService(connectedCalendar)
     default:
