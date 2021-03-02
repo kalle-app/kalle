@@ -1,5 +1,5 @@
 import { Booking, ConnectedCalendar, Meeting, User } from "db"
-import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./caldav"
+import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./caldav/caldav-service"
 import { getCalendarService as getGoogleCalendarService } from "app/calendar/googlecalendar/googlecalendar"
 
 export type CreateEventBooking = Pick<Booking, "startDateUTC" | "inviteeEmail"> & {
