@@ -2,7 +2,7 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 import { v4 as uuidv4 } from "uuid"
-import type { CalendarService, CreateEventBooking } from "app/calendar/calendar-service"
+import type { CalendarService, CreateEventBooking, ExternalEvent } from "app/calendar/calendar-service"
 import { ConnectedCalendar } from "db"
 import passwordEncryptor from "app/users/password-encryptor"
 import { addMinutes } from "date-fns"
@@ -154,12 +154,6 @@ export async function verifyConnectionDetails(
 
     return { fail: "other", error }
   }
-}
-
-export interface ExternalEvent {
-  title?: string
-  start: Date
-  end: Date
 }
 
 export function formatDateAsICS(date: Date) {
