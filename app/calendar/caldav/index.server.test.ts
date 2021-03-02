@@ -258,7 +258,12 @@ function test(calendarBackend: Backends) {
             location: "Frankfurt",
             duration: 30,
             name: "DummyEvent",
+            description: "This is a dummy event!",
+            owner: {
+              email: "some@owner.de",
+            },
           },
+          inviteeEmail: "some@invitee.de",
         })
 
         const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))

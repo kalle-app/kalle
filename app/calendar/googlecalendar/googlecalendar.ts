@@ -1,8 +1,8 @@
-import { ExternalEvent } from "app/caldav"
+import { ExternalEvent } from "app/calendar/caldav"
 import { google } from "googleapis"
 import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
 import { ConnectedCalendar } from "db"
-import { CalendarService, CreateEventBooking } from "app/calendar-service"
+import { CalendarService, CreateEventBooking } from "app/calendar/calendar-service"
 import { addSeconds } from "date-fns"
 
 export async function createGcalEvent(booking: CreateEventBooking, refreshToken: string) {

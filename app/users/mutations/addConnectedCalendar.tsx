@@ -1,7 +1,7 @@
 import db, { ConnectedCalendarType } from "db"
 import { resolver } from "blitz"
 import passwordEncryptor from "../password-encryptor"
-import { verifyConnectionDetails } from "app/caldav"
+import { verifyConnectionDetails } from "app/calendar/caldav"
 import * as z from "zod"
 
 export default resolver.pipe(

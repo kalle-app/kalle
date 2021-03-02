@@ -3,7 +3,7 @@ import db, { Booking, Meeting, User } from "db"
 import { addMinutes, subMinutes } from "date-fns"
 import reminderQueue from "../api/queues/reminders"
 import * as z from "zod"
-import { getCalendarService } from "app/calendar-service"
+import { getCalendarService } from "app/calendar/calendar-service"
 import { getEmailService } from "../../email"
 import { createICalendarEvent } from "../utils/createCalendarEvent"
 
