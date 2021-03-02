@@ -3,55 +3,47 @@ interface Interval {
   end: number
 }
 
-/**
- * Googlecalendar returns freebusy-slots of multiples calendars. These must be merged.
- * @returns the freebusy slots of all the combined calendars as one
- */
-export function boilDownIntervals(arr: Interval[], outerbounds: Interval): Interval[] {
-  // Sort the array in descending order
+export function boilDownIntervals(arr: Interval[]): Interval[] {
+  if (arr.length === 0) {
+    return arr
+  }
+
   arr.sort(function (a, b) {
     return a.start - b.start
   })
 
-  let mergedArr: Interval[] = []
+  const resultingIntervals: Interval[] = []
 
-  // timestamps of the year 2500 to make the algorithm work, see docs for deeper explanation
-  arr.push(outerbounds)
-  let old = arr[0]
-  let temp: Interval = { start: -1, end: -1 }
-  for (let el of arr) {
-    let curr = el
-    if (curr === old) continue
+  let lastStart = arr[0].start
+  let lastEnd = arr[0].end
+  for (let i = 1; i < arr.length; i++) {
+    const v = arr[i]
+    if (v.start <= lastEnd && v.end >= lastEnd) {
+      lastEnd = v.end
+    } else if (v.start > lastEnd) {
+      resultingIntervals.push({
+        start: lastStart,
+        end: lastEnd,
+      })
 
-    if (curr.start <= old.end) {
-      if (temp.start === -1) {
-        temp.start = old!.start
-      }
-      curr.start = old.start
-    } else {
-      if (temp.start === -1) {
-        temp.start = old.start!
-        temp.end = old.end!
-      } else {
-        temp.end = old.end!
-      }
-      mergedArr.push(temp)
-      temp = { start: -1, end: -1 }
+      lastStart = v.start
+      lastEnd = v.end
     }
-
-    old = el
   }
 
-  return mergedArr.sort(function (a, b) {
-    return a.start - b.start
+  resultingIntervals.push({
+    start: lastStart,
+    end: lastEnd,
   })
+
+  return resultingIntervals
 }
 
 export function boilDownTimeIntervals(
   interval: { start: Date; end: Date }[]
 ): { start: Date; end: Date }[] {
   const asNumbers = interval.map((i) => ({ start: +i.start, end: +i.end }))
-  const boiledDown = boilDownIntervals(asNumbers, { start: 16754814600000, end: 16754818200000 })
+  const boiledDown = boilDownIntervals(asNumbers)
   const asDates = boiledDown.map((i) => ({
     start: new Date(i.start),
     end: new Date(i.end),
