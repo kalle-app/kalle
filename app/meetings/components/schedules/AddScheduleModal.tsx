@@ -7,13 +7,52 @@ import React, { useState } from "react"
 import { Alert, Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
 import timezones from "./tz"
+import { mapValues } from "utils/map-values"
 
 interface AddScheduleProps {
   show: boolean
   setVisibility: (value: boolean) => void
 }
 
-const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
+type Schedules = Record<typeof days[number], { start: string; end: string }>
+
+const isScheduleWellFormed = (schedules: Schedules) => {
+  return Object.values(schedules).every(({ start, end }) => isBefore(start, end))
+}
+
+const isBefore = (startTime: string, endTime: string) => {
+  const start = parseTime(startTime)
+  const end = parseTime(endTime)
+
+  if (!start || !end) {
+    return false
+  }
+
+  if (start[0] > end[0]) {
+    return false
+  }
+
+  return start[1] <= end[1]
+}
+
+const parseTime = (time: string): [start: number, end: number] | null => {
+  const parts = time.split(":")
+  if (parts.length !== 2) {
+    return null
+  }
+
+  const [hours, minutes] = parts.map(parseInt)
+  if (hours < 0 || hours > 23) {
+    return null
+  }
+
+  if (minutes < 0 || minutes > 59) {
+    return null
+  }
+
+  return [hours, minutes]
+}
 
 const initialSchedule = {
   monday: { blocked: false, start: "09:00", end: "17:00" },
@@ -34,10 +73,9 @@ const AddSchedule = (props: AddScheduleProps) => {
   const [message, setMessage] = useState("")
 
   const scheduleChanged = (value: any, day: string, type: string) => {
-    let newDay = { ...schedule[day], [type]: value }
     setSchedule({
       ...schedule,
-      [day]: newDay,
+      [day]: { ...schedule[day], [type]: value },
     })
   }
 
@@ -50,78 +88,8 @@ const AddSchedule = (props: AddScheduleProps) => {
     props.setVisibility(false)
   }
 
-  const checkSchedules = (schedules) => {
-    for (const key in schedules) {
-      if (!schedule[key].blocked) {
-        if (!compareTimes(schedule[key].start, schedule[key].end)) {
-          return false
-        }
-      }
-    }
-    return true
-  }
-
-  const compareTimes = (startTime, endTime) => {
-    const start = parseTime(startTime)
-    const end = parseTime(endTime)
-    if (start !== [] && end !== []) {
-      const startValue = parseInt(`${start[0]}${start[1]}`)
-      const endValue = parseInt(`${end[0]}${end[1]}`)
-      if (startValue <= endValue) {
-        return true
-      }
-    }
-    return false
-  }
-
-  const parseTime = (time) => {
-    const parts = time.split(":")
-    if (parts.length === 2) {
-      if (parts[0].trim().length === 2 && parts[1].trim().length === 2) {
-        const hour = parseInt(time[0])
-        const minute = parseInt(time[1])
-        if (!Number.isNaN(hour) && !Number.isNaN(minute)) {
-          if (hour >= 0 && hour <= 23) {
-            if (minute >= 0 && minute <= 59) {
-              return [hour, minute]
-            }
-          }
-        }
-      }
-    }
-    return []
-  }
-
   const submit = async () => {
-    const postSchedule = {
-      name: name,
-      timezone,
-      schedule: {
-        monday: (schedule.monday.blocked
-          ? ["", ""]
-          : [schedule.monday.start, schedule.monday.end]) as [start: string, end: string],
-        tuesday: (schedule.tuesday.blocked
-          ? ["", ""]
-          : [schedule.tuesday.start, schedule.tuesday.end]) as [start: string, end: string],
-        wednesday: (schedule.wednesday.blocked
-          ? ["", ""]
-          : [schedule.wednesday.start, schedule.wednesday.end]) as [start: string, end: string],
-        thursday: (schedule.thursday.blocked
-          ? ["", ""]
-          : [schedule.thursday.start, schedule.thursday.end]) as [start: string, end: string],
-        friday: (schedule.friday.blocked
-          ? ["", ""]
-          : [schedule.friday.start, schedule.friday.end]) as [start: string, end: string],
-        saturday: (schedule.saturday.blocked
-          ? ["", ""]
-          : [schedule.saturday.start, schedule.saturday.end]) as [start: string, end: string],
-        sunday: (schedule.sunday.blocked
-          ? ["", ""]
-          : [schedule.sunday.start, schedule.sunday.end]) as [start: string, end: string],
-      },
-    }
-
-    const parseResult = ScheduleInput.refine((data) => checkSchedules(data.schedule), {
+    const parseResult = ScheduleInput.refine((data) => isScheduleWellFormed(data.schedule), {
       message: "Please check the entered times. Expected is a format of hour:minutes, e.g. 09:30",
     }).safeParse({
       name,
@@ -133,15 +101,20 @@ const AddSchedule = (props: AddScheduleProps) => {
       return
     }
 
-    await createScheduleMutation(postSchedule)
-      .then(async (data) => {
-        await invalidateQuery(getSchedules)
-        await invalidateQuery(getScheduleNames)
-        closeModal()
+    try {
+      await createScheduleMutation({
+        name: name,
+        timezone,
+        schedule: mapValues(schedule, ({ blocked, start, end }) =>
+          blocked ? { startTime: "", endTime: "" } : { startTime: start, endTime: end }
+        ),
       })
-      .catch((error) => {
-        setError({ error: true, message: error })
-      })
+      await invalidateQuery(getSchedules)
+      await invalidateQuery(getScheduleNames)
+      closeModal()
+    } catch (error) {
+      setError({ error: true, message: error })
+    }
   }
 
   return (
