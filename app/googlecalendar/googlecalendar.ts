@@ -1,26 +1,25 @@
 import { ExternalEvent } from "app/caldav"
 import { google } from "googleapis"
 import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
-import { Appointment } from "../appointments/types"
 import { ConnectedCalendar } from "db"
-import { CalendarService } from "app/calendar-service"
-import { addMilliseconds } from "date-fns"
+import { CalendarService, CreateEventBooking } from "app/calendar-service"
+import { addSeconds } from "date-fns"
 
-export async function createGcalEvent(appointment: Appointment, refreshToken: string) {
+export async function createGcalEvent(booking: CreateEventBooking, refreshToken: string) {
   const calendar = google.calendar({
     version: "v3",
     auth: createAuthenticatedGoogleOauth(refreshToken),
   })
 
-  const startDate = appointment.start
-  const endDate = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
+  const startDate = booking.startDateUTC
+  const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
 
   await calendar.events.insert({
     calendarId: "primary",
     requestBody: {
-      summary: appointment.title,
-      location: appointment.location || "",
-      description: appointment.description,
+      summary: booking.meeting.name,
+      location: booking.meeting.location ?? "",
+      description: booking.meeting.description,
       start: {
         dateTime: startDate.toISOString(),
         timeZone: "Etc/UTC",
@@ -28,7 +27,7 @@ export async function createGcalEvent(appointment: Appointment, refreshToken: st
       end: {
         dateTime: endDate.toISOString(),
       },
-      attendees: [{ email: appointment.owner.email }, { email: appointment.organiser.email }],
+      attendees: [{ email: booking.meeting.owner.email }, { email: booking.inviteeEmail }],
       reminders: {
         useDefault: true,
       },

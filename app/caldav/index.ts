@@ -2,11 +2,10 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 import { v4 as uuidv4 } from "uuid"
-import type { CalendarService } from "app/calendar-service"
+import type { CalendarService, CreateEventBooking } from "app/calendar-service"
 import { ConnectedCalendar } from "db"
 import passwordEncryptor from "app/users/password-encryptor"
-import { Appointment } from "app/appointments/types"
-import { addMilliseconds } from "date-fns"
+import { addMinutes } from "date-fns"
 
 function ensureProtocolIsSpecified(url: string) {
   if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -288,10 +287,10 @@ export async function getTakenTimeSlots(
 
 export async function createCalDavEvent(
   calendar: CalendarConnectionDetails,
-  appointment: Appointment
+  booking: CreateEventBooking
 ) {
-  const start = appointment.start
-  const end = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
+  const start = booking.startDateUTC
+  const end = addMinutes(booking.startDateUTC, booking.meeting.duration)
 
   const dateNow = new Date()
   const uid = uuidv4()
@@ -307,8 +306,8 @@ X-MICROSOFT-CDO-BUSYSTATUS:BUSY
 LAST-MODIFIED:${formatDateAsICS(dateNow)}
 DTSTAMP:${formatDateAsICS(dateNow)}
 CREATED:${formatDateAsICS(dateNow)}
-LOCATION:${appointment.location}
-SUMMARY:${appointment.title}
+LOCATION:${booking.meeting.location}
+SUMMARY:${booking.meeting.name}
 CLASS:PUBLIC
 END:VEVENT
 END:VCALENDAR\r\n`

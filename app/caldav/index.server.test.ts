@@ -253,19 +253,12 @@ function test(calendarBackend: Backends) {
       it("basic event", async () => {
         const date = new Date()
         await createCalDavEvent(getCalendarConnection(), {
-          title: "DummyEvent",
-          start: date,
-          durationInMilliseconds: 30 * 60 * 1000,
-          organiser: {
-            email: "kalle@kalle.app",
-            name: "Kalle McFishface",
+          startDateUTC: date,
+          meeting: {
+            location: "Frankfurt",
+            duration: 30,
+            name: "DummyEvent",
           },
-          owner: {
-            email: "kalle@kalle.app",
-            name: "Kalle McFishface",
-          },
-          location: "Frankfurt",
-          description: "A description",
         })
 
         const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))

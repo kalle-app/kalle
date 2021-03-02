@@ -1,10 +1,14 @@
-import { ConnectedCalendar } from "db"
-import { Appointment } from "app/appointments/types"
+import { Booking, ConnectedCalendar, Meeting, User } from "db"
 import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./caldav"
 import { getCalendarService as getGoogleCalendarService } from "app/googlecalendar/googlecalendar"
 
+export type CreateEventBooking = Pick<Booking, "startDateUTC" | "inviteeEmail"> & {
+  meeting: Pick<Meeting, "duration" | "location" | "name" | "description"> & {
+    owner: Pick<User, "email">
+  }
+}
 export interface CalendarService {
-  createEvent(appointment: Appointment): Promise<void>
+  createEvent(booking: CreateEventBooking): Promise<void>
   getTakenTimeSlots(start: Date, end: Date): Promise<ExternalEvent[]>
 }
 
