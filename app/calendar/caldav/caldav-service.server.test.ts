@@ -32,12 +32,12 @@ async function buildByHand(context: string, name: string) {
 }
 
 async function getBaikalContainer() {
-  await buildByHand("../../test/baikal", "baikal-with-cal")
+  await buildByHand("../../../test/baikal", "baikal-with-cal")
   return new GenericContainer("baikal-with-cal").withExposedPorts(80)
 }
 
 async function getNextcloudContainer() {
-  await buildByHand("../../test/nextcloud", "nc-with-cal")
+  await buildByHand("../../../test/nextcloud", "nc-with-cal")
   return new GenericContainer("nc-with-cal").withExposedPorts(80)
 }
 
