@@ -6,12 +6,11 @@ import { BlitzPage, Link, useQuery, useSession } from "blitz"
 import { format } from "date-fns"
 import type { Meeting } from "db"
 import React, { Suspense } from "react"
-import { Alert, Card, Col, Container, Row } from "react-bootstrap"
-import Button from "react-bootstrap/Button"
+import { Alert, Card, Col, Container, Row, Button } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { CopyToClipboard } from "react-copy-to-clipboard"
-import { getOrigin } from "utils/generalUtils"
 import ReactTooltip from "react-tooltip"
+import { formatMeetingHref } from "app/meetings/utils/format-meeting-href"
 
 const Content = () => {
   const session = useSession()
@@ -264,8 +263,6 @@ const OverviewBox = (props: { span; header; children }) => {
 }
 
 const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
-  const href = `/schedule/${meeting.ownerName}/${meeting.link}`
-  const hrefToDisplay = getOrigin() + href
   return (
     <Col lg={6} className="my-1" style={{ display: "flex" }}>
       <Card
@@ -294,7 +291,7 @@ const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
               </Button>
             </Link>
             <CopyToClipboard
-              text={hrefToDisplay}
+              text={formatMeetingHref(meeting)}
               className="ml-3 mt-lg-2 mt-xl-0 float-lg-right float-xl-none"
             >
               <Button variant="outline-primary">Copy Link</Button>

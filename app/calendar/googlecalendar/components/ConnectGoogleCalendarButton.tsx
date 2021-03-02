@@ -1,8 +1,13 @@
 import { useQuery } from "blitz"
+import { PropsWithChildren } from "react"
 import { Button } from "react-bootstrap"
 import getCcalOAuthUrl from "../queries/createConnection"
 
-const ConnectGoogleCalendarButton = (props) => {
+export const ConnectGoogleCalendarButton = (
+  props: PropsWithChildren<{
+    id: string
+  }>
+) => {
   const [url] = useQuery(getCcalOAuthUrl, undefined)
 
   return (
@@ -11,5 +16,3 @@ const ConnectGoogleCalendarButton = (props) => {
     </Button>
   )
 }
-
-export default ConnectGoogleCalendarButton

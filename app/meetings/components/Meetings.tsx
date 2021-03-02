@@ -2,12 +2,12 @@ import { Card, Row, Col, Button, Alert } from "react-bootstrap"
 import { useState } from "react"
 import type { Meeting } from "db"
 import { Link, useMutation, invalidateQuery } from "blitz"
-import { getOrigin } from "utils/generalUtils"
 import deleteMeetingMutation from "../mutations/deleteMeeting"
 import getMeetings from "../queries/getMeetings"
 import { format } from "date-fns"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { Geo, CalendarRange } from "react-bootstrap-icons"
+import { formatMeetingHref } from "../utils/format-meeting-href"
 
 interface MeetingsProps {
   meetings: Meeting[]
@@ -36,9 +36,6 @@ const Meetings = (props: MeetingsProps) => {
   return (
     <Row style={{ display: "flex", flexWrap: "wrap" }}>
       {meetings.map((meeting) => {
-        const href = `/schedule/${meeting.ownerName}/${meeting.link}`
-        const hrefToDisplay = getOrigin() + href
-
         return (
           <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
             <Card
@@ -96,7 +93,7 @@ const Meetings = (props: MeetingsProps) => {
                 <Link href={"/meeting/bookings/" + meeting.id}>
                   <Button variant="outline-primary">View Bookings</Button>
                 </Link>
-                <CopyToClipboard text={hrefToDisplay} className="ml-3">
+                <CopyToClipboard text={formatMeetingHref(meeting)} className="ml-3">
                   <Button variant="outline-primary">Copy Link</Button>
                 </CopyToClipboard>
               </div>
