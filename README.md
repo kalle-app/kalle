@@ -4,12 +4,12 @@
 
 ## Overview
 
-Kalle is a **Appointment scheduling tool** that allows you to schedule an appointment with customers, collegues or friends within seconds. We support self hosted CalDav based calendars and solutions such as authenticating your google-calendar.
+Kalle is an **appointment scheduling tool** that allows you to schedule an appointment with customers, colleagues or friends within seconds. We support self-hosted CalDav-based calendars and solutions such as authenticating your Google calendar.
 
-Kalle is a modern webapp that is built with [Blitz.js](https://github.com/blitz-js/blitz) a fullstack react framework, made to boost productivity.
-A hosted version can be found at [**Kalle.app**](https://www.kalle.app/)
+Kalle is a modern web app that is built with [Blitz.js](https://github.com/blitz-js/blitz), a full-stack React framework, made to boost productivity.
+A hosted version can be found at [**kalle.app**](https://www.kalle.app/)
 
-_This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner Institute_
+_This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner-Institute_
 
 ## Features
 
@@ -23,7 +23,7 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
   <tbody>
     <tr>
       <td>🔓</td>
-      <td>Create an Account</td>
+      <td>Create an account</td>
     </tr>
     <tr>
       <td>🔓</td>
@@ -31,11 +31,11 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Connect google-calendars</td>
+      <td>Connect Google calendars</td>
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Create a Meeting</td>
+      <td>Create a meeting</td>
     </tr>
     <tr>
       <td>🔓</td>
@@ -50,7 +50,7 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
 
 Follow these steps for a development environment:
 
-Make sure you have [Docker](https://docs.docker.com/get-docker/) installed on your system and have got the appropiate rights set. Then run the following command:
+Make sure you have installed [Docker](https://docs.docker.com/get-docker/) on your system and set the appropriate permissions. Then run the following command:
 
 ```
 npm install
@@ -72,6 +72,6 @@ MODE="DEVELOPMENT"
 
 When mode !== development mails will be sent!
 
-### Running the Application
+### Running the application
 
-Running `npm run start` will startup a server which can be reached over the specified url :)
+Running `npm run dev` will start up a server which can be reached over the specified URL :)

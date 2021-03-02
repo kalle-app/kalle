@@ -11,12 +11,9 @@ services:
       POSTGRES_DB: kalle
 
   baikal:
-    image: ckulka/baikal:0.7.2-nginx
+    build: test/baikal
     ports:
       - 5232:80
-    volumes:
-      - ./test/baikal/Specific:/var/www/baikal/Specific
-      - ./test/baikal/config:/var/www/baikal/config
 
   mailhog:
     image: mailhog/mailhog

@@ -9,17 +9,6 @@ import * as path from "path"
 import { addMinutes } from "date-fns"
 import childProcess from "child_process"
 
-async function getBaikalContainer() {
-  return new GenericContainer("ckulka/baikal", "0.7.2-nginx")
-    .withExposedPorts(80)
-    .withBindMount(
-      path.join(__dirname, "../../test/baikal/Specific"),
-      "/var/www/baikal/Specific",
-      "rw"
-    )
-    .withBindMount(path.join(__dirname, "../../test/baikal/config"), "/var/www/baikal/config", "rw")
-}
-
 function exec(command: string, cwd = process.cwd()) {
   return new Promise<void>((resolve, reject) => {
     const $ = childProcess.exec(command, {
@@ -36,14 +25,19 @@ function exec(command: string, cwd = process.cwd()) {
   })
 }
 
-async function getNextcloudContainer() {
-  // for some reason, testcontainer's build doesn't want to work.
-  // that's why we build it by hand ...
-  await exec(
-    "docker buildx build -t nc-with-cal .",
-    path.resolve(__dirname, "../../test/nextcloud")
-  )
+// for some reason, testcontainer's build doesn't want to work.
+// that's why we build it by hand ...
+async function buildByHand(context: string, name: string) {
+  return await exec(`docker buildx build -t ${name} .`, path.resolve(__dirname, context))
+}
 
+async function getBaikalContainer() {
+  await buildByHand("../../test/baikal", "baikal-with-cal")
+  return new GenericContainer("baikal-with-cal").withExposedPorts(80)
+}
+
+async function getNextcloudContainer() {
+  await buildByHand("../../test/nextcloud", "nc-with-cal")
   return new GenericContainer("nc-with-cal").withExposedPorts(80)
 }
 

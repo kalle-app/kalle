@@ -60,8 +60,8 @@ const initialSchedule = {
   wednesday: { blocked: false, start: "09:00", end: "17:00" },
   thursday: { blocked: false, start: "09:00", end: "17:00" },
   friday: { blocked: false, start: "09:00", end: "17:00" },
-  saturday: { blocked: true, start: "", end: "" },
-  sunday: { blocked: true, start: "", end: "" },
+  saturday: { blocked: true, start: "09:00", end: "17:00" },
+  sunday: { blocked: true, start: "09:00", end: "17:00" },
 }
 
 const AddSchedule = (props: AddScheduleProps) => {
@@ -85,6 +85,9 @@ const AddSchedule = (props: AddScheduleProps) => {
 
   const closeModal = (): void => {
     setError({ error: false, message: "" })
+    setName("")
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    setSchedule(initialSchedule)
     props.setVisibility(false)
   }
 
@@ -118,7 +121,7 @@ const AddSchedule = (props: AddScheduleProps) => {
   }
 
   return (
-    <Modal show={props.show} onHide={() => props.setVisibility(false)}>
+    <Modal show={props.show} onHide={() => closeModal()}>
       <Modal.Header closeButton>
         <Modal.Title>Add a new Schedule</Modal.Title>
       </Modal.Header>

@@ -91,7 +91,9 @@ const Meetings = (props: MeetingsProps) => {
               )}
               <div className="d-flex mt-4 justify-content-end">
                 <Link href={"/meeting/bookings/" + meeting.id}>
-                  <Button variant="outline-primary">View Bookings</Button>
+                  <Button id={"booking-btn-" + meeting.name} variant="outline-primary">
+                    View Bookings
+                  </Button>
                 </Link>
                 <CopyToClipboard text={formatMeetingHref(meeting)} className="ml-3">
                   <Button variant="outline-primary">Copy Link</Button>
