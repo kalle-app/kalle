@@ -50,11 +50,19 @@ const AddCalendar = (props: AddCalendarProps) => {
                 setMessage(parseResult.error.errors[0].message)
                 return
               }
+              var calendarType = type;
+              if (type === "google") {
+                calendarType = "GoogleCalendar"
+              } else if (type === "caldav") {
+                calendarType = "CaldavDigest"
+              } else {
+                calendarType = "ICloud"
+              }
 
               const { fail } = await createCalendar({
                 name,
                 password,
-                type: type === "google" ? "GoogleCalendar" : "CaldavDigest",
+                type: calendarType,
                 url,
                 username,
               })
@@ -168,7 +176,7 @@ const ICloudFormBody = () => {
       <Form.Group controlId="formName">
         <Alert variant="danger">
           iCloud requires the usage of a third party password. Please get one at the apple-id
-          settings.&nbsp;
+          settings.
         </Alert>
         <Form.Label>Calendar name</Form.Label>
         <Form.Control

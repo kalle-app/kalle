@@ -48,6 +48,7 @@ enum ConnectedCalendarStatus {
 enum ConnectedCalendarType {
   CaldavDigest
   CaldavBasic
+  ICloud
   GoogleCalendar
 }
 
