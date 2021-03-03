@@ -1,5 +1,5 @@
 import getOutlookCredentials from "../queries/getOutlookCredentials"
-import MicrosoftClient from "./MicrosoftClient"
+import MicrosoftClient from "../helpers/MicrosoftClient"
 
 export default async function updateCalendarCredentials(userId: number) {
   const credentials = await getOutlookCredentials(userId)

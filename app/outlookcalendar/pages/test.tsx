@@ -6,7 +6,7 @@ import getOutlookCredentials from "../queries/getOutlookCredentials"
 import { Button, Row, Col, Form } from "react-bootstrap"
 import getFreeBusySchedule from "../queries/getFreeBusySchedule"
 import createCalendarEvent from "../queries/createCalendarEvent"
-
+import updateCalendarCredentialsQuery from "../queries/updateCalendarCredentialsQuery"
 function TestFun() {
   const now = new Date()
   const future = new Date(2021, 0, 26)
@@ -35,7 +35,7 @@ function TestFun() {
       >
         dGet Free Busy{" "}
       </Button>
-      <Button onClick={() => invoke(createCalendarEvent, null)}>post event </Button>
+      <Button onClick={() => invoke(updateCalendarCredentialsQuery, 1)}>post event </Button>
     </>
   )
 }

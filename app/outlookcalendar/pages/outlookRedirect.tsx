@@ -4,6 +4,7 @@ import { BlitzPage, Link, useMutation, useRouterQuery } from "blitz"
 import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
 import postOAuthToken from "../queries/postOAuthToken"
+import updateCalendarCredentialsQuery from "../queries/updateCalendarCredentialsQuery"
 
 interface credentials {
   account: object
@@ -29,10 +30,10 @@ function OAuthCallbackPage() {
       return postOAuthToken(code)
         .then(({ account, scopes }: credentials) => {
           if (!account || !scopes) {
-            console.log("GDJK")
+            console.log("dsd")
             setIsError(true)
           } else {
-            console.log("DFFGHJ")
+            console.log(account)
             postCredentials({
               credentials: { account: account, scopes: scopes },
               name: calendarName,
