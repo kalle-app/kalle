@@ -16,6 +16,7 @@ import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Advanced from "../../components/creationSteps/Advanced"
 import "react-step-progress/dist/index.css"
+import getDefaultCalendarByUser from "app/users/queries/getDefaultCalendarByUser"
 
 enum Steps {
   General,
@@ -105,6 +106,16 @@ const InviteCreationContent = () => {
   const [readyForSubmission, setReadyForSubmission] = useState(false)
   const user = useCurrentUser()
   const [userHasCalendar] = useQuery(hasCalendar, null)
+  const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
+
+  useEffect(() => {
+    if (defaultCalendarId) {
+      setMeeting((oldMeeting) => ({
+        ...oldMeeting,
+        defaultConnectedCalendarId: defaultCalendarId,
+      }))
+    }
+  }, [defaultCalendarId])
 
   useEffect(() => {
     if (readyForSubmission) {

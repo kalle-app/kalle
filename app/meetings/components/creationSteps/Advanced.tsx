@@ -12,13 +12,7 @@ type AdvancedProps = {
   onSubmit: (defaultCalendarId: number) => void
 }
 const AdvancedStep = (props: AdvancedProps) => {
-  let [getDefaultCalendar] = useQuery(getDefaultCalendarByUser, null)
-  const [defaultCalendarId, setDefaultCalendarId] = useState(
-    getDefaultCalendar ? getDefaultCalendar : -1
-  )
-  if (props.initialMeeting.defaultConnectedCalendarId !== -1) {
-    setDefaultCalendarId(defaultCalendarId)
-  }
+  const [defaultCalendarId, setDefaultCalendarId] = useState(-1)
   useEffect(() => {
     setDefaultCalendarId(props.initialMeeting.defaultConnectedCalendarId)
   }, [])
