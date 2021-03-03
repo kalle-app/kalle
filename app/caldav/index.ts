@@ -25,7 +25,7 @@ export interface CalendarConnectionDetails {
   }
 }
 
-async function makeRequestTo(
+export async function makeRequestTo(
   calendar: CalendarConnectionDetails,
   {
     data,
@@ -102,6 +102,7 @@ export async function verifyConnectionDetails(
       } else if (response.status === 401) {
         return "unauthorized"
       } else {
+        console.log(response)
         return "no_caldav_support"
       }
     }
