@@ -82,11 +82,13 @@ const AddCalendar = (props: AddCalendarProps) => {
               >
                 <option value="caldav">CalDav</option>
                 <option value="google">Google Calendar</option>
+                <option value="icloud">iCloud Calendar</option>
                 <option value="outlook">Microsoft Outlook</option>
               </Form.Control>
             </Form.Group>
             {calendarType === "caldav" && <CalDavFormBody />}
             {calendarType === "google" && <GoogleFormBody />}
+            {calendarType === "icloud" && <ICloudFormBody />}
             {calendarType === "outlook" && <OutlookFormBody />}
             {error.error && (
               <Alert variant="danger">Couldn't connect successfully: {error.message}</Alert>
@@ -136,6 +138,43 @@ const CalDavFormBody = () => {
           name="url"
           type="url"
           onChange={(evt) => setUrl(evt.target.value)}
+        />
+      </Form.Group>
+      {url.includes("remote.php") && !url.includes("remote.php/dav") && (
+        <Alert variant="info">
+          It seems that you're trying to connect a Nextcloud instance. Please use a URL of the
+          following form:
+          <br />
+          <code>{"/remote.php/dav/calendars/<username>/<calendar-name>"}</code>
+        </Alert>
+      )}
+      <Form.Group controlId="formUsername">
+        <Form.Label>Username</Form.Label>
+        <Form.Control id="caldav-username" name="username" />
+      </Form.Group>
+      <Form.Group controlId="formPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control id="caldav-password" type="password" name="password" />
+      </Form.Group>
+    </>
+  )
+}
+
+const ICloudFormBody = () => {
+  const [url, setUrl] = useState<string>("")
+
+  return (
+    <>
+      <Form.Group controlId="formName">
+        <Alert variant="danger">
+          iCloud requires the usage of a third party password. Please get one at the apple-id
+          settings.&nbsp;
+        </Alert>
+        <Form.Label>Calendar name</Form.Label>
+        <Form.Control
+          id="caldav-name"
+          name="name"
+          placeholder="Enter a name you'd like for your calendar"
         />
       </Form.Group>
       {url.includes("remote.php") && !url.includes("remote.php/dav") && (
