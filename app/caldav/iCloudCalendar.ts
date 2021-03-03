@@ -1,7 +1,10 @@
 import { CalendarConnectionDetails, makeRequestTo } from "./index"
 
 export async function getConnectionString(calendar: CalendarConnectionDetails) {
-  await makeRequestTo(calendar, {
+  calendar.url = "https://caldav.icloud.com"
+  console.log("making the request")
+  console.log(calendar)
+  const z = await makeRequestTo(calendar, {
     headers: { DEPTH: 0 },
     method: "PROPFIND",
     data: `
@@ -11,5 +14,7 @@ export async function getConnectionString(calendar: CalendarConnectionDetails) {
                     </prop>
                 </propfind>
             `,
-  })
+    }
+  )
+  console.log("response", z.data.toString())
 }

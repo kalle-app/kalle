@@ -2,6 +2,7 @@ import db, { ConnectedCalendarType } from "db"
 import { resolver } from "blitz"
 import passwordEncryptor from "../password-encryptor"
 import { verifyConnectionDetails } from "app/caldav"
+import {getConnectionString} from "app/caldav/iCloudCalendar"
 import * as z from "zod"
 
 export default resolver.pipe(
@@ -16,6 +17,19 @@ export default resolver.pipe(
   ),
   resolver.authorize(),
   async (calendarCreate, ctx) => {
+    console.log("is this icloud", calendarCreate)
+    if (calendarCreate.type === "ICloud") {
+      console.log("this is icloud")
+      const x = await getConnectionString({
+        url: calendarCreate.url,
+        auth: {
+          username: calendarCreate.username,
+          password: calendarCreate.password,
+          digest: false
+        }
+      })
+      console.log(x)
+    }
     const { fail } = await verifyConnectionDetails(
       calendarCreate.url,
       calendarCreate.username,

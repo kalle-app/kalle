@@ -102,7 +102,6 @@ export async function verifyConnectionDetails(
       } else if (response.status === 401) {
         return "unauthorized"
       } else {
-        console.log(response)
         return "no_caldav_support"
       }
     }

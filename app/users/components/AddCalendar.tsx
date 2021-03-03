@@ -34,10 +34,11 @@ const AddCalendar = (props: AddCalendarProps) => {
 
               const type = form.get("type") as string
               const name = form.get("name") as string
-              const url = form.get("url") as string
+              
+              //const url = form.get("url") as string
+              const url = "http://lasklu.com"
               const username = form.get("username") as string
               const password = form.get("password") as string
-
               const parseResult = AddCalendarInput.safeParse({
                 type,
                 url,
@@ -50,7 +51,7 @@ const AddCalendar = (props: AddCalendarProps) => {
                 setMessage(parseResult.error.errors[0].message)
                 return
               }
-              var calendarType = type;
+              var calendarType: 'GoogleCalendar' | 'CaldavDigest' | 'ICloud' = 'GoogleCalendar';
               if (type === "google") {
                 calendarType = "GoogleCalendar"
               } else if (type === "caldav") {
@@ -106,7 +107,7 @@ const AddCalendar = (props: AddCalendarProps) => {
               <Button variant="outline-primary" className="mx-1" onClick={props.onClose}>
                 Cancel
               </Button>
-              {calendarType === "caldav" && (
+              {(calendarType === "caldav" || calendarType === "icloud") && (
                 <Button variant="primary" className="mx-1" type="submit">
                   Add
                 </Button>
@@ -169,7 +170,7 @@ const CalDavFormBody = () => {
 }
 
 const ICloudFormBody = () => {
-  const [url, setUrl] = useState<string>("")
+  const [url, setUrl] = useState<string>("value")
 
   return (
     <>
