@@ -41,7 +41,7 @@ const UserDataForm = (props: UserDataFormProps) => {
             onChange={(e) => props.setPassword(e.target.value)}
           />
         </Form.Group>
-        <Form.Group as={Col} controlId="formPasswordRepeat">
+        <Form.Group as={Col} controlId="formRepeatPassword">
           <Form.Label>Repeat Password</Form.Label>
           <Form.Control
             autoComplete="new-password"

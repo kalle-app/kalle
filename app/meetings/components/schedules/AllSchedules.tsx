@@ -66,6 +66,7 @@ const AllSchedules = () => {
                   <Row>
                     <Col className="d-flex justify-content-center">
                       <Button
+                        id={"delete-" + schedule.name}
                         variant="outline-danger"
                         onClick={() => {
                           submitDeletion(schedule.id)
