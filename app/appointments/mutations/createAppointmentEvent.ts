@@ -1,6 +1,7 @@
 import db from "db"
 import { getCalendarService } from "app/calendar/calendar-service"
 import getConnectedCalendar from "../queries/getConnectedCalendar"
+import * as uuid from "uuid"
 
 interface BookingDetails {
   meetingId: number
@@ -26,6 +27,9 @@ export default async function createAppointmentEventMutation(bookingDetails: Boo
     throw new Error("An error occured: Owner doesn't have a connected calendar")
   }
 
+  const cancelCode = uuid.v4()
+
+  // todo save hashed cancelcode
   const booking = await db.booking.create({
     data: {
       meeting: {
@@ -33,6 +37,7 @@ export default async function createAppointmentEventMutation(bookingDetails: Boo
       },
       inviteeEmail: bookingDetails.inviteeEmail,
       startDateUTC: bookingDetails.date,
+      cancelCode: cancelCode,
     },
   })
 
