@@ -1,41 +1,32 @@
 import Layout from "app/layouts/Layout"
-import ConnectedCalendars from "app/users/components/ConnectedCalendars"
-import SectionHeader from "app/users/components/SectionHeader"
-import { BlitzPage, useQuery } from "blitz"
-import React, { Suspense, useState } from "react"
-import getConnectedCalendars from "../queries/getConnectedCalendars"
-import Card from "react-bootstrap/Card"
-import SectionFooter from "app/users/components/SectionFooter"
-import AddCalendarModal from "app/users/components/AddCalendar"
+import { BlitzPage } from "blitz"
+import React, { Suspense } from "react"
+
 import Skeleton from "react-loading-skeleton"
+import MyCalendars from "app/users/components/MyCalendars"
+import CalendarSettings from "app/users/components/CalendarSettings"
 
-const CalendarList = () => {
-  const [calendarEntries] = useQuery(getConnectedCalendars, null)
-  const [showAddCalendarModal, setShowAddCalendarModal] = useState(false)
-
+const CalendarOverview = () => {
   return (
-    <Card>
-      {showAddCalendarModal && <AddCalendarModal onClose={() => setShowAddCalendarModal(false)} />}
+    <>
+      <MyCalendars />
+      <CalendarSettings />
+    </>
+  )
+}
 
-      <SectionHeader
-        title="My Calendars"
-        subtitle="Add Calendars that you want to connect to Kalle"
-      />
-      <ConnectedCalendars calendars={calendarEntries ? calendarEntries : []} />
-      <SectionFooter
-        id="add-calendar-button"
-        text="Add Calendar"
-        variant="primary"
-        action={() => setShowAddCalendarModal(true)}
-      />
-    </Card>
+const CalendarsContent = () => {
+  return (
+    <>
+      <CalendarOverview />
+    </>
   )
 }
 
 const Calendars: BlitzPage = () => {
   return (
     <Suspense fallback={<Skeleton count={10} />}>
-      <CalendarList />
+      <CalendarsContent />
     </Suspense>
   )
 }

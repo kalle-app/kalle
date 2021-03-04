@@ -28,7 +28,7 @@ export default resolver.pipe(
 
     const encryptedPassword = await passwordEncryptor.encrypt(calendarCreate.password)
 
-    await db.connectedCalendar.create({
+    const calendar = await db.connectedCalendar.create({
       data: {
         name: calendarCreate.name,
         caldavAddress: calendarCreate.url,
@@ -41,6 +41,23 @@ export default resolver.pipe(
         },
       },
     })
+
+    const defaultCalendar = await db.defaultCalendar.findFirst({
+      where: { userId: ctx.session.userId },
+    })
+
+    if (!defaultCalendar) {
+      await db.defaultCalendar.create({
+        data: {
+          user: {
+            connect: { id: ctx.session.userId },
+          },
+          calendar: {
+            connect: { id: calendar.id },
+          },
+        },
+      })
+    }
 
     return { fail: null }
   }

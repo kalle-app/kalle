@@ -80,7 +80,7 @@ const Meetings = (props: MeetingsProps) => {
               <Row>
                 <Col className="my-auto pb-1">
                   <p className="my-auto">
-                    <Geo className="mr-2"></Geo>
+                    {meeting.location ? <Geo className="mr-2"></Geo> : ""}
                     {meeting.location}
                   </p>
                 </Col>

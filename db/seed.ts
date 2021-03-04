@@ -8,7 +8,7 @@ function mockHashPassword(pw: string) {
 }
 
 async function main() {
-  await db.user.create({
+  const user = await db.user.create({
     data: {
       name: johnDoe.fullName,
       username: johnDoe.username,
@@ -24,6 +24,25 @@ async function main() {
           status: "active",
           type: "CaldavDigest",
         },
+      },
+    },
+  })
+
+  const calendar = await db.connectedCalendar.findFirst({
+    where: { ownerId: user.id },
+  })
+
+  if (!user || !calendar) {
+    throw new Error("Seeding failed")
+  }
+
+  await db.defaultCalendar.create({
+    data: {
+      user: {
+        connect: { id: user.id },
+      },
+      calendar: {
+        connect: { id: calendar.id },
       },
     },
   })

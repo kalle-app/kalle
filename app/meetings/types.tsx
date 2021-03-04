@@ -12,7 +12,7 @@ export const Weekdays = [
 
 export type Weekdays = typeof Weekdays[number]
 
-export const Meeting = z.object({
+export const MeetingSchema = z.object({
   name: z.string(),
   link: z.string(),
   description: z.string(),
@@ -20,5 +20,8 @@ export const Meeting = z.object({
   startDate: z.date(),
   endDate: z.date(),
   location: z.string(),
-  scheduleId: z.number()
+  scheduleId: z.number(),
+  defaultConnectedCalendarId: z.number(),
 })
+
+export type Meeting = z.TypeOf<typeof MeetingSchema>

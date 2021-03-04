@@ -12,7 +12,7 @@ const messages = {
   shortPassword: "Password must contain at least 10 characters",
   longPassword: "Password cannot contain more than 100 characters",
   invalidUrl: "Please enter a valid url",
-  invalidNotificationMinutes: "Please leve this field blank or enter a positive number.",
+  invalidNotificationMinutes: "Please leave this field blank or enter a positive number.",
 }
 
 export const SignupInput = z.object({
@@ -83,8 +83,8 @@ export type AddCalendarInputType = z.infer<typeof AddCalendarInput>
 export const GeneralInformationInput = z.object({
   name: z.string().min(1, { message: messages.noName }),
   link: z.string().min(1, { message: messages.noLink }),
-  description: z.string().min(1, { message: messages.noDescription }),
-  location: z.string().min(1, { message: messages.noLocation }),
+  description: z.string().optional(),
+  location: z.string().optional(),
 })
 export type GeneralInformationInputType = z.infer<typeof GeneralInformationInput>
 

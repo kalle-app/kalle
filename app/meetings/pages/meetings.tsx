@@ -21,7 +21,7 @@ const MyMeetings: BlitzPage = () => {
         </Col>
         <Col md={4} className="text-md-right text-sm-left">
           <Link href="/meeting/create">
-            <Button variant="primary">Create new Meeting</Button>
+            <Button variant="success">Create new Meeting</Button>
           </Link>
         </Col>
       </Row>
