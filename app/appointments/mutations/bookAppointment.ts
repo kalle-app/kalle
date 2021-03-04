@@ -12,7 +12,7 @@ async function sendConfirmationMail(booking: Booking, meeting: Meeting & { owner
   await getEmailService().send({
     template: "confirmation",
     message: {
-      to: meeting.owner.email,
+      to: booking.inviteeEmail,
       attachments: [
         {
           filename: "appointment.ics",
