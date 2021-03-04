@@ -235,7 +235,7 @@ const InviteCreationContent = () => {
       case 2: {
         if (step === Steps.Advanced) {
           return " _35Ago stepDone"
-        } else if (step == Steps.Schedule) {
+        } else if (step === Steps.Schedule) {
           return "_35Ago"
         }
         return ""

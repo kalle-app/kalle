@@ -8,6 +8,7 @@ export function createMeeting(meetingName: string, meetingLink: string): void {
   cy.contains("Create new Meeting").click()
   cy.wait(2000)
   cy.get("#name").type(meetingName)
+  cy.get("#link").clear()
   cy.get("#link").type(meetingLink)
   cy.get("#description").type("Lorem ipsum, dolor sit amet.")
   cy.get("#location").type("Berlin")
