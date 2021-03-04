@@ -9,5 +9,5 @@ export default async function getDefaultCalendarByUser(_ = null, ctx: Ctx) {
   })
 
   if (!defaultCalendar) return null
-  return defaultCalendar.calendarId
+  return defaultCalendar
 }

@@ -107,16 +107,16 @@ const InviteCreationContent = () => {
   const [readyForSubmission, setReadyForSubmission] = useState(false)
   const user = useCurrentUser()
   const [userHasCalendar] = useQuery(hasCalendar, null)
-  const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
+  const [defaultCalendar] = useQuery(getDefaultCalendarByUser, null)
 
   useEffect(() => {
-    if (defaultCalendarId) {
+    if (defaultCalendar) {
       setMeeting((oldMeeting) => ({
         ...oldMeeting,
-        defaultConnectedCalendarId: defaultCalendarId,
+        defaultConnectedCalendarId: defaultCalendar.id,
       }))
     }
-  }, [defaultCalendarId])
+  }, [defaultCalendar])
 
   useEffect(() => {
     if (readyForSubmission) {

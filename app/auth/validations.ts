@@ -83,8 +83,8 @@ export type AddCalendarInputType = z.infer<typeof AddCalendarInput>
 export const GeneralInformationInput = z.object({
   name: z.string().min(1, { message: messages.noName }),
   link: z.string().min(1, { message: messages.noLink }),
-  description: z.string().min(1, { message: messages.noDescription }),
-  location: z.string().min(1, { message: messages.noLocation }),
+  description: z.string().optional(),
+  location: z.string().optional(),
 })
 export type GeneralInformationInputType = z.infer<typeof GeneralInformationInput>
 

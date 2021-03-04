@@ -14,6 +14,16 @@ export default resolver.pipe(
       throw new Error("Invariant failed: Owner does not exist.")
     }
 
+    const ownersCalendars = await db.connectedCalendar.findMany({
+      where: { ownerId: owner.id },
+    })
+
+    if (
+      !ownersCalendars.some((calendar) => calendar.id == meetingCreate.defaultConnectedCalendarId)
+    ) {
+      throw new Error("Calender where to add events to invalid")
+    }
+
     const meeting = await db.meeting.create({
       data: {
         name: meetingCreate.name,

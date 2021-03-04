@@ -16,7 +16,7 @@ export const DefaultCalendarSelector = (props: {
 }) => {
   const [validated] = useState(false)
   const [getCalendars] = useQuery(getConnectedCalendars, null)
-  const [defaultCalendarId] = useQuery(getDefaultCalendarByUser, null)
+  const [defaultCalendar] = useQuery(getDefaultCalendarByUser, null)
   const calendars = getCalendars
 
   const onChange = (event) => {
@@ -48,7 +48,7 @@ export const DefaultCalendarSelector = (props: {
             <Form.Control
               as="select"
               name="defaultCalendar"
-              defaultValue={defaultCalendarId ? defaultCalendarId : -1}
+              defaultValue={defaultCalendar!.id ? defaultCalendar!.id : -1}
               onChange={onChange}
             >
               {dropdownElements}
