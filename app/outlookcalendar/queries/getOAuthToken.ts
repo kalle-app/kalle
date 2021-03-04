@@ -4,10 +4,10 @@ const tenant = "common"
 const client_id = process.env.MICROSOFTCLIENTID
 const redirect_uri = "http://localhost:3000/outlookRedirect"
 const response_mode = "query"
-const scope =  "offline_access%20user.read%20mail.read"
+const scope =  "offline_access user.read mail.read"
 const response_type = "code"
 
-export function getURL(){
+export default async function getURL(){
     checkEnvVariable('MICROSOFTCLIENTID')
     const url = new URL("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/authorize")
     
