@@ -95,7 +95,7 @@ const ScheduleStep = (props: ScheduleProps) => {
               onChange={(event) => {
                 updateDuration(Number(event.currentTarget.value))
               }}
-              defaultValue={[15, 30, 60].some((time) => time == duration) ? "" : duration}
+              defaultValue={[15, 30, 60].some((time) => time === duration) ? "" : duration}
               placeholder="Custom Duration (minutes)"
               name="customDuration"
             />

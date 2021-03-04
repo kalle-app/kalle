@@ -19,7 +19,7 @@ export default resolver.pipe(
     })
 
     if (
-      !ownersCalendars.some((calendar) => calendar.id == meetingCreate.defaultConnectedCalendarId)
+      !ownersCalendars.some((calendar) => calendar.id === meetingCreate.defaultConnectedCalendarId)
     ) {
       throw new Error("Calender where to add events to invalid")
     }

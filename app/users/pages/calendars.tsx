@@ -1,16 +1,12 @@
 import Layout from "app/layouts/Layout"
-import ConnectedCalendars from "app/users/components/ConnectedCalendars"
-import SectionHeader from "app/users/components/SectionHeader"
-import { BlitzPage, useQuery } from "blitz"
-import React, { Suspense, useState } from "react"
-import getConnectedCalendars from "../queries/getConnectedCalendars"
+import { BlitzPage } from "blitz"
+import React, { Suspense } from "react"
 
 import Skeleton from "react-loading-skeleton"
 import AuthError from "app/components/AuthError"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
 import MyCalendars from "app/users/components/MyCalendars"
 import CalendarSettings from "app/users/components/CalendarSettings"
-import { Card } from "react-bootstrap"
 
 const CalendarOverview = () => {
   return (

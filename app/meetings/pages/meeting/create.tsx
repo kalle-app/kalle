@@ -161,17 +161,6 @@ const InviteCreationContent = () => {
     )
   }
 
-  const submitMeeting = async () => {
-    try {
-      const data = await createMeeting(meeting)
-      const link = getOrigin() + "/schedule/" + data?.ownerName + "/" + data?.link
-      setMeetingLink(link)
-      setShow(true)
-    } catch (error) {
-      alert(error)
-    }
-  }
-
   const next = () => {
     setStep((oldStep) => oldStep + 1)
   }
@@ -237,14 +226,14 @@ const InviteCreationContent = () => {
   const getColor = (stepNumber: number) => {
     switch (stepNumber) {
       case 1: {
-        if (step == Steps.Schedule || step == Steps.Advanced) {
+        if (step === Steps.Schedule || step === Steps.Advanced) {
           return "stepDone"
         } else {
           return "_35Ago"
         }
       }
       case 2: {
-        if (step == Steps.Advanced) {
+        if (step === Steps.Advanced) {
           return " _35Ago stepDone"
         } else if (step == Steps.Schedule) {
           return "_35Ago"
@@ -252,7 +241,7 @@ const InviteCreationContent = () => {
         return ""
       }
       case 3: {
-        if (step == Steps.Advanced) {
+        if (step === Steps.Advanced) {
           return "_35Ago"
         }
         return ""
