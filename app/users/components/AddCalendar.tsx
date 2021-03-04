@@ -4,7 +4,7 @@ import getConnectedCalendars from "../queries/getConnectedCalendars"
 import styles from "./AddCalendar.module.css"
 import { Alert, Card, Form, Button } from "react-bootstrap"
 import { useState } from "react"
-import { ConnectGoogleCalendarButton } from "../../calendar/googlecalendar"
+import { ConnectGoogleCalendarButton } from "../../calendar/googlecalendar/components/ConnectGoogleCalendarButton"
 import { AddCalendarInput } from "app/auth/validations"
 interface AddCalendarProps {
   onClose(): void
