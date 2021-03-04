@@ -24,4 +24,6 @@ export function createMeeting(meetingName: string, meetingLink: string): void {
   cy.wait(2000)
   cy.get("#select-schedule").select(scheduleName)
   cy.get("#submit").click()
+  cy.wait(1000)
+  cy.get("#submit").click()
 }

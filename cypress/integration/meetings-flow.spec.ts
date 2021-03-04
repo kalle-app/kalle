@@ -11,6 +11,7 @@ describe("Meetings Flow", () => {
     const meetingLink = uuid.v4()
     loginAs(johnDoe)
     createMeeting(uuid.v4(), meetingLink)
+    cy.wait(2000)
     cy.contains(url(`/schedule/${johnDoe.username}/${meetingLink}`))
   })
 
