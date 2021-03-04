@@ -249,8 +249,8 @@ const IntroSection = () => {
 
 const OverviewBox = (props: { span; header; children }) => {
   return (
-    <Col md={props.span} className="p-3">
-      <Col md={12} className="p-3 rounded shadow">
+    <Col md={props.span} style={{ display: "flex" }} className="p-3">
+      <Col md={12} style={{ width: "100%" }} className="p-3 rounded shadow">
         <div>
           <div>
             {props.header}
@@ -318,7 +318,7 @@ const OverviewSection = () => {
                 </Col>
                 <Col sm={4}>
                   <Link href="/meeting/create">
-                    <Button variant="primary" className="m-1 float-md-right">
+                    <Button variant="success" className="m-1 float-md-right">
                       + Meeting
                     </Button>
                   </Link>

@@ -1,9 +1,10 @@
 import { ConnectedCalendar } from "@prisma/client"
-import { invalidateQuery, useMutation } from "blitz"
+import { invalidateQuery, useMutation, invoke } from "blitz"
 import { Button, Table } from "react-bootstrap"
 import deleteConnectedCalendar from "../mutations/deleteConnectedCalendar"
 import getConnectedCalendars from "../queries/getConnectedCalendars"
-
+import checkIfCalendarIsDefaultCalendar from "../queries/checkIfCalendarIsDefaultCalendar"
+import getMeetingsToCalendar from "../queries/getMeetingsToCalendar"
 interface ConnectedCalendarsProps {
   calendars: Omit<ConnectedCalendar, "encryptedPassword">[]
 }
@@ -12,6 +13,17 @@ const ConnectedCalendars = (props: ConnectedCalendarsProps) => {
   const [deleteCalendar] = useMutation(deleteConnectedCalendar)
 
   const submitDeletion = async (calendarId: number) => {
+    const meetings = await invoke(getMeetingsToCalendar, calendarId)
+    if (meetings.length > 0) {
+      alert("You have still some meetings connected to this calendar! Please delete them.")
+      return
+    }
+    if (await invoke(checkIfCalendarIsDefaultCalendar, calendarId)) {
+      alert(
+        "You are trying to delete your default calendar! Please select another calendar as default before deleting it."
+      )
+      return
+    }
     await deleteCalendar(calendarId)
     invalidateQuery(getConnectedCalendars)
   }

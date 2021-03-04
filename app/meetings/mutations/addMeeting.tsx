@@ -1,9 +1,9 @@
 import db from "db"
 import { resolver } from "blitz"
-import { Meeting } from "app/meetings/types"
+import { MeetingSchema } from "app/meetings/types"
 
 export default resolver.pipe(
-  resolver.zod(Meeting),
+  resolver.zod(MeetingSchema),
   resolver.authorize(),
   async (meetingCreate, ctx) => {
     const owner = await db.user.findFirst({
@@ -12,6 +12,16 @@ export default resolver.pipe(
 
     if (!owner) {
       throw new Error("Invariant failed: Owner does not exist.")
+    }
+
+    const ownersCalendars = await db.connectedCalendar.findMany({
+      where: { ownerId: owner.id },
+    })
+
+    if (
+      !ownersCalendars.some((calendar) => calendar.id === meetingCreate.defaultConnectedCalendarId)
+    ) {
+      throw new Error("Calender where to add events to invalid")
     }
 
     const meeting = await db.meeting.create({
@@ -28,6 +38,9 @@ export default resolver.pipe(
         location: meetingCreate.location,
         owner: {
           connect: { username: owner.username },
+        },
+        defaultConnectedCalendar: {
+          connect: { id: meetingCreate.defaultConnectedCalendarId },
         },
       },
     })

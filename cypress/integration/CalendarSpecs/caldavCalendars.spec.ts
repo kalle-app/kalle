@@ -13,7 +13,7 @@ function addCaldavCalendar(cal: Omit<typeof baikal, "encryptedPassword">) {
 
   cy.get("#add-calendar-button").click()
 
-  cy.get("select").select("CalDav")
+  cy.get("select").eq(0).select("CalDav")
 
   cy.get("#caldav-name").type(cal.name)
   cy.get("#caldav-url").type(cal.caldavAddress)
