@@ -1,6 +1,6 @@
 import db from "db"
 import { getCalendarService } from "app/calendar-service"
-import getDefaultConnectedCalendar from "../queries/getDefaultConnectedCalendar"
+import getConnectedCalendar from "../queries/getConnectedCalendar"
 
 interface BookingDetails {
   meetingId: number
@@ -21,7 +21,7 @@ export default async function createAppointmentEventMutation(bookingDetails: Boo
   if (!meeting) {
     throw new Error("An error occured: Meeting does not exist.")
   }
-  const primaryCalendar = await getDefaultConnectedCalendar(meeting.defaultConnectedCalendarId)
+  const primaryCalendar = await getConnectedCalendar(meeting.defaultConnectedCalendarId)
   if (!primaryCalendar) {
     throw new Error("An error occured: Owner doesn't have a connected calendar")
   }

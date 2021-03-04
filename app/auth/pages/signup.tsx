@@ -93,7 +93,7 @@ const SignupPage: BlitzPage = () => {
             now!
           </Col>
           <Col xs={4} className="d-flex justify-content-end">
-            <Button id="login" variant="primary" onClick={processSignup}>
+            <Button id="signup" variant="primary" onClick={processSignup}>
               Sign up
             </Button>
           </Col>
