@@ -1,9 +1,9 @@
 import {checkEnvVariable} from "utils/checkEnvVariables"
-import {tenant, client_id,redirect_uri, response_mode,scope,response_type } from "../constants"
+import {client_id, redirect_uri, response_mode, scope, response_type, baseURL } from "../constants"
 
 export default async function getURL(){
     checkEnvVariable('MICROSOFTCLIENTID')
-    const url = new URL("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/authorize")
+    const url = new URL(baseURL + "authorize")
     
     url.searchParams.append("client_id", client_id!)
     url.searchParams.append("redirect_uri", redirect_uri)
