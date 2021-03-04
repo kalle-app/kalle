@@ -265,12 +265,7 @@ const OverviewBox = (props: { span; header; children }) => {
 const MeetingOverviewBox = ({ meeting }: { meeting: Meeting }) => {
   return (
     <Col lg={6} className="my-1" style={{ display: "flex" }}>
-      <Card
-        key={meeting.id + meeting.ownerName + meeting.name}
-        id={"" + meeting.id}
-        className="p-3 my-2 text-left"
-        style={{ width: "100%" }}
-      >
+      <Card id={"" + meeting.id} className="p-3 my-2 text-left" style={{ width: "100%" }}>
         <Row>
           <Col md={12}>
             <h5 className="font-weight-bold">
@@ -331,7 +326,7 @@ const OverviewSection = () => {
             {meetings.length === 0 ? <p className="text-center">No active meetings yet</p> : ""}
             <Row style={{ display: "flex", flexWrap: "wrap" }}>
               {meetings.map((meeting) => (
-                <MeetingOverviewBox meeting={meeting} />
+                <MeetingOverviewBox key={meeting.id + "-MeetingOverviewBox"} meeting={meeting} />
               ))}
             </Row>
           </OverviewBox>
@@ -341,7 +336,7 @@ const OverviewSection = () => {
             ) : (
               appointments.map((appointment) => {
                 return (
-                  <>
+                  <div key={appointment.id + "-appointment"}>
                     <Row className="py-2">
                       <Col xs={8}>
                         <Row>
@@ -364,7 +359,7 @@ const OverviewSection = () => {
                       </Col>
                     </Row>
                     <hr></hr>
-                  </>
+                  </div>
                 )
               })
             )}

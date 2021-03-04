@@ -40,15 +40,21 @@ const LoginPage: BlitzPage = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <h2 className="text-center mt-4 mb-5">Log In</h2>
         <Form>
-          <Form.Group controlId="email">
+          <Form.Group>
             <Form.Label>Email address</Form.Label>
-            <Form.Control id="email" type="email" onChange={(e) => setEmail(e.target.value)} />
+            <Form.Control
+              id="email"
+              type="email"
+              autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Group>
-          <Form.Group controlId="password">
+          <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
               id="password"
               type="password"
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>

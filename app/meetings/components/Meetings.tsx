@@ -37,7 +37,13 @@ const Meetings = (props: MeetingsProps) => {
     <Row style={{ display: "flex", flexWrap: "wrap" }}>
       {meetings.map((meeting) => {
         return (
-          <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+          <Col
+            key={meeting.id + "meetingView"}
+            sm={6}
+            lg={4}
+            style={{ display: "flex" }}
+            className="my-1"
+          >
             <Card
               key={meeting.id + meeting.ownerName + meeting.name}
               id={"" + meeting.id}

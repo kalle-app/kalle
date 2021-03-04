@@ -112,7 +112,11 @@ const ScheduleStep = (props: ScheduleProps) => {
               >
                 <option>Select a Schedule</option>
                 {props.schedulePresets.map((schedule) => {
-                  return <option value={schedule.id}>{schedule.name}</option>
+                  return (
+                    <option key={"schedule" + schedule.id} value={schedule.id}>
+                      {schedule.name}
+                    </option>
+                  )
                 })}
               </Form.Control>
               <p>

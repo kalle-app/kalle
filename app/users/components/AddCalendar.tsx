@@ -113,7 +113,7 @@ const CalDavFormBody = () => {
 
   return (
     <>
-      <Form.Group controlId="formName">
+      <Form.Group>
         <Alert variant="danger">
           The CalDav protocol requires us to save your CalDav credentials in a way that we can send
           it in plain text to the host. We encrypt the password, but please be aware that this a
@@ -128,7 +128,7 @@ const CalDavFormBody = () => {
           placeholder="Enter a name you'd like for your calendar"
         />
       </Form.Group>
-      <Form.Group controlId="formUrl">
+      <Form.Group>
         <Form.Label>Calendar URL</Form.Label>
         <Form.Control
           id="caldav-url"
@@ -145,13 +145,18 @@ const CalDavFormBody = () => {
           <code>{"/remote.php/dav/calendars/<username>/<calendar-name>"}</code>
         </Alert>
       )}
-      <Form.Group controlId="formUsername">
+      <Form.Group>
         <Form.Label>Username</Form.Label>
-        <Form.Control id="caldav-username" name="username" />
+        <Form.Control autoComplete="username" id="caldav-username" name="username" />
       </Form.Group>
-      <Form.Group controlId="formPassword">
+      <Form.Group>
         <Form.Label>Password</Form.Label>
-        <Form.Control id="caldav-password" type="password" name="password" />
+        <Form.Control
+          autoComplete="new-password"
+          id="caldav-password"
+          type="password"
+          name="password"
+        />
       </Form.Group>
     </>
   )

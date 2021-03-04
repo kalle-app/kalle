@@ -18,6 +18,7 @@ const UserDataForm = (props: UserDataFormProps) => {
       <Form.Group controlId="formName">
         <Form.Label>Full name</Form.Label>
         <Form.Control
+          autoComplete="name"
           placeholder={currentUser?.name}
           onChange={(e) => props.setName(e.target.value)}
         />
@@ -25,6 +26,7 @@ const UserDataForm = (props: UserDataFormProps) => {
       <Form.Group controlId="formEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
+          autoComplete="email"
           type="email"
           placeholder={currentUser?.email}
           onChange={(e) => props.setEmail(e.target.value)}
@@ -33,11 +35,19 @@ const UserDataForm = (props: UserDataFormProps) => {
       <Form.Row>
         <Form.Group as={Col} controlId="formPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" onChange={(e) => props.setPassword(e.target.value)} />
+          <Form.Control
+            autoComplete="new-password"
+            type="password"
+            onChange={(e) => props.setPassword(e.target.value)}
+          />
         </Form.Group>
         <Form.Group as={Col} controlId="formRepeatPassword">
           <Form.Label>Repeat Password</Form.Label>
-          <Form.Control type="password" onChange={(e) => props.setRepeatPassword(e.target.value)} />
+          <Form.Control
+            autoComplete="new-password"
+            type="password"
+            onChange={(e) => props.setRepeatPassword(e.target.value)}
+          />
         </Form.Group>
       </Form.Row>
       <Form.Text className={props.state + " mb-4"}>{props.message}</Form.Text>
