@@ -60,19 +60,27 @@ const SignupPage: BlitzPage = () => {
         <Form>
           <Form.Group controlId="fullName">
             <Form.Label>Full name</Form.Label>
-            <Form.Control onChange={(e) => setName(e.target.value)} />
+            <Form.Control autoComplete="name" onChange={(e) => setName(e.target.value)} />
           </Form.Group>
           <Form.Group controlId="username">
             <Form.Label>Username</Form.Label>
-            <Form.Control onChange={(e) => setUsername(e.target.value)} />
+            <Form.Control autoComplete="username" onChange={(e) => setUsername(e.target.value)} />
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" onChange={(e) => setEmail(e.target.value)} />
+            <Form.Control
+              autoComplete="email"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Group>
           <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" onChange={(e) => setPassword(e.target.value)} />
+            <Form.Control
+              autoComplete="new-password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </Form.Group>
           <Form.Text className="text-danger mb-4">{message}</Form.Text>
         </Form>

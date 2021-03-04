@@ -40,7 +40,13 @@ const Meetings = (props: MeetingsProps) => {
         const hrefToDisplay = getOrigin() + href
 
         return (
-          <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+          <Col
+            key={meeting.id + "meetingView"}
+            sm={6}
+            lg={4}
+            style={{ display: "flex" }}
+            className="my-1"
+          >
             <Card
               key={meeting.id + meeting.ownerName + meeting.name}
               id={"" + meeting.id}
