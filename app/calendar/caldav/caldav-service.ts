@@ -2,7 +2,11 @@ import * as urllib from "urllib"
 import * as ical from "node-ical"
 import _ from "lodash"
 import { v4 as uuidv4 } from "uuid"
-import type { CalendarService, CreateEventBooking, ExternalEvent } from "app/calendar/calendar-service"
+import type {
+  CalendarService,
+  CreateEventBooking,
+  ExternalEvent,
+} from "app/calendar/calendar-service"
 import { ConnectedCalendar } from "db"
 import passwordEncryptor from "app/users/password-encryptor"
 import { addMinutes } from "date-fns"
@@ -305,23 +309,24 @@ export class CaldavService implements CalendarService {
 
     const dateNow = new Date()
     const uid = uuidv4()
-    const data = `BEGIN:VCALENDAR
-  VERSION:2.0
-  PRODID:-//MailClient.VObject/8.0.3385.0
-  BEGIN:VEVENT
-  UID:${uid}
-  DTSTART;TZID=Europe/Berlin:${formatDateAsICS(start)}
-  DTEND;TZID=Europe/Berlin:${formatDateAsICS(end)}
-  TRANSP:OPAQUE
-  X-MICROSOFT-CDO-BUSYSTATUS:BUSY
-  LAST-MODIFIED:${formatDateAsICS(dateNow)}
-  DTSTAMP:${formatDateAsICS(dateNow)}
-  CREATED:${formatDateAsICS(dateNow)}
-  LOCATION:${booking.meeting.location}
-  SUMMARY:${booking.meeting.name}
-  CLASS:PUBLIC
-  END:VEVENT
-  END:VCALENDAR\r\n`
+    const data = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MailClient.VObject/8.0.3385.0
+BEGIN:VEVENT
+UID:${uid}
+DTSTART;TZID=Europe/Berlin:${formatDateAsICS(start)}
+DTEND;TZID=Europe/Berlin:${formatDateAsICS(end)}
+TRANSP:OPAQUE
+X-MICROSOFT-CDO-BUSYSTATUS:BUSY
+LAST-MODIFIED:${formatDateAsICS(dateNow)}
+DTSTAMP:${formatDateAsICS(dateNow)}
+CREATED:${formatDateAsICS(dateNow)}
+LOCATION:${booking.meeting.location}
+SUMMARY:${booking.meeting.name}
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR\r\n`.trimLeft()
     const response = await makeRequestTo(this.calendar, {
       data: data,
       method: "PUT",
