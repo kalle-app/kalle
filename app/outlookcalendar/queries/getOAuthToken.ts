@@ -1,11 +1,5 @@
 import {checkEnvVariable} from "utils/checkEnvVariables"
-
-const tenant = "common"
-const client_id = process.env.MICROSOFTCLIENTID
-const redirect_uri = "http://localhost:3000/outlookRedirect"
-const response_mode = "query"
-const scope =  "offline_access user.read mail.read"
-const response_type = "code"
+import {tenant, client_id,redirect_uri, response_mode,scope,response_type } from "../constants"
 
 export default async function getURL(){
     checkEnvVariable('MICROSOFTCLIENTID')
