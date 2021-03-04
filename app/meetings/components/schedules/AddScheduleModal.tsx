@@ -7,7 +7,7 @@ import React, { useState } from "react"
 import { Alert, Button, Col, Form, Modal } from "react-bootstrap"
 import addSchedule from "../../mutations/addSchedule"
 import timezones from "./tz"
-import { mapValues } from "utils/map-values"
+import { mapValues } from "utils/map-values"
 
 interface AddScheduleProps {
   show: boolean
@@ -17,11 +17,11 @@ interface AddScheduleProps {
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const
 type Schedules = Record<typeof days[number], { start: string; end: string }>
 
-const isScheduleWellFormed = (schedules: Schedules) => {
+export const isScheduleWellFormed = (schedules: Schedules) => {
   return Object.values(schedules).every(({ start, end }) => isBefore(start, end))
 }
 
-const isBefore = (startTime: string, endTime: string) => {
+export const isBefore = (startTime: string, endTime: string) => {
   const start = parseTime(startTime)
   const end = parseTime(endTime)
 
@@ -29,20 +29,20 @@ const isBefore = (startTime: string, endTime: string) => {
     return false
   }
 
-  if (start[0] > end[0]) {
-    return false
+  if (start[0] === end[0]) {
+    return start[1] < end[1]
   }
 
-  return start[1] <= end[1]
+  return start[0] < end[0]
 }
 
-const parseTime = (time: string): [start: number, end: number] | null => {
+export const parseTime = (time: string): [start: number, end: number] | null => {
   const parts = time.split(":")
   if (parts.length !== 2) {
     return null
   }
 
-  const [hours, minutes] = parts.map(parseInt)
+  const [hours, minutes] = parts.map((v) => parseInt(v))
   if (hours < 0 || hours > 23) {
     return null
   }
