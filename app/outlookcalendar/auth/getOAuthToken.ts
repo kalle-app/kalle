@@ -1,12 +1,21 @@
+import {checkEnvVariable} from "utils/checkEnvVariables"
+
 const tenant = "common"
-const clientId = process.env.
-export async function getURL(){
-    const baseURL = "https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/authorize" 
+const client_id = process.env.MICROSOFTCLIENTID
+const redirect_uri = "http://localhost:3000/outlookRedirect"
+const response_mode = "query"
+const scope =  "offline_access%20user.read%20mail.read"
+const response_type = "code"
+
+export function getURL(){
+    checkEnvVariable('MICROSOFTCLIENTID')
+    const url = new URL("https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/authorize")
     
+    url.searchParams.append("client_id", client_id!)
+    url.searchParams.append("redirect_uri", redirect_uri)
+    url.searchParams.append("response_mode", response_mode)
+    url.searchParams.append("scope", scope)
+    url.searchParams.append("response_type", response_type!)
+
+    return url.href
 }
-
-
-https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
-client_id=9516495f-79a2-4e13-860b-4ffebb531f95&response_type=code
-&redirect_uri=http://localhost:3000/outlookRedirect&response_mode=query
-&scope=offline_access%20user.read%20mail.read
