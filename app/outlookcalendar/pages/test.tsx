@@ -2,7 +2,7 @@ import Layout from "app/layouts/Layout"
 import { BlitzPage, invoke, useQuery } from "blitz"
 import React, { Suspense } from "react"
 import { Button } from "react-bootstrap"
-import getURL from "../queries/getOAuthToken"
+import getURL from "../queries/getURL"
 function TestFun() {
   const [url] = useQuery(getURL, undefined)
   return (
