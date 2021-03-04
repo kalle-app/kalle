@@ -1,4 +1,5 @@
-import { Card, Row, Col, Button } from "react-bootstrap"
+import { Card, Row, Col, Button, Alert } from "react-bootstrap"
+import { useState } from "react"
 import type { Meeting } from "db"
 import { Link, useMutation, invalidateQuery } from "blitz"
 import { getOrigin } from "utils/generalUtils"
@@ -14,10 +15,17 @@ interface MeetingsProps {
 
 const Meetings = (props: MeetingsProps) => {
   const [deleteMeeting] = useMutation(deleteMeetingMutation)
+  const [activeMeeting, setActiveMeeting] = useState(0)
+  const [message, setMessage] = useState("")
 
   const submitDeletion = async (meetingId: number) => {
-    await deleteMeeting(meetingId)
-    invalidateQuery(getMeetings)
+    const result = await deleteMeeting(meetingId)
+    if (result === "error") {
+      setActiveMeeting(meetingId)
+      setMessage("There are still active bookings")
+    } else {
+      invalidateQuery(getMeetings)
+    }
   }
 
   const { meetings } = props
@@ -32,7 +40,13 @@ const Meetings = (props: MeetingsProps) => {
         const hrefToDisplay = getOrigin() + href
 
         return (
-          <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+          <Col
+            key={meeting.id + "meetingView"}
+            sm={6}
+            lg={4}
+            style={{ display: "flex" }}
+            className="my-1"
+          >
             <Card
               key={meeting.id + meeting.ownerName + meeting.name}
               id={"" + meeting.id}
@@ -79,9 +93,16 @@ const Meetings = (props: MeetingsProps) => {
                   <p className="my-auto">{meeting.description}</p>
                 </Col>
               </Row>
+              {activeMeeting === meeting.id && message !== "" && (
+                <Alert variant="danger" className="mt-4">
+                  {message}
+                </Alert>
+              )}
               <div className="d-flex mt-4 justify-content-end">
                 <Link href={"/meeting/bookings/" + meeting.id}>
-                  <Button variant="outline-primary">View Bookings</Button>
+                  <Button id={"booking-btn-" + meeting.name} variant="outline-primary">
+                    View Bookings
+                  </Button>
                 </Link>
                 <CopyToClipboard text={hrefToDisplay} className="ml-3">
                   <Button variant="outline-primary">Copy Link</Button>

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faAngleDoubleRight, faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDoubleLeft, faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Form, ButtonGroup, Button, ToggleButton, Col } from "react-bootstrap"
@@ -18,8 +18,8 @@ interface ScheduleFormResult {
 type ScheduleProps = {
   initialMeeting: Meeting
   stepBack: () => void
-  toNext: (result: ScheduleFormResult) => void
-  schedulePresets: Schedule[]
+  onSubmit: (result: ScheduleFormResult) => void
+  schedulePresets: Pick<Schedule, "id" | "timezone" | "name">[]
 }
 
 const ScheduleStep = (props: ScheduleProps) => {
@@ -60,7 +60,7 @@ const ScheduleStep = (props: ScheduleProps) => {
             return
           }
 
-          props.toNext({
+          props.onSubmit({
             endDate,
             startDate,
             scheduleId,
@@ -143,8 +143,12 @@ const ScheduleStep = (props: ScheduleProps) => {
                 value={scheduleId}
               >
                 <option>Select a Schedule</option>
-                {props.schedulePresets.map((schedule: Schedule) => {
-                  return <option value={schedule.id}>{schedule.name}</option>
+                {props.schedulePresets.map((schedule) => {
+                  return (
+                    <option key={"schedule" + schedule.id} value={schedule.id}>
+                      {schedule.name}
+                    </option>
+                  )
                 })}
               </Form.Control>
               <p>

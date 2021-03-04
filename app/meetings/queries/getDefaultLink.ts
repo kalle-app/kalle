@@ -11,7 +11,7 @@ function createNewName() {
 }
 
 export default async function getDefaultLink(_ = null, ctx: Ctx) {
-  ctx.session.authorize()
+  ctx.session.$authorize()
 
   const meetings = await db.meeting.findMany({
     where: {

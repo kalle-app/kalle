@@ -1,6 +1,4 @@
 import logoutMutation from "app/auth/mutations/logout"
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
 import SectionFooter from "app/users/components/SectionFooter"
 import SectionHeader from "app/users/components/SectionHeader"
@@ -91,27 +89,16 @@ const DangerZone = () => {
   )
 }
 
-const SettingsContent = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
-
-  return (
-    <>
-      <PersonalInformation />
-      <DangerZone />
-    </>
-  )
-}
-
 const Settings: BlitzPage = () => {
   return (
     <Suspense fallback={<Skeleton count={10} />}>
-      <SettingsContent />
+      <PersonalInformation />
+      <DangerZone />
     </Suspense>
   )
 }
 
+Settings.authenticate = true
 Settings.getLayout = (page) => <Layout title="Settings">{page}</Layout>
 
 export default Settings

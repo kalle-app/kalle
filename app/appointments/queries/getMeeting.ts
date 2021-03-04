@@ -1,18 +1,17 @@
 import db from "db"
-import { Ctx } from "blitz"
+import { resolver } from "blitz"
+import * as z from "zod"
 
-interface MeetingLink {
-  username: string
-  slug: string
-}
+export default resolver.pipe(
+  resolver.zod(z.object({ username: z.string(), slug: z.string() })),
+  async ({ username, slug }) => {
+    const meeting = await db.meeting.findFirst({
+      where: {
+        link: slug,
+        ownerName: username,
+      },
+    })
 
-export default async function getMeeting(link: MeetingLink, ctx: Ctx) {
-  const meeting = await db.meeting.findFirst({
-    where: {
-      link: link.slug,
-      ownerName: link.username,
-    },
-  })
-
-  return meeting
-}
+    return meeting
+  }
+)

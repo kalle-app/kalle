@@ -7,16 +7,13 @@ import React, { Suspense } from "react"
 import { Card, Row, Col, Button, Container } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 
-interface BookingsProps {
-  meetingId: number
-}
+const BookingsContent = () => {
+  const meetingId = useParam("meetingId", "number")!
 
-const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) => {
   const [meeting] = useQuery(getMeetingById, meetingId)
   const [bookings] = useQuery(getBookings, meetingId)
 
-  if (!meeting) return <p>This meeting was deleted.</p>
-  if (!bookings || bookings.length < 1) return <p>No Bookings yet</p>
+  if (bookings.length < 1) return <p>No Bookings yet</p>
 
   return (
     <>
@@ -26,9 +23,14 @@ const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) 
         {bookings.map((booking) => {
           const dateString = format(new Date(booking.startDateUTC), "iiii, dd. LLLL y - H:mm")
           return (
-            <Col sm={6} lg={4} style={{ display: "flex" }} className="my-1">
+            <Col
+              key={booking.id + "bookingView"}
+              sm={6}
+              lg={4}
+              style={{ display: "flex" }}
+              className="my-1"
+            >
               <Card
-                key={booking.id}
                 id={"" + booking.id}
                 className="p-3 my-2 text-left shadow"
                 style={{ width: "100%" }}
@@ -55,20 +57,16 @@ const BookingsContent: React.FunctionComponent<BookingsProps> = ({ meetingId }) 
 }
 
 const Bookings: BlitzPage = () => {
-  const meetingId = useParam("meetingId", "number")
-  if (!meetingId) {
-    return <Skeleton count={10} />
-  }
-
   return (
     <Suspense fallback={<Skeleton count={10} />}>
       <Container>
-        <BookingsContent meetingId={meetingId} />
+        <BookingsContent />
       </Container>
     </Suspense>
   )
 }
 
+Bookings.authenticate = true
 Bookings.getLayout = (page) => <Layout title="Bookings">{page}</Layout>
 
 export default Bookings

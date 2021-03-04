@@ -83,6 +83,7 @@ export const mockRouter: BlitzRouter = {
     emit: jest.fn(),
   },
   isFallback: false,
+  isLocaleDomain: false,
 }
 
 type DefaultParams = Parameters<typeof defaultRender>

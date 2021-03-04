@@ -1,3 +1,5 @@
+import * as z from "zod"
+
 export const Weekdays = [
   "monday",
   "tuesday",
@@ -10,14 +12,16 @@ export const Weekdays = [
 
 export type Weekdays = typeof Weekdays[number]
 
-export interface Meeting {
-  name: string
-  link: string
-  description: string
-  duration: number
-  startDate: Date
-  endDate: Date
-  location: string
-  scheduleId: number
-  defaultConnectedCalendarId: number
-}
+export const MeetingSchema = z.object({
+  name: z.string(),
+  link: z.string(),
+  description: z.string(),
+  duration: z.number(),
+  startDate: z.date(),
+  endDate: z.date(),
+  location: z.string(),
+  scheduleId: z.number(),
+  defaultConnectedCalendarId: z.number(),
+})
+
+export type Meeting = z.TypeOf<typeof MeetingSchema>

@@ -1,8 +1,6 @@
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import Layout from "app/layouts/Layout"
 import getScheduleNames from "app/meetings/queries/getScheduleNames"
-import { Meeting } from "app/meetings/types"
+import { MeetingSchema } from "app/meetings/types"
 import { BlitzPage, Link, Router, useMutation, useQuery } from "blitz"
 import React, { ReactElement, Suspense, useEffect, useState } from "react"
 import { Button, Modal } from "react-bootstrap"
@@ -11,12 +9,15 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import Skeleton from "react-loading-skeleton"
 import hasCalendar from "app/meetings/queries/hasCalendar"
 import { getOrigin } from "utils/generalUtils"
+import * as z from "zod"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
 import addMeetingMutation from "../../mutations/addMeeting"
 import Advanced from "../../components/creationSteps/Advanced"
 import "react-step-progress/dist/index.css"
 import getDefaultCalendarByUser from "app/users/queries/getDefaultCalendarByUser"
+import { useCurrentUser } from "app/hooks/useCurrentUser"
+import AuthError from "app/components/AuthError"
 
 enum Steps {
   General,
@@ -24,7 +25,7 @@ enum Steps {
   Advanced,
 }
 
-const initialMeeting: Meeting = {
+const initialMeeting: z.TypeOf<typeof MeetingSchema> = {
   name: "",
   link: "",
   description: "",
@@ -203,7 +204,7 @@ const InviteCreationContent = () => {
           <ScheduleStep
             initialMeeting={meeting}
             schedulePresets={schedulePresets!}
-            toNext={(result) => {
+            onSubmit={(result) => {
               setMeeting((oldMeeting) => ({
                 ...oldMeeting,
                 startDate: result.startDate,
@@ -292,6 +293,7 @@ const Create: BlitzPage = () => {
   )
 }
 
+Create.authenticate = true
 Create.getLayout = (page) => <Layout title="Create a Meeting">{page}</Layout>
 
 export default Create

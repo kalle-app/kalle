@@ -5,8 +5,6 @@ import getMeetings from "../queries/getMeetings"
 import Meetings from "../components/Meetings"
 import Button from "react-bootstrap/Button"
 import Skeleton from "react-loading-skeleton"
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import { Col, Row } from "react-bootstrap"
 
 const MeetingsContent = () => {
@@ -14,12 +12,9 @@ const MeetingsContent = () => {
   return <Meetings meetings={meetings ? meetings : []} />
 }
 
-const MainContent = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
+const MyMeetings: BlitzPage = () => {
   return (
-    <div className="">
+    <Suspense fallback={<Skeleton count={10} />}>
       <Row className="mb-3">
         <Col md={8} className="text-left">
           <h3>Your Meetings</h3>
@@ -31,18 +26,11 @@ const MainContent = () => {
         </Col>
       </Row>
       <MeetingsContent />
-    </div>
-  )
-}
-
-const MyMeetings: BlitzPage = () => {
-  return (
-    <Suspense fallback={<Skeleton count={10} />}>
-      <MainContent />
     </Suspense>
   )
 }
 
+MyMeetings.authenticate = true
 MyMeetings.getLayout = (page) => <Layout title="Meetings | Kalle">{page}</Layout>
 
 export default MyMeetings

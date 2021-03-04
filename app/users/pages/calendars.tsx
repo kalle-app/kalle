@@ -41,6 +41,7 @@ const Calendars: BlitzPage = () => {
   )
 }
 
+Calendars.authenticate = true
 Calendars.getLayout = (page) => <Layout title="Calendars | Kalle">{page}</Layout>
 
 export default Calendars
