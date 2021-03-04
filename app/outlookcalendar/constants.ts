@@ -5,3 +5,5 @@ export const response_mode = "query"
 export const scope =  "offline_access user.read mail.read"
 export const response_type = "code"
 export const baseURL = "https://login.microsoftonline.com/" + tenant + "/oauth2/v2.0/"
+export const grant_type = "authorization_code"
+export const client_secret = process.env.MICROSOFTCLIENTSECRET
