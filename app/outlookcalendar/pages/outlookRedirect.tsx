@@ -2,7 +2,7 @@ import Layout from "app/layouts/Layout"
 import { BlitzPage, Link, useMutation, useRouterQuery } from "blitz"
 import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
-
+import {handleOAuthCode} from "../queries/handleOAuthCode"
 interface credentials {
   account: object
   scopes: string[]
@@ -14,9 +14,21 @@ function OAuthCallbackPage() {
   const [isError, setIsError] = useState(false)
   const [isCalenderAdded, setIsCalenderAdded] = useState(false)
   const [calendarName, setCalendarName] = useState("Your Google Calendar")
+  const [handleAUth]
   let { code } = useRouterQuery()
 
   const SettingsLink = () => {
+    const hanldeCode = async () => {
+        setIsError(false)
+        try {
+          if (!code || Array.isArray(code))
+            return <p>Google Authentication failed with Code {code}. Please try again.</p>
+
+          return await handleOAuthCode(code)
+        } catch (error) {
+          setIsError(true)
+        }
+      }
     return (
       <Link href={"/settings"}>
         <Button variant="secondary" href={"/settings"}>
