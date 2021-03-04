@@ -7,28 +7,14 @@ import {
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
-import childProcess from "child_process"
-
-function exec(command: string, cwd = process.cwd()) {
-  return new Promise<void>((resolve, reject) => {
-    const $ = childProcess.exec(command, {
-      cwd,
-    })
-
-    $.on("exit", (code) => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject()
-      }
-    })
-  })
-}
+import execa from "execa"
 
 // for some reason, testcontainer's build doesn't want to work.
 // that's why we build it by hand ...
 async function buildByHand(context: string, name: string) {
-  return await exec(`docker buildx build -t ${name} .`, path.resolve(__dirname, context))
+  await execa("docker", ["buildx", "build", "-t", name, "."], {
+    cwd: path.resolve(__dirname, context),
+  })
 }
 
 async function getBaikalContainer() {
