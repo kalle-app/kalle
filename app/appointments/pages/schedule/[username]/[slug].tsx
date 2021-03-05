@@ -13,6 +13,7 @@ import React, { Suspense, useEffect, useState } from "react"
 import { Alert, Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { DatePickerCalendar } from "react-nice-dates"
+import { getOrigin } from "utils/origin"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -100,6 +101,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
         inviteeEmail: email,
         startDate: selectedTimeSlot.start,
         notificationTime: notificationTime,
+        baseUrl: getOrigin(),
       })
       setSuccess(true)
     } catch (e) {

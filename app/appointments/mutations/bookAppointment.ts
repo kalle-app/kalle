@@ -6,8 +6,14 @@ import * as z from "zod"
 import { getCalendarService } from "app/calendar/calendar-service"
 import { getEmailService } from "../../email"
 import { createICalendarEvent } from "../utils/createCalendarEvent"
+import * as uuid from "uuid"
+const bcrypt = require("bcrypt")
 
-async function sendConfirmationMail(booking: Booking, meeting: Meeting & { owner: User }) {
+async function sendConfirmationMail(
+  booking: Booking,
+  cancelLink: String,
+  meeting: Meeting & { owner: User }
+) {
   const startMonth = (booking.startDateUTC.getMonth() + 1).toString()
   await getEmailService().send({
     template: "confirmation",
@@ -47,6 +53,7 @@ async function sendConfirmationMail(booking: Booking, meeting: Meeting & { owner
           hours: Math.floor(meeting.duration / 60),
           minutes: meeting.duration % 60,
         },
+        cancelLink: cancelLink,
       },
     },
   })
@@ -56,6 +63,7 @@ export default resolver.pipe(
   resolver.zod(
     z.object({
       meetingId: z.number(),
+      baseUrl: z.string(),
       inviteeEmail: z.string(),
       startDate: z.date(),
       notificationTime: z.number(),
@@ -75,6 +83,9 @@ export default resolver.pipe(
       throw new Error("An error occured: Owner doesn't have a connected calendar")
     }
 
+    const cancelCode = uuid.v4()
+
+    const hashedCode = await bcrypt.hash(cancelCode, 10)
     const booking = await db.booking.create({
       data: {
         meeting: {
@@ -82,9 +93,9 @@ export default resolver.pipe(
         },
         inviteeEmail: bookingInfo.inviteeEmail,
         startDateUTC: bookingInfo.startDate,
+        cancelCode: hashedCode,
       },
     })
-
     const calendarService = await getCalendarService(primaryCalendar)
     await calendarService.createEvent({
       ...booking,
@@ -99,8 +110,8 @@ export default resolver.pipe(
       throw new Error("meeting not found")
     }
 
-    await sendConfirmationMail(booking, meeting)
-
+    const cancelLink = bookingInfo.baseUrl + "/cancelBooking/" + booking.id + "/" + cancelCode
+    await sendConfirmationMail(booking, cancelLink, meeting)
     const startTime = subMinutes(bookingInfo.startDate, bookingInfo.notificationTime)
     if (startTime > addMinutes(new Date(), 30)) {
       await reminderQueue.enqueue(booking.id, { runAt: startTime })
