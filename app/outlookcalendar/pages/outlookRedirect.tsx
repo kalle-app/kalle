@@ -1,5 +1,5 @@
 import Layout from "app/layouts/Layout"
-import { BlitzPage, Link, useRouterQuery } from "blitz"
+import { BlitzPage, Link, useRouterQuery, invoke } from "blitz"
 import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
 import handleOAuthCode from "../queries/handleOAuthCode"
@@ -22,7 +22,7 @@ function OAuthCallbackPage() {
           if (!code || Array.isArray(code))
             return <p>Microsoft Authentication failed with Code {code}. Please try again.</p>
 
-          return await handleOAuthCode(code)
+          return await invoke(handleOAuthCode, {code: code, name: calendarName})
         } catch (error) {
           setIsError(true)
         }
