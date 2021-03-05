@@ -1,32 +1,31 @@
+import { Booking, Meeting, User } from "db"
 import * as ics from "ics"
-import { Appointment } from "../types"
 
-function durationToIcsDurationObject(duration: number): ics.DurationObject {
-  const durationInMinutes = duration / (60 * 1000)
+function durationToIcsDurationObject(durationInMinutes: number): ics.DurationObject {
   return {
     hours: Math.floor(durationInMinutes / 60),
     minutes: durationInMinutes % 60,
   }
 }
 
-export function createCalendarEvent(appointment: Appointment): string {
+export function createICalendarEvent(booking: Booking, meeting: Meeting & { owner: User }): string {
   const { error, value } = ics.createEvent({
     start: [
-      appointment.start.getFullYear(),
-      appointment.start.getMonth() + 1,
-      appointment.start.getDate(),
-      appointment.start.getHours(),
-      appointment.start.getMinutes(),
+      booking.startDateUTC.getFullYear(),
+      booking.startDateUTC.getMonth() + 1,
+      booking.startDateUTC.getDate(),
+      booking.startDateUTC.getHours(),
+      booking.startDateUTC.getMinutes(),
     ],
-    duration: durationToIcsDurationObject(appointment.durationInMilliseconds),
-    title: appointment.title,
-    description: appointment.description,
-    location: appointment.location,
-    organizer: { name: appointment.organiser.name, email: appointment.organiser.email },
+    duration: durationToIcsDurationObject(meeting.duration),
+    title: meeting.name,
+    description: meeting.description,
+    location: meeting.location,
+    organizer: { name: meeting.owner.name, email: meeting.owner.email },
     attendees: [
       {
-        name: appointment.owner.name,
-        email: appointment.owner.email,
+        name: meeting.owner.name,
+        email: meeting.owner.email,
         rsvp: true,
         partstat: "ACCEPTED",
         role: "REQ-PARTICIPANT",

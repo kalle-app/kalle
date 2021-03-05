@@ -7,8 +7,8 @@ import { Button, Modal } from "react-bootstrap"
 import Card from "react-bootstrap/Card"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import Skeleton from "react-loading-skeleton"
+import { getOrigin } from "utils/origin"
 import hasCalendar from "app/meetings/queries/hasCalendar"
-import { getOrigin } from "utils/generalUtils"
 import * as z from "zod"
 import General from "../../components/creationSteps/General"
 import ScheduleStep from "../../components/creationSteps/Schedule"
@@ -17,7 +17,6 @@ import Advanced from "../../components/creationSteps/Advanced"
 import "react-step-progress/dist/index.css"
 import getDefaultCalendarByUser from "app/users/queries/getDefaultCalendarByUser"
 import { useCurrentUser } from "app/hooks/useCurrentUser"
-import AuthError from "app/components/AuthError"
 
 enum Steps {
   General,
@@ -105,7 +104,7 @@ const InviteCreationContent = () => {
   const [schedulePresets] = useQuery(getScheduleNames, null)
   const [error, setError] = useState({ error: false, message: "" })
   const [readyForSubmission, setReadyForSubmission] = useState(false)
-  const user = useCurrentUser()
+  const user = useCurrentUser()!
   const [userHasCalendar] = useQuery(hasCalendar, null)
   const [defaultCalendar] = useQuery(getDefaultCalendarByUser, null)
 
@@ -135,10 +134,6 @@ const InviteCreationContent = () => {
       submitMeeting()
     }
   }, [readyForSubmission, meeting, createMeeting])
-
-  if (!user) {
-    return <AuthError />
-  }
 
   if (!userHasCalendar) {
     return (

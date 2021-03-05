@@ -1,44 +1,29 @@
 import {
-  getTakenTimeSlots,
   getEvents,
   verifyConnectionDetails,
-  createCalDavEvent,
   formatDateAsICS,
-} from "."
+  CaldavService,
+} from "./caldav-service"
 import { GenericContainer, StartedTestContainer } from "testcontainers"
 import * as path from "path"
 import { addMinutes } from "date-fns"
-import childProcess from "child_process"
-
-function exec(command: string, cwd = process.cwd()) {
-  return new Promise<void>((resolve, reject) => {
-    const $ = childProcess.exec(command, {
-      cwd,
-    })
-
-    $.on("exit", (code) => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject()
-      }
-    })
-  })
-}
+import execa from "execa"
 
 // for some reason, testcontainer's build doesn't want to work.
 // that's why we build it by hand ...
 async function buildByHand(context: string, name: string) {
-  return await exec(`docker buildx build -t ${name} .`, path.resolve(__dirname, context))
+  await execa("docker", ["buildx", "build", "-t", name, "."], {
+    cwd: path.resolve(__dirname, context),
+  })
 }
 
 async function getBaikalContainer() {
-  await buildByHand("../../test/baikal", "baikal-with-cal")
+  await buildByHand("../../../test/baikal", "baikal-with-cal")
   return new GenericContainer("baikal-with-cal").withExposedPorts(80)
 }
 
 async function getNextcloudContainer() {
-  await buildByHand("../../test/nextcloud", "nc-with-cal")
+  await buildByHand("../../../test/nextcloud", "nc-with-cal")
   return new GenericContainer("nc-with-cal").withExposedPorts(80)
 }
 
@@ -89,6 +74,10 @@ function test(calendarBackend: Backends) {
           },
         },
       })
+    }
+
+    function getCaldavService() {
+      return new CaldavService(getCalendarConnection())
     }
 
     describe("auth test", () => {
@@ -170,8 +159,7 @@ function test(calendarBackend: Backends) {
 
     describe("freeBusy", () => {
       it("without events", async () => {
-        const result = await getTakenTimeSlots(
-          getCalendarConnection(),
+        const result = await getCaldavService().getTakenTimeSlots(
           new Date("2020-11-16T00:00:00.000Z"),
           new Date("2020-11-21T00:00:00.000Z")
         )
@@ -179,8 +167,7 @@ function test(calendarBackend: Backends) {
         expect(result).toEqual(expected)
       })
       it("with events", async () => {
-        const result = await getTakenTimeSlots(
-          getCalendarConnection(),
+        const result = await getCaldavService().getTakenTimeSlots(
           new Date("2020-11-23T00:00:00.000Z"),
           new Date("2020-11-28T00:00:00.000Z")
         )
@@ -246,20 +233,18 @@ function test(calendarBackend: Backends) {
     describe("create event", () => {
       it("basic event", async () => {
         const date = new Date()
-        await createCalDavEvent(getCalendarConnection(), {
-          title: "DummyEvent",
-          start: date,
-          durationInMilliseconds: 30 * 60 * 1000,
-          organiser: {
-            email: "kalle@kalle.app",
-            name: "Kalle McFishface",
+        await getCaldavService().createEvent({
+          startDateUTC: date,
+          meeting: {
+            location: "Frankfurt",
+            duration: 30,
+            name: "DummyEvent",
+            description: "This is a dummy event!",
+            owner: {
+              email: "some@owner.de",
+            },
           },
-          owner: {
-            email: "kalle@kalle.app",
-            name: "Kalle McFishface",
-          },
-          location: "Frankfurt",
-          description: "A description",
+          inviteeEmail: "some@invitee.de",
         })
 
         const events = await getEvents(getCalendarConnection(), date, addMinutes(date, 30))
