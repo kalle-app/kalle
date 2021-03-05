@@ -24,7 +24,6 @@ const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
     return new Promise((resolve, reject) => {request(options, function (error, response) {
         if (error) reject(error);
         const res = JSON.parse(response.body)
-        console.log(res)
         resolve(res.access_token)
     })})
 }

@@ -48,16 +48,12 @@ async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting
 ): Promise<ExternalEvent[]> {
-  console.log("getTaken")
-  console.log(calendars)
   const result = await Promise.all(
     trimDownToOneGoogleCal(calendars).map(async (calendar) => {
       const calendarService = await getCalendarService(calendar)
-      console.log(calendarService)
       return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })
   )
-  console.log("finished")
   const takenTimeSlots: ExternalEvent[] = []
   result.forEach((values) => {
     values.forEach((slots) => {

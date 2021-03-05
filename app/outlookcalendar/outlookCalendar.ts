@@ -8,13 +8,8 @@ import makeRequestTo from "./helper/callMicrosoftAPI"
 export async function createOutlookEvent(appointment: Appointment, refreshToken: string) {
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
     const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/events")
-console.log("CTEATE EVENT")
-
     const startDate = appointment.start
     const endDate = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
- console.log(startDate)
- console.log(endDate)
- console.log(appointment.owner.email)
     const body = {
         "Subject": appointment.title,
         "Body": {
@@ -46,9 +41,7 @@ console.log("CTEATE EVENT")
         'body': JSON.stringify(body),
         'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
-      console.log(options)
       const x = await makeRequestTo(options)
-      console.log("crear,", x)
 
 }
 
@@ -63,9 +56,7 @@ interface DateTimeUnix {
 }
 
 export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: string) {
-    console.log("i am taken")
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
-    console.log(authorizationHeader)
     const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/getschedule")
     const body = {        
         "Schedules": ["lasklu@gmail.com"],
@@ -86,8 +77,6 @@ export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: st
         'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
     const x = await makeRequestTo(options)
-    console.log("FREEBUSY", )
-    console.log(x)
     const y = x.value[0].scheduleItems
         .filter((event) => event.status = 'busy')
         .map((event) => {return {start: event.start.dateTime, end: event.end.dateTime}})
@@ -98,7 +87,6 @@ export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: st
 }
 
 export function getCalendarService(calendar: ConnectedCalendar): CalendarService {
-  console.log("yeah", calendar)
   return {
     createEvent: (details) => createOutlookEvent(details, calendar.refreshToken!),
     getTakenTimeSlots: (start, end) => getTakenTimeSlots(start, end, calendar.refreshToken!),

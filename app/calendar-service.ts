@@ -12,7 +12,6 @@ export interface CalendarService {
 export async function getCalendarService(
   connectedCalendar: ConnectedCalendar
 ): Promise<CalendarService> {
-  console.log(connectedCalendar.type)
   switch (connectedCalendar.type) {
     case "CaldavBasic":
     case "CaldavDigest":
