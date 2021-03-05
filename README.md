@@ -68,6 +68,11 @@ SMTP_PASSWORD="Insert SMTP Password"
 SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
 SMTP_HOST="Insert HOST_Name of SMTP-Server"
 MODE="DEVELOPMENT"
+HOME_URL="URL where kalle is deployed from: http://localhost:3000"
+GOOGLE_CLIENT_ID="For oAuth to use google calendars"
+GOOGLE_CLIENT_SECRET="For oAuth to use google calendars"
+MICROSOFTCLIENTSECRET="For oAuth to use outlook calendars"
+MICROSOFTCLIENTID="For oAuth to use outlook calendars"
 ```
 
 When mode !== development mails will be sent!
