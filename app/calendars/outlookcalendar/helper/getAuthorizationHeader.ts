@@ -1,4 +1,4 @@
-import { baseURL, client_id, client_secret, grant_type_refresh, redirect_uri, scope } from "../constants";
+import { constants } from "../constants";
 import {checkEnvVariable} from "utils/checkEnvVariables"
 import makeRequestTo from "./callMicrosoftAPI"
 
@@ -12,7 +12,7 @@ export default async function getAuthorizationHeader(refreshToken: string): Prom
 }
 
 const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
-    const url = new URL(baseURL + 'token');
+    const url = new URL(constants.baseURL + 'token');
 
     var options = {
         'method': 'POST' as const,
@@ -27,11 +27,11 @@ const buildBody = (refreshToken: string) => {
     checkEnvVariable('MICROSOFTCLIENTSECRET')
 
     return {
-        'client_id': client_id!,
-        'scope': scope,
+        'client_id': constants.client_id,
+        'scope': constants.scope,
         'refresh_token': refreshToken,
-        'redirect_uri': redirect_uri,
-        'grant_type': grant_type_refresh,
-        'client_secret': client_secret!
+        'redirect_uri': constants.redirect_uri,
+        'grant_type': constants.grant_type_refresh,
+        'client_secret': constants.client_secret
     } as const
 }
