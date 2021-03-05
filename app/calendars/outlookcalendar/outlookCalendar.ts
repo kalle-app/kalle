@@ -45,16 +45,6 @@ export async function createOutlookEvent(appointment: Appointment, refreshToken:
 
 }
 
-interface TimeSlotString {
-  start: string
-  end: string
-}
-
-interface DateTimeUnix {
-  start: number
-  end: number
-}
-
 export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: string) {
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
     const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/getschedule")
