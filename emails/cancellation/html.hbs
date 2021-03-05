@@ -10,7 +10,8 @@
             Your appointment "{{ appointment.title }}" with {{appointment.partner}} was cancelled:
         </h1>
         <p style="margin-bottom: 30px; font-size: 16px;">
-            {{ appointment.title }} - {{appointment.start.hour}}:{{appointment.start.minute}}, {{appointment.start.day}}.{{appointment.start.month}}.{{appointment.start.year}}
+            Appointment Details:
+            {{ appointment.title }} - {{appointment.start.day}}.{{appointment.start.month}}.{{appointment.start.year}}, {{appointment.start.hour}}:{{appointment.start.minute}}
         </p>
     </div>
 </div>

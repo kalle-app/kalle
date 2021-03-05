@@ -1,5 +1,46 @@
+import { getEmailService } from "app/email"
 import { Ctx } from "blitz"
-import db from "db"
+import db, { Booking, Meeting, User } from "db"
+
+async function sendCancellationMail(booking: Booking, meeting: Meeting & { owner: User }) {
+  const startMonth = (booking.startDateUTC.getMonth() + 1).toString()
+  await getEmailService().send({
+    template: "cancellation",
+    message: {
+      to: booking.inviteeEmail,
+    },
+    locals: {
+      appointment: {
+        durationInMilliseconds: meeting.duration * 60 * 1000,
+        title: meeting.name,
+        description: meeting.description ?? "Description",
+        location: meeting.location,
+        url: "www.kalle.app",
+        organiser: {
+          name: meeting.ownerName,
+          email: meeting.owner.email,
+        },
+        owner: {
+          name: booking.inviteeEmail.split("@")[0],
+          email: booking.inviteeEmail,
+        },
+        partner: meeting.ownerName,
+        start: {
+          hour: booking.startDateUTC.getHours(),
+          minute:
+            booking.startDateUTC.getMinutes() === 0 ? "00" : booking.startDateUTC.getMinutes(),
+          day: booking.startDateUTC.getDate(),
+          month: startMonth.length === 2 ? startMonth : "0" + startMonth,
+          year: booking.startDateUTC.getFullYear(),
+        },
+        duration: {
+          hours: Math.floor(meeting.duration / 60),
+          minutes: meeting.duration % 60,
+        },
+      },
+    },
+  })
+}
 
 export default async function cancelBookingMutation(bookingId: number, ctx: Ctx) {
   const booking = await db.booking.findFirst({
@@ -21,6 +62,5 @@ export default async function cancelBookingMutation(bookingId: number, ctx: Ctx)
     where: { id: bookingId },
   })
 
-  // send confirmation mail
-  return
+  await sendCancellationMail(booking, booking.meeting)
 }
