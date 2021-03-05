@@ -1,4 +1,4 @@
-import { baseURL, client_id, client_secret, grant_type, redirect_uri, scope } from "../constants";
+import { baseURL, client_id, client_secret, grant_type_refresh, redirect_uri, scope } from "../constants";
 import * as request from "request"
 import {checkEnvVariable} from "utils/checkEnvVariables"
 import db from "db"
@@ -24,6 +24,7 @@ const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
     return new Promise((resolve, reject) => {request(options, function (error, response) {
         if (error) reject(error);
         const res = JSON.parse(response.body)
+        console.log(res)
         resolve(res.access_token)
     })})
 }
@@ -36,7 +37,7 @@ const buildBody = (refreshToken: string) => {
         'scope': scope,
         'refresh_token': refreshToken,
         'redirect_uri': redirect_uri,
-        'grant_type': grant_type,
+        'grant_type': grant_type_refresh,
         'client_secret': client_secret!
     } as const
 }

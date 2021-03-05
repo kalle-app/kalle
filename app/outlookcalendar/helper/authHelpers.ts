@@ -1,7 +1,7 @@
 import * as request from "request"
 
 import { checkEnvVariable } from "utils/checkEnvVariables";
-import { baseURL, client_id, client_secret, grant_type, redirect_uri, scope } from "../constants";
+import { baseURL, client_id, client_secret, grant_type_code, redirect_uri, scope } from "../constants";
 
 export const requestToken = async (code: string): Promise<{access_token: string, refresh_token: string}> => { //TODO remove any
     const url = new URL(baseURL + 'token');
@@ -27,7 +27,7 @@ const buildBody = (code: string) => {
         'scope': scope,
         'code': code,
         'redirect_uri': redirect_uri,
-        'grant_type': grant_type,
+        'grant_type': grant_type_code,
         'client_secret': client_secret!
     } as const
 }

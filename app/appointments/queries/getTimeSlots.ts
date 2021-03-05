@@ -19,8 +19,12 @@ function trimDownToOneGoogleCal(calendars: ConnectedCalendar[]) {
     (cal) => cal.type === "CaldavBasic" || cal.type === "CaldavDigest"
   )
   const googleCalendar = calendars.find((cal) => cal.type === "GoogleCalendar")
+  const outlookCalendar = calendars.find((cal) => cal.type === "OutlookCalendar")
   if (googleCalendar) {
     caldavCalendars.push(googleCalendar)
+  }
+  if (outlookCalendar) {
+    caldavCalendars.push(outlookCalendar)
   }
   return caldavCalendars
 }
@@ -44,12 +48,16 @@ async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting
 ): Promise<ExternalEvent[]> {
+  console.log("getTaken")
+  console.log(calendars)
   const result = await Promise.all(
     trimDownToOneGoogleCal(calendars).map(async (calendar) => {
       const calendarService = await getCalendarService(calendar)
+      console.log(calendarService)
       return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })
   )
+  console.log("finished")
   const takenTimeSlots: ExternalEvent[] = []
   result.forEach((values) => {
     values.forEach((slots) => {

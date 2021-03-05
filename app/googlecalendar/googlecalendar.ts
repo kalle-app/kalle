@@ -131,7 +131,7 @@ export function convertToUnix(arr: TimeSlotString[]): DateTimeUnix[] {
   })
 }
 
-function convertToExternalEvent(arr: DateTimeUnix[]): ExternalEvent[] {
+export function convertToExternalEvent(arr: DateTimeUnix[]): ExternalEvent[] {
   return arr.map((el: DateTimeUnix) => {
     return {
       start: new Date(el.start * 1000),
