@@ -58,6 +58,7 @@ enum ConnectedCalendarType {
   CaldavDigest
   CaldavBasic
   GoogleCalendar
+  OutlookCalendar
 }
 
 model ConnectedCalendar {
