@@ -44,7 +44,7 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
   </tbody>
 </table>
 
-## Getting started
+## Getting Started
 
 ### Setup
 
@@ -61,17 +61,17 @@ Now you have to create a `.env.local` file in your root folder.
 This should contain the following properties:
 
 ```
-DATABASE_URL="file:./db.sqlite"
+DATABASE_URL="postgres://user:password@hostname:port/database"
 EMAIL_FROM="changeme@yourdomain.com"
-SMTP_USER="Insert SMTP Username"
-SMTP_PASSWORD="Insert SMTP Password"
-SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
-SMTP_HOST="Insert HOST_Name of SMTP-Server"
+SMTP_USER="Insert SMTP username"
+SMTP_PASSWORD="Insert SMTP password"
+SMTP_PORT="Insert the PORT of the SMTP server, usually 587"
+SMTP_HOST="Insert the HOSTNAME of the SMTP server"
 MODE="DEVELOPMENT"
 ```
 
 When mode !== development mails will be sent!
 
-### Running the application
+### Running the Application
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
