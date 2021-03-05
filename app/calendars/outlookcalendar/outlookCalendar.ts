@@ -1,5 +1,5 @@
-import {mergeArr, convertToUnix, convertToExternalEvent} from "../googlecalendar/googlecalendar"
-import { Appointment } from "../appointments/types"
+import {mergeArr, convertToUnix, convertToExternalEvent} from "../utils"
+import { Appointment } from "../../appointments/types"
 import { ConnectedCalendar } from "db"
 import { CalendarService } from "app/calendar-service"
 import { addMilliseconds } from "date-fns"
