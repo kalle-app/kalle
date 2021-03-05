@@ -1,3 +1,5 @@
+import { ExternalEvent } from "./caldav"
+
 export interface TimeSlotString {
     start: string
     end: string

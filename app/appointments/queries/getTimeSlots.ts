@@ -1,4 +1,4 @@
-import { ExternalEvent } from "app/caldav"
+import { ExternalEvent } from "app/calendars/caldav"
 import { getCalendarService } from "app/calendar-service"
 import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
 import { Ctx, resolver } from "blitz"

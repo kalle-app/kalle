@@ -1,8 +1,8 @@
 import { ConnectedCalendar } from "db"
 import { Appointment } from "app/appointments/types"
-import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./caldav"
-import { getCalendarService as getGoogleCalendarService } from "app/googlecalendar/googlecalendar"
-import {getCalendarService as getOutlookCalendarService} from "app/outlookcalendar/outlookCalendar"
+import { ExternalEvent, getCalendarService as getCalDavCalendarService } from "./calendars/caldav"
+import { getCalendarService as getGoogleCalendarService } from "app/calendars/googlecalendar/googlecalendar"
+import {getCalendarService as getOutlookCalendarService} from "app/calendars/outlookcalendar/outlookCalendar"
 
 export interface CalendarService {
   createEvent(appointment: Appointment): Promise<void>

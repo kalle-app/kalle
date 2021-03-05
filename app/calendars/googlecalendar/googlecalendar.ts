@@ -1,4 +1,4 @@
-import { TimeSlotString, mergeArr, convertToExternalEvent ,convertToUnix } from "..utils/"
+import { TimeSlotString, mergeArr, convertToExternalEvent ,convertToUnix } from "../utils"
 import { google } from "googleapis"
 import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
 import { Appointment } from "../../appointments/types"

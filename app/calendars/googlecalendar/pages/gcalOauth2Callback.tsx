@@ -1,4 +1,4 @@
-import addGoogleCalendarCredentialsMutation from "app/googlecalendar/mutations/createCalendarCredentials"
+import addGoogleCalendarCredentialsMutation from "app/calendars/googlecalendar/mutations/createCalendarCredentials"
 import Layout from "app/layouts/Layout"
 import { BlitzPage, Link, useMutation, useRouterQuery } from "blitz"
 import { Suspense, useState } from "react"
