@@ -43,8 +43,12 @@ export async function createOutlookEvent(appointment: Appointment, refreshToken:
         'body': JSON.stringify(body),
         'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
-
-      await makeRequestTo(options)
+      try {
+        await makeRequestTo(options)
+      } catch(err) {
+        throw new Error("Error while requesting:" + err)
+      }
+      
 
 }
 
@@ -70,14 +74,16 @@ export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: st
         'body': JSON.stringify(body),
         'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
-    const x = await makeRequestTo(options)
-    const y = x.value[0].scheduleItems
-        .filter((event) => event.status = 'busy')
-        .map((event) => {return {start: event.start.dateTime, end: event.end.dateTime}})
-    return convertToExternalEvent(mergeArr(convertToUnix(y)))
-    //return[{start: new Date(), end: new Date()}]
- 
+    try {
+      const rawScheduleData = await makeRequestTo(options)
 
+      const schedule = rawScheduleData.value[0].scheduleItems
+          .filter((event) => event.status = 'busy')
+          .map((event) => {return {start: event.start.dateTime, end: event.end.dateTime}})
+      return convertToExternalEvent(mergeArr(convertToUnix(schedule)))
+    } catch(err) {
+      throw new Error("Error while requesting:" + err)
+    }
 }
 
 export function getCalendarService(calendar: ConnectedCalendar): CalendarService {
