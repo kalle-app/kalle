@@ -1,6 +1,6 @@
 import { useQuery } from "blitz"
 import { Button } from "react-bootstrap"
-import { getURL } from "../queries/getURL"
+import getURL from "../queries/getURL"
 
 const ConnectOutlookCalendarButton = (props) => {
   const [url] = useQuery(getURL, undefined)

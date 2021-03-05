@@ -5,6 +5,7 @@ import { CalendarService } from "app/calendar-service"
 import { addMilliseconds } from "date-fns"
 import getAuthorizationHeader from "./helper/getAuthorizationHeader"
 import makeRequestTo from "./helper/callMicrosoftAPI"
+import getUsersEmailAddress from "./helper/getUsersEmailAddress"
 
 export async function createOutlookEvent(appointment: Appointment, refreshToken: string) {
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
@@ -48,10 +49,11 @@ export async function createOutlookEvent(appointment: Appointment, refreshToken:
 }
 
 export async function getTakenTimeSlots(start: Date, end: Date, refreshToken: string) {
+    const email = await getUsersEmailAddress(refreshToken)
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
     const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/getschedule")
     const body = {        
-        "Schedules": ["lasklu@gmail.com"],
+        "Schedules": [email],
         "startTime": {
             "dateTime": start,
             "timeZone":"UTC"
