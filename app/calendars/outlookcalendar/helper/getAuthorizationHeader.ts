@@ -19,8 +19,12 @@ const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
         'url': url.href,
         'formData': buildBody(refreshToken)
     }
-    const res = await makeRequestTo(options)
-    return res.access_token
+    try {
+        const res = await makeRequestTo(options)
+        return res.access_token
+    } catch(err) {
+        throw new Error("Error while requesting:" + err)
+    }
 }
 
 const buildBody = (refreshToken: string) => {

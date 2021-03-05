@@ -7,9 +7,12 @@ export const requestToken = async (code: string): Promise<string> => { //TODO re
         'url': url.href,
         'formData': buildBody(code)
     }
-
-    const res = await makeRequestTo(options)
-    return res.refresh_token
+    try {
+        const res = await makeRequestTo(options)
+        return res.refresh_token
+    } catch(err) {
+        throw new Error("Error while requesting:" + err)
+    }
 }
 
 const buildBody = (code: string) => {

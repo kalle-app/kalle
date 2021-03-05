@@ -1,15 +1,15 @@
 import {checkEnvVariable} from "utils/checkEnvVariables"
-import {client_id, redirect_uri, response_mode, scope, response_type, baseURL } from "../constants"
+import { constants } from "../constants"
 
 export default async function getURL(){
     checkEnvVariable('MICROSOFTCLIENTID')
-    const url = new URL(baseURL + "authorize")
+    const url = new URL(constants.baseURL + "authorize")
     
-    url.searchParams.append("client_id", client_id!)
-    url.searchParams.append("redirect_uri", redirect_uri)
-    url.searchParams.append("response_mode", response_mode)
-    url.searchParams.append("scope", scope)
-    url.searchParams.append("response_type", response_type!)
+    url.searchParams.append("client_id", constants.client_id)
+    url.searchParams.append("redirect_uri", constants.redirect_uri)
+    url.searchParams.append("response_mode", constants.response_mode)
+    url.searchParams.append("scope", constants.scope)
+    url.searchParams.append("response_type", constants.response_type)
 
     return url.href
 }
