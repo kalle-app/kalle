@@ -6,7 +6,7 @@ interface AuthCred {
     name: string
 }
 export default async function handleOAuthCode(authCred: AuthCred, ctx: Ctx){
-    const tokens = await requestToken(authCred.code);
-    createCalendarCredentials({name: authCred.name, refreshToken: tokens.refresh_token}, ctx)
+    const refresh_token = await requestToken(authCred.code);
+    createCalendarCredentials({name: authCred.name, refreshToken: refresh_token}, ctx)
 }
 

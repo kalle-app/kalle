@@ -2,21 +2,17 @@ import * as request from "request"
 
 import { checkEnvVariable } from "utils/checkEnvVariables";
 import { baseURL, client_id, client_secret, grant_type_code, redirect_uri, scope } from "../constants";
-
-export const requestToken = async (code: string): Promise<{access_token: string, refresh_token: string}> => { //TODO remove any
+import makeRequestTo from "./callMicrosoftAPI"
+export const requestToken = async (code: string): Promise<string> => { //TODO remove any
     const url = new URL(baseURL + 'token');
-
     var options = {
-        'method': 'POST',
+        'method': 'POST' as const,
         'url': url.href,
         'formData': buildBody(code)
     }
 
-    return new Promise((resolve, reject) => {request(options, function (error, response) {
-        if (error) reject(error);
-        const res = JSON.parse(response.body)
-        resolve({refresh_token: res.refresh_token, access_token: res.access_token})
-    })})
+    const res = await makeRequestTo(options)
+    return res.refresh_token
 }
 
 const buildBody = (code: string) => {
