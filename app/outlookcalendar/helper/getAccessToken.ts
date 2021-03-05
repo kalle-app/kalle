@@ -2,19 +2,25 @@ import { baseURL, client_id, client_secret, grant_type, redirect_uri, scope } fr
 import * as request from "request"
 import {checkEnvVariable} from "utils/checkEnvVariables"
 import db from "db"
+interface AuthorizationHeader{
+    'Authorization': string
+}
+export default async function getAuthorizationHeader(calendarId: number): AuthorizationHeader{
+    const access_token = await getAccessToken(calendarId)
 
-export default async function getAccessToken(calendarId: number): string{
+}
+
+async function getAccessToken(calendarId: number): Promise<string>{
     const calendar = await db.connectedCalendar.findFirst({
         where: {
             id: calendarId
         },
     })
     if (!calendar) throw new Error("No calendar for this id!")
-    console.log(await callMicrosoftApiForToken(calendar.refreshToken))
-
+    return await callMicrosoftApiForToken(calendar.refreshToken)
 }
 
-const callMicrosoftApiForToken = async (refreshToken) => {
+const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
     const url = new URL(baseURL + 'token');
 
     var options = {
@@ -26,7 +32,7 @@ const callMicrosoftApiForToken = async (refreshToken) => {
     return new Promise((resolve, reject) => {request(options, function (error, response) {
         if (error) reject(error);
         const res = JSON.parse(response.body)
-        resolve({refresh_token: res.refresh_token, access_token: res.access_token})
+        resolve(res.access_token)
     })})
 }
 
