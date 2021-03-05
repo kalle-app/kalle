@@ -1,4 +1,4 @@
-import { mergeArr } from "./googlecalendar"
+import { mergeArr } from "../utils"
 
 describe("googlecalendar", () => {
   it("testMergeArray", () => {
