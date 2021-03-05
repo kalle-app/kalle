@@ -97,7 +97,6 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     try {
       await bookAppointment({
         meetingId: meeting.id,
-        meetingOwnerName: username,
         inviteeEmail: email,
         startDate: selectedTimeSlot.start,
         notificationTime: notificationTime,
