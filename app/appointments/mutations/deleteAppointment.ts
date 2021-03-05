@@ -31,9 +31,9 @@ async function sendCancellationMail(booking: Booking, meeting: Meeting & { owner
   })
 }
 
-export default async function deleteAppointmentMutation(bookingId: number, cancelCode: String) {
-  const cancelCodeValid = await verifyCancelCode(bookingId, cancelCode)
-  if (!!cancelCodeValid) {
+export default async function deleteAppointmentMutation({ bookingId, cancelCode }) {
+  const cancelCodeValid = await verifyCancelCode({ bookingId, cancelCode })
+  if (!cancelCodeValid) {
     throw Error("Invalid Cancellationcode given")
   }
 
@@ -42,7 +42,7 @@ export default async function deleteAppointmentMutation(bookingId: number, cance
   })
 
   const meeting = await db.meeting.findFirst({
-    where: { id: booking.id },
+    where: { id: booking.meetingId },
     include: { owner: true },
   })
 

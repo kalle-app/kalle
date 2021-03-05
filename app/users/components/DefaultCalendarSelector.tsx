@@ -48,7 +48,7 @@ export const DefaultCalendarSelector = (props: {
             <Form.Control
               as="select"
               name="defaultCalendar"
-              defaultValue={defaultCalendar!.id ? defaultCalendar!.id : -1}
+              defaultValue={defaultCalendar?.id ? defaultCalendar!.id : -1}
               onChange={onChange}
             >
               {dropdownElements}

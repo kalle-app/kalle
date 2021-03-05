@@ -7,7 +7,6 @@ import { getCalendarService } from "app/calendar/calendar-service"
 import { getEmailService } from "../../email"
 import { createICalendarEvent } from "../utils/createCalendarEvent"
 import * as uuid from "uuid"
-import { getOrigin } from "utils/origin"
 const bcrypt = require("bcrypt")
 
 async function sendConfirmationMail(
@@ -64,6 +63,7 @@ export default resolver.pipe(
   resolver.zod(
     z.object({
       meetingId: z.number(),
+      baseUrl: z.string(),
       inviteeEmail: z.string(),
       startDate: z.date(),
       notificationTime: z.number(),
@@ -86,7 +86,6 @@ export default resolver.pipe(
     const cancelCode = uuid.v4()
 
     const hashedCode = await bcrypt.hash(cancelCode, 10)
-
     const booking = await db.booking.create({
       data: {
         meeting: {
@@ -111,10 +110,8 @@ export default resolver.pipe(
       throw new Error("meeting not found")
     }
 
-    const cancelLink = getOrigin() + "/cancelBooking/" + booking.id + "/" + cancelCode
-
+    const cancelLink = bookingInfo.baseUrl + "/cancelBooking/" + booking.id + "/" + cancelCode
     await sendConfirmationMail(booking, cancelLink, meeting)
-
     const startTime = subMinutes(bookingInfo.startDate, bookingInfo.notificationTime)
     if (startTime > addMinutes(new Date(), 30)) {
       await reminderQueue.enqueue(booking.id, { runAt: startTime })
