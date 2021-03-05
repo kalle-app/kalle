@@ -7,29 +7,33 @@ import getAuthorizationHeader from "./helper/getAuthorizationHeader"
 import makeRequestTo from "./helper/callMicrosoftAPI"
 export async function createOutlookEvent(appointment: Appointment, refreshToken: string) {
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
-    const url = new URL("https://outlook.office.com/api/v2.0/me/events")
-
+    const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/events")
+console.log("CTEATE EVENT")
 
     const startDate = appointment.start
     const endDate = addMilliseconds(appointment.start, appointment.durationInMilliseconds)
-
+ console.log(startDate)
+ console.log(endDate)
+ console.log(appointment.owner.email)
     const body = {
-        "Subject": appointment.description,
+        "Subject": appointment.title,
         "Body": {
           "ContentType": "HTML",
-          "Content": "I think it will meet our requirements!"
+          "Content": "This meeting was booked via kalle.app"
         },
         "Start": {
             "DateTime": startDate,
+            "timeZone":"UTC"
         },
         "End": {
             "DateTime": endDate,
+            "timeZone":"UTC"
         },
         "Attendees": [
           {
             "EmailAddress": {
-              "Address": appointment.organiser.email,
-              "Name": appointment.organiser.name
+              "Address": appointment.owner.email,
+              "Name": appointment.owner.name
             },
             "Type": "Required"
           }
@@ -39,8 +43,8 @@ export async function createOutlookEvent(appointment: Appointment, refreshToken:
       var options = {
         'method': 'POST' as const,
         'url': url.href,
-        'data': body,
-        'header': authorizationHeader
+        'body': JSON.stringify(body),
+        'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
       console.log(options)
       const x = await makeRequestTo(options)
