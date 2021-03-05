@@ -1,5 +1,4 @@
 import * as request from "request"
-import * as FormData from "form-data"
 
 interface Options{
     'method': "POST" | "GET",

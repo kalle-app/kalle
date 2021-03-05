@@ -5,6 +5,7 @@ import { CalendarService } from "app/calendar-service"
 import { addMilliseconds } from "date-fns"
 import getAuthorizationHeader from "./helper/getAuthorizationHeader"
 import makeRequestTo from "./helper/callMicrosoftAPI"
+
 export async function createOutlookEvent(appointment: Appointment, refreshToken: string) {
     const authorizationHeader = await getAuthorizationHeader(refreshToken)
     const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/events")
@@ -41,7 +42,8 @@ export async function createOutlookEvent(appointment: Appointment, refreshToken:
         'body': JSON.stringify(body),
         'headers': {...authorizationHeader, "content-type": 'application/json'}
       }
-      const x = await makeRequestTo(options)
+
+      await makeRequestTo(options)
 
 }
 

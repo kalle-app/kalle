@@ -1,5 +1,4 @@
 import { baseURL, client_id, client_secret, grant_type_refresh, redirect_uri, scope } from "../constants";
-import * as request from "request"
 import {checkEnvVariable} from "utils/checkEnvVariables"
 import makeRequestTo from "./callMicrosoftAPI"
 
