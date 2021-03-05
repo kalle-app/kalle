@@ -8,6 +8,7 @@ import { getEmailService } from "../../email"
 import { createICalendarEvent } from "../utils/createCalendarEvent"
 import * as uuid from "uuid"
 import { getOrigin } from "utils/origin"
+const bcrypt = require("bcrypt")
 
 async function sendConfirmationMail(
   booking: Booking,
@@ -84,7 +85,7 @@ export default resolver.pipe(
 
     const cancelCode = uuid.v4()
 
-    // todo save hashed cancelcode
+    const hashedCode = await bcrypt.hash(cancelCode, 10)
 
     const booking = await db.booking.create({
       data: {
@@ -93,10 +94,9 @@ export default resolver.pipe(
         },
         inviteeEmail: bookingInfo.inviteeEmail,
         startDateUTC: bookingInfo.startDate,
-        cancelCode: cancelCode,
+        cancelCode: hashedCode,
       },
     })
-
     const calendarService = await getCalendarService(primaryCalendar)
     await calendarService.createEvent({
       ...booking,

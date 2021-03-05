@@ -1,10 +1,11 @@
 import Layout from "app/layouts/Layout"
+import cancelBookingMutation from "app/meetings/mutations/cancelBooking"
 import getBookings from "app/meetings/queries/getBookings"
 import getMeetingById from "app/meetings/queries/getMeetingById"
-import { BlitzPage, useParam, useQuery } from "blitz"
+import { BlitzPage, invalidateQuery, useMutation, useParam, useQuery } from "blitz"
 import { format } from "date-fns"
-import React, { Suspense } from "react"
-import { Card, Row, Col, Button, Container } from "react-bootstrap"
+import React, { Suspense, useState } from "react"
+import { Card, Row, Col, Button, Container, Modal } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 
 const BookingsContent = () => {
@@ -12,6 +13,14 @@ const BookingsContent = () => {
 
   const [meeting] = useQuery(getMeetingById, meetingId)
   const [bookings] = useQuery(getBookings, meetingId)
+  const [cancelBooking] = useMutation(cancelBookingMutation)
+  const [selectedBooking, setSelectedBooking] = useState<number>()
+  const [cancelModalVisible, setCancelModalVisible] = useState(false)
+
+  const setCancelModal = (bookingId: number) => {
+    setSelectedBooking(bookingId)
+    setCancelModalVisible(true)
+  }
 
   if (bookings.length < 1) return <p>No Bookings yet</p>
 
@@ -43,8 +52,14 @@ const BookingsContent = () => {
                   </Col>
                 </Row>
                 <div className="d-flex justify-content-end">
-                  <Button className="ml-3" variant="outline-danger">
-                    Cancel Meeting
+                  <Button
+                    className="mt-3"
+                    onClick={() => {
+                      setCancelModal(booking.id)
+                    }}
+                    variant="outline-danger"
+                  >
+                    Cancel Appointment
                   </Button>
                 </div>
               </Card>
@@ -52,6 +67,31 @@ const BookingsContent = () => {
           )
         })}
       </Row>
+      <Modal
+        show={cancelModalVisible}
+        onHide={() => {
+          setCancelModalVisible(false)
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Cancel Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to cancel this appointment?
+          <Button
+            className="mt-3 float-right"
+            variant="primary"
+            onClick={async () => {
+              await cancelBooking(selectedBooking)
+              await invalidateQuery(getBookings)
+              setCancelModalVisible(false)
+            }}
+            id="submit"
+          >
+            Cancel Appointment
+          </Button>
+        </Modal.Body>
+      </Modal>
     </>
   )
 }
