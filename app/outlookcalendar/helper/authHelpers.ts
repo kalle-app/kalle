@@ -19,7 +19,7 @@ export const requestToken = async (code: string): Promise<{access_token: string,
     })})
 }
 
-const buildBody = (code: string): object => {
+const buildBody = (code: string) => {
     checkEnvVariable('MICROSOFTCLIENTSECRET')
 
     return {
@@ -29,5 +29,5 @@ const buildBody = (code: string): object => {
         'redirect_uri': redirect_uri,
         'grant_type': grant_type,
         'client_secret': client_secret!
-    }
+    } as const
 }
