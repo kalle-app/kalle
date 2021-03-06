@@ -61,6 +61,10 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
       <td>🔓</td>
       <td>Hide conflicting events for Invitee</td>
     </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Email status updated (Reminders/Confirmations)</td>
+    </tr>
   </tbody>
 </table>
 
