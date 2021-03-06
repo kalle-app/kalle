@@ -29,9 +29,6 @@ export const isBefore = (startTime: string, endTime: string) => {
     return false
   }
 
-  console.log("start 0, end 0,", start[0], "and", end[0])
-  console.log("start 0, end 0,", start[1], "and", end[1])
-
   if (start[0] === end[0]) {
     // handle explicitly blocked dates ("00:00 - 00:00")
     if (start[0] === 0) {
