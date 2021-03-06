@@ -3,12 +3,9 @@ import { BlitzPage, Link, useRouterQuery, invoke } from "blitz"
 import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
 import handleOAuthCode from "../queries/handleOAuthCode"
-interface credentials {
-  account: object
-  scopes: string[]
-}
+
 /**
- * This gets a code as a query parameter. This code needs to be sent to microsoft which returns a refresh_token. The refresh_tokem is used to generate a session_access_token.
+ * This gets a code as a query parameter. This code needs to be sent to microsoft which returns a refresh_token. The refresh_token is used to generate a session_access_token.
  */
 function OAuthCallbackPage() {
   const [isError, setIsError] = useState(false)

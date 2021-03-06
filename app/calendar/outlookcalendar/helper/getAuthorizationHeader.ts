@@ -1,5 +1,4 @@
 import { constants } from "../constants"
-import { checkEnvVariable } from "utils/checkEnvVariables"
 import makeRequestTo from "./callMicrosoftAPI"
 
 export interface AuthorizationHeader {
