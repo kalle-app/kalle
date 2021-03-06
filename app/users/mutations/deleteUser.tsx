@@ -34,6 +34,10 @@ export default resolver.pipe(resolver.authorize(), async (_ = null, ctx) => {
     where: { ownerId: userId },
   })
 
+  await db.defaultCalendar.deleteMany({
+    where: { userId: userId },
+  })
+
   await db.connectedCalendar.deleteMany({
     where: { ownerId: userId },
   })
