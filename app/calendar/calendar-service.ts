@@ -30,9 +30,7 @@ export async function getCalendarService(
     case "GoogleCalendar":
       return new GoogleCalendarService(connectedCalendar)
     case "OutlookCalendar":
-      const outlookCalendarService = new OutlookCalendarService(connectedCalendar)
-      await outlookCalendarService.initialize()
-      return outlookCalendarService
+      return await OutlookCalendarService.getOutlookCalendarService(connectedCalendar)
     default:
       throw new Error("Unknown Calendar Type: " + connectedCalendar.type)
   }

@@ -12,7 +12,13 @@ export class OutlookCalendarService implements CalendarService {
   private authorizationHeader: AuthorizationHeader
   private calendar: ConnectedCalendar
 
-  constructor(calendar: ConnectedCalendar) {
+  public static async getOutlookCalendarService(calendar: ConnectedCalendar) {
+    const outlookCalendarService = new OutlookCalendarService(calendar)
+    await outlookCalendarService.initialize()
+    return outlookCalendarService
+  }
+
+  private constructor(calendar: ConnectedCalendar) {
     if (!calendar.refreshToken) {
       throw new Error("refreshToken missing!")
     }
