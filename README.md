@@ -95,8 +95,8 @@ MODE="DEVELOPMENT"
 HOME_URL="URL where kalle is deployed from: http://localhost:3000"
 GOOGLE_CLIENT_ID="For oAuth to use google calendars"
 GOOGLE_CLIENT_SECRET="For oAuth to use google calendars"
-MICROSOFTCLIENTSECRET="For oAuth to use outlook calendars"
-MICROSOFTCLIENTID="For oAuth to use outlook calendars"
+MICROSOFT_CLIENT_SECRET="For oAuth to use outlook calendars"
+MICROSOFT_CLIENT_ID="For oAuth to use outlook calendars"
 ```
 
 When mode !== development mails will be sent!
