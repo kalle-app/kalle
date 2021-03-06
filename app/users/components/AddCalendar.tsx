@@ -7,6 +7,7 @@ import { useState } from "react"
 import { ConnectGoogleCalendarButton } from "app/calendar/googlecalendar/components/ConnectGoogleCalendarButton"
 import { ConnectOutlookCalendarButton } from "app/calendar/outlookcalendar/components/ConnectOutlookCalendarButton"
 import { AddCalendarInput } from "app/auth/validations"
+import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 interface AddCalendarProps {
   onClose(): void
 }
@@ -65,6 +66,7 @@ const AddCalendar = (props: AddCalendarProps) => {
               } else {
                 setError({ error: false, message: "" })
                 await invalidateQuery(getConnectedCalendars)
+                await invalidateQuery(getDefaultCalendarByUser)
                 props.onClose()
               }
             }}

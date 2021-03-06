@@ -25,7 +25,7 @@ describe("Signup Flow", () => {
         email,
         username,
         fullName: "John Notabot",
-        password: "mysupersecurepassword",
+        password: "my_Supersecure1password",
       })
       cy.get("#auth-dropdown").should("contain", email)
     })

@@ -35,16 +35,40 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
     </tr>
     <tr>
       <td>🔓</td>
+      <td>Connect Outlook calendars</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
       <td>Create a meeting</td>
     </tr>
     <tr>
       <td>🔓</td>
       <td>Book an appointment</td>
     </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Cancel an appointment</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Use schedule presets</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Use multiple calendars</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Hide conflicting events for invitees</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Email confirmations and reminders</td>
+    </tr>
   </tbody>
 </table>
 
-## Getting started
+## Getting Started
 
 ### Setup
 
@@ -61,12 +85,12 @@ Now you have to create a `.env.local` file in your root folder.
 This should contain the following properties:
 
 ```
-DATABASE_URL="file:./db.sqlite"
+DATABASE_URL="postgres://user:password@hostname:port/database"
 EMAIL_FROM="changeme@yourdomain.com"
-SMTP_USER="Insert SMTP Username"
-SMTP_PASSWORD="Insert SMTP Password"
-SMTP_PORT="Insert PORT to connect to the SMTP-Server, usually 587"
-SMTP_HOST="Insert HOST_Name of SMTP-Server"
+SMTP_USER="Insert SMTP username"
+SMTP_PASSWORD="Insert SMTP password"
+SMTP_PORT="Insert the PORT of the SMTP server, usually 587"
+SMTP_HOST="Insert the HOSTNAME of the SMTP server"
 MODE="DEVELOPMENT"
 HOME_URL="URL where kalle is deployed from: http://localhost:3000"
 GOOGLE_CLIENT_ID="For oAuth to use google calendars"
@@ -77,6 +101,7 @@ MICROSOFTCLIENTID="For oAuth to use outlook calendars"
 
 When mode !== development mails will be sent!
 
-### Running the application
+### Running the Application
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
+It will also start up the PostgreSQL database, a Baikal server containing a calendar for experimental purposes, a Nextcloud server, the Quirrel job queue and Mailhog.
