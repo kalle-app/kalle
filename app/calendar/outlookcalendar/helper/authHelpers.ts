@@ -1,7 +1,6 @@
 import { constants } from "../constants"
 import makeRequestTo from "./callMicrosoftAPI"
 export const requestToken = async (code: string): Promise<string> => {
-  //TODO remove any
   const url = new URL(constants.baseURL + "token")
   var options = {
     method: "POST" as const,
