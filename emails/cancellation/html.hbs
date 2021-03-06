@@ -1,0 +1,19 @@
+<html lang="DE">
+<head>
+    <title>Appointment Cancelled</title>
+</head>
+<body style="font-family: 'Helvetica Neue','Helvetica','Arial',sans-serif; margin: 0; background: #eee; padding: 10px 0 50px;">
+<div style="max-width: 600px; margin: 10px auto; background: white;">
+    <div style="background: #ff654f; height: 50px;"></div>
+    <div style="padding: 30px">
+        <h1 style="font-weight: 200; margin: 0 0 20px; font-size: 28px;">
+            Your appointment "{{ appointment.title }}" with {{appointment.partner}} was cancelled:
+        </h1>
+        <p style="margin-bottom: 30px; font-size: 16px;">
+            Appointment Details:
+            {{ appointment.title }} - {{appointment.start.day}}.{{appointment.start.month}}.{{appointment.start.year}}, {{appointment.start.hour}}:{{appointment.start.minute}}
+        </p>
+    </div>
+</div>
+</body>
+</html>

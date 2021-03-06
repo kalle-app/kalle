@@ -39,7 +39,9 @@ const AllSchedules = () => {
                           </b>
                         </Col>
                         <Col sm={6}>
-                          {dailySchedule.startTime} - {dailySchedule.endTime}
+                          {dailySchedule.startTime === dailySchedule.endTime
+                            ? "blocked"
+                            : dailySchedule.startTime + " - " + dailySchedule.endTime}
                         </Col>
                       </Row>
                     </ListGroup.Item>

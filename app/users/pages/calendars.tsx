@@ -3,8 +3,6 @@ import { BlitzPage } from "blitz"
 import React, { Suspense } from "react"
 
 import Skeleton from "react-loading-skeleton"
-import AuthError from "app/components/AuthError"
-import { useCurrentUser } from "app/hooks/useCurrentUser"
 import MyCalendars from "app/users/components/MyCalendars"
 import CalendarSettings from "app/users/components/CalendarSettings"
 
@@ -18,10 +16,6 @@ const CalendarOverview = () => {
 }
 
 const CalendarsContent = () => {
-  if (!useCurrentUser()) {
-    return <AuthError />
-  }
-
   return (
     <>
       <CalendarOverview />

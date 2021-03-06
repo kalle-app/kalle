@@ -5,14 +5,6 @@ import { Suspense } from "react"
 import { useRouter, useMutation, useSession, Link } from "blitz"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 
-const Navigation = () => {
-  const session = useSession()
-  if (!session.isLoading) {
-    return session.userId ? <PrivateNavigation /> : <PublicNavigation />
-  }
-  return <div></div>
-}
-
 const PrivateNavigation = () => {
   const router = useRouter()
   const [logout] = useMutation(logoutMutation)
@@ -47,7 +39,7 @@ const PrivateNavigation = () => {
 const PublicNavigation = () => {
   return (
     <>
-      <Nav className="mr-auto"></Nav>
+      <Nav className="mr-auto" />
       <Nav>
         <Link href="/login" passHref>
           <Nav.Link>Log In</Nav.Link>
@@ -55,6 +47,14 @@ const PublicNavigation = () => {
       </Nav>
     </>
   )
+}
+
+const Navigation = () => {
+  const session = useSession()
+  if (!session.isLoading) {
+    return session.userId ? <PrivateNavigation /> : <PublicNavigation />
+  }
+  return null
 }
 
 const NavBar = () => {

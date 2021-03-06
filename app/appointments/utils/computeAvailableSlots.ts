@@ -1,4 +1,4 @@
-import { ExternalEvent } from "app/calendars/caldav"
+import { ExternalEvent } from "app/calendar/calendar-service"
 import { TimeSlot } from "../types"
 
 function orderedByStart(a: TimeSlot, b: TimeSlot) {

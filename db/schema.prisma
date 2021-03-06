@@ -119,4 +119,5 @@ model Booking {
   meetingId    Int
   inviteeEmail String
   startDateUTC DateTime
+  cancelCode String
 }

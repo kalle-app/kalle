@@ -7,7 +7,7 @@ export default resolver.pipe(
     z.object({
       name: z.string(),
       timezone: z.string(),
-      schedule: z.record(z.tuple([z.string(), z.string()])),
+      schedule: z.record(z.object({ startTime: z.string(), endTime: z.string() })),
     })
   ),
   resolver.authorize(),
@@ -20,7 +20,7 @@ export default resolver.pipe(
           connect: { id: ctx.session.userId },
         },
         dailySchedules: {
-          create: Object.entries(scheduleCreate.schedule).map(([day, [startTime, endTime]]) => ({
+          create: Object.entries(scheduleCreate.schedule).map(([day, { startTime, endTime }]) => ({
             day,
             startTime,
             endTime,
