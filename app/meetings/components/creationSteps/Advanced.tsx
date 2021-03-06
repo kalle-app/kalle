@@ -11,6 +11,7 @@ type AdvancedProps = {
 }
 const AdvancedStep = (props: AdvancedProps) => {
   const [defaultCalendarId, setDefaultCalendarId] = useState(-1)
+
   useEffect(() => {
     setDefaultCalendarId(props.initialMeeting.defaultConnectedCalendarId)
   }, [])
