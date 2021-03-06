@@ -51,19 +51,19 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Use Schedule Presets</td>
+      <td>Use schedule presets</td>
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Use multiple Calendars</td>
+      <td>Use multiple calendars</td>
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Hide conflicting events for Invitee</td>
+      <td>Hide conflicting events for invitees</td>
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Email status updated (Reminders/Confirmations)</td>
+      <td>Email confirmations and reminders</td>
     </tr>
   </tbody>
 </table>
@@ -99,4 +99,4 @@ When mode !== development mails will be sent!
 ### Running the Application
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
-It will also startup the Postgres Database, a Baikal Server containing a Calendar for experimental purposes, a Nextcloud server and the Quirrel Jobqueue and Mailhog.
+It will also start up the PostgreSQL database, a Baikal server containing a calendar for experimental purposes, a Nextcloud server, the Quirrel job queue and Mailhog.
