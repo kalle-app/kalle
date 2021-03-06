@@ -112,7 +112,7 @@ const InviteCreationContent = () => {
     if (defaultCalendar) {
       setMeeting((oldMeeting) => ({
         ...oldMeeting,
-        defaultConnectedCalendarId: defaultCalendar.id,
+        defaultConnectedCalendarId: defaultCalendar.calendarId,
       }))
     }
   }, [defaultCalendar])
