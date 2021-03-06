@@ -2,7 +2,7 @@ export const johnDoe = {
   email: "john.doe@kalle.app",
   fullName: "John Doe",
   username: "john.doe",
-  password: "supersecurepassword",
+  password: "123superSecure-password",
 
   calendars: {
     baikal: {

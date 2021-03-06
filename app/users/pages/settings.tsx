@@ -8,7 +8,7 @@ import { BlitzPage, invalidateQuery, useMutation, useRouter } from "blitz"
 import { default as React, Suspense, useState } from "react"
 import Card from "react-bootstrap/Card"
 import Skeleton from "react-loading-skeleton"
-import { UpdateUserInput } from "../../auth/validations"
+import { UpdateUserInput, checkPassword } from "../../auth/validations"
 import deleteUserMutation from "../mutations/deleteUser"
 import updateMutation from "../mutations/updateUserData"
 
@@ -34,6 +34,14 @@ const PersonalInformation = () => {
     if (!parseResult.success) {
       setState("text-danger")
       setMessage(parseResult.error.errors[0].message)
+      return
+    }
+
+    const passwordCheck = checkPassword(password)
+
+    if (!passwordCheck.valid) {
+      setState("text-danger")
+      setMessage(passwordCheck.message)
       return
     }
 

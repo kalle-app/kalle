@@ -30,6 +30,10 @@ export const isBefore = (startTime: string, endTime: string) => {
   }
 
   if (start[0] === end[0]) {
+    // handle explicitly blocked dates ("00:00 - 00:00")
+    if (start[0] === 0) {
+      return start[1] === 0 && end[1] === 0
+    }
     return start[1] < end[1]
   }
 
@@ -92,34 +96,6 @@ const AddSchedule = (props: AddScheduleProps) => {
   }
 
   const submit = async () => {
-    const postSchedule = {
-      name: name,
-      timezone,
-      schedule: {
-        monday: (schedule.monday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.monday.start, schedule.monday.end]) as [start: string, end: string],
-        tuesday: (schedule.tuesday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.tuesday.start, schedule.tuesday.end]) as [start: string, end: string],
-        wednesday: (schedule.wednesday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.wednesday.start, schedule.wednesday.end]) as [start: string, end: string],
-        thursday: (schedule.thursday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.thursday.start, schedule.thursday.end]) as [start: string, end: string],
-        friday: (schedule.friday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.friday.start, schedule.friday.end]) as [start: string, end: string],
-        saturday: (schedule.saturday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.saturday.start, schedule.saturday.end]) as [start: string, end: string],
-        sunday: (schedule.sunday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.sunday.start, schedule.sunday.end]) as [start: string, end: string],
-      },
-    }
-
     const parseResult = ScheduleInput.refine((data) => isScheduleWellFormed(data.schedule), {
       message: "Please check the entered times. Expected is a format of hour:minutes, e.g. 09:30",
     }).safeParse({
@@ -137,7 +113,7 @@ const AddSchedule = (props: AddScheduleProps) => {
         name: name,
         timezone,
         schedule: mapValues(schedule, ({ blocked, start, end }) =>
-          blocked ? { startTime: "", endTime: "" } : { startTime: start, endTime: end }
+          blocked ? { startTime: "00:00", endTime: "00:00" } : { startTime: start, endTime: end }
         ),
       })
       await invalidateQuery(getSchedules)

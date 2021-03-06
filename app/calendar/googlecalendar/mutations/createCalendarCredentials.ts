@@ -15,7 +15,7 @@ export default resolver.pipe(
     const oauth2Client = createGoogleOauth()
     const { tokens } = await oauth2Client.getToken(oauthCode)
 
-    await db.connectedCalendar.create({
+    const calendar = await db.connectedCalendar.create({
       data: {
         name: name,
         owner: {
@@ -26,5 +26,22 @@ export default resolver.pipe(
         refreshToken: tokens.refresh_token,
       },
     })
+
+    const defaultCalendar = await db.defaultCalendar.findFirst({
+      where: { userId: ctx.session.userId },
+    })
+
+    if (!defaultCalendar) {
+      await db.defaultCalendar.create({
+        data: {
+          user: {
+            connect: { id: ctx.session.userId },
+          },
+          calendar: {
+            connect: { id: calendar.id },
+          },
+        },
+      })
+    }
   }
 )
