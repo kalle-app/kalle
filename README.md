@@ -35,11 +35,31 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
     </tr>
     <tr>
       <td>🔓</td>
+      <td>Connect Outlook calendars</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
       <td>Create a meeting</td>
     </tr>
     <tr>
       <td>🔓</td>
       <td>Book an appointment</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Cancel an appointment</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Use Schedule Presets</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Use multiple Calendars</td>
+    </tr>
+    <tr>
+      <td>🔓</td>
+      <td>Hide conflicting events for Invitee</td>
     </tr>
   </tbody>
 </table>
@@ -75,3 +95,4 @@ When mode !== development mails will be sent!
 ### Running the Application
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
+It will also startup the Postgres Database, a Baikal Server containing a Calendar for experimental purposes, a Nextcloud server and the Quirrel Jobqueue and Mailhog.
