@@ -152,7 +152,7 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
                 />
               </Col>
               <Col md={6}>
-                <div style={{ maxHeight: "60vh", overflowY: "scroll" }}>
+                <div style={{ maxHeight: "60vh", minHeight: "400px", overflowY: "scroll" }}>
                   <AvailableTimeSlotsSelection
                     slots={slots}
                     selectedDay={selectedDay}

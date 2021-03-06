@@ -21,7 +21,7 @@ export class GoogleCalendarService implements CalendarService {
 
   public async createEvent(booking: CreateEventBooking) {
     const startDate = booking.startDateUTC
-    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
+    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration * 60)
 
     await this.calendar.events.insert({
       calendarId: "primary",
@@ -45,6 +45,8 @@ export class GoogleCalendarService implements CalendarService {
   }
 
   public async getTakenTimeSlots(start: Date, end: Date) {
+    start.setHours(0, 0)
+    end.setHours(23, 59)
     const {
       data: { items: ownedCalendars = [] },
     } = await this.calendar.calendarList.list({
