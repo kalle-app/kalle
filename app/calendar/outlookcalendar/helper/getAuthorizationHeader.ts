@@ -28,8 +28,6 @@ const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
 }
 
 const buildBody = (refreshToken: string) => {
-  checkEnvVariable("MICROSOFTCLIENTSECRET")
-
   return {
     client_id: constants.client_id,
     scope: constants.scope,
