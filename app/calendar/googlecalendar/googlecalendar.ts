@@ -2,7 +2,7 @@ import { google, calendar_v3 } from "googleapis"
 import { createAuthenticatedGoogleOauth } from "./helpers/GoogleClient"
 import { ConnectedCalendar } from "db"
 import { CalendarService, CreateEventBooking } from "app/calendar/calendar-service"
-import { addSeconds } from "date-fns"
+import { addMinutes } from "date-fns"
 import { boilDownTimeIntervals } from "../utils/boildown-intervals"
 
 export class GoogleCalendarService implements CalendarService {
@@ -21,7 +21,7 @@ export class GoogleCalendarService implements CalendarService {
 
   public async createEvent(booking: CreateEventBooking) {
     const startDate = booking.startDateUTC
-    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
+    const endDate = addMinutes(booking.startDateUTC, booking.meeting.duration)
 
     await this.calendar.events.insert({
       calendarId: "primary",

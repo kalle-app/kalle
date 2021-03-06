@@ -2,7 +2,7 @@ import Layout from "app/layouts/Layout"
 import { BlitzPage, Link, useRouterQuery, invoke } from "blitz"
 import { Suspense, useState } from "react"
 import { Button, Form } from "react-bootstrap"
-import handleOAuthCode from "../queries/handleOAuthCode"
+import handleOAuthCode from "../mutations/handleOAuthCode"
 
 /**
  * This gets a code as a query parameter. This code needs to be sent to microsoft which returns a refresh_token. The refresh_token is used to generate a session_access_token.

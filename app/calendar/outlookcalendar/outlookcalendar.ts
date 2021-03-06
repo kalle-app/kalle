@@ -3,10 +3,11 @@ import {
   AuthorizationHeader,
   getAuthorizationHeader,
 } from "app/calendar/outlookcalendar/helper/getAuthorizationHeader"
-import { addSeconds } from "date-fns"
+import { addMinutes } from "date-fns"
 import { ConnectedCalendar } from "db"
 import { boilDownTimeIntervals } from "app/calendar/utils/boildown-intervals"
 import makeRequestTo from "app/calendar/outlookcalendar/helper/callMicrosoftAPI"
+import { zonedTimeToUtc } from "date-fns-tz"
 
 export class OutlookCalendarService implements CalendarService {
   private authorizationHeader: AuthorizationHeader
@@ -32,7 +33,8 @@ export class OutlookCalendarService implements CalendarService {
   public async createEvent(booking: CreateEventBooking) {
     const url = "https://graph.microsoft.com/v1.0/me/calendar/events"
     const startDate = booking.startDateUTC
-    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
+    const endDate = addMinutes(booking.startDateUTC, booking.meeting.duration)
+
     const body = {
       Subject: booking.meeting.name + " with " + booking.inviteeEmail,
       Body: {
@@ -77,11 +79,11 @@ export class OutlookCalendarService implements CalendarService {
     const body = {
       Schedules: [email],
       startTime: {
-        dateTime: start,
+        dateTime: start.toUTCString(),
         timeZone: "UTC",
       },
       endTime: {
-        dateTime: end,
+        dateTime: end.toUTCString(),
         timeZone: "UTC",
       },
     }
@@ -97,7 +99,10 @@ export class OutlookCalendarService implements CalendarService {
       const schedule = rawScheduleData.value[0].scheduleItems
         .filter((event) => (event.status = "busy"))
         .map((event) => {
-          return { start: new Date(event.start.dateTime!), end: new Date(event.end.dateTime!) }
+          return {
+            start: zonedTimeToUtc(event.start.dateTime!, "UTC"),
+            end: zonedTimeToUtc(event.end.dateTime!, "UTC"),
+          }
         })
 
       return boilDownTimeIntervals(schedule)
