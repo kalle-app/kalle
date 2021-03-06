@@ -65,6 +65,10 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     return <h2 className="text-center m-5">This meeting was deleted or is in the past.</h2>
   }
 
+  if (meeting.endDateUTC < new Date()) {
+    return <h2 className="text-center m-5">This meeting is in the past.</h2>
+  }
+
   if (!slots) {
     return <h2 className="text-center m-5">There are no free slots available for this meeting.</h2>
   }
