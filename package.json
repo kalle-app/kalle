@@ -74,6 +74,7 @@
     "react-nice-dates": "3.0.7",
     "react-step-progress": "1.0.3",
     "react-tooltip": "4.2.13",
+    "request": "2.88.2",
     "secure-e2ee": "0.4.0",
     "secure-password": "4.0.0",
     "unique-names-generator": "4.3.1",

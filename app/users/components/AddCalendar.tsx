@@ -4,7 +4,8 @@ import getConnectedCalendars from "../queries/getConnectedCalendars"
 import styles from "./AddCalendar.module.css"
 import { Alert, Card, Form, Button } from "react-bootstrap"
 import { useState } from "react"
-import { ConnectGoogleCalendarButton } from "../../calendar/googlecalendar/components/ConnectGoogleCalendarButton"
+import { ConnectGoogleCalendarButton } from "app/calendar/googlecalendar/components/ConnectGoogleCalendarButton"
+import { ConnectOutlookCalendarButton } from "app/calendar/outlookcalendar/components/ConnectOutlookCalendarButton"
 import { AddCalendarInput } from "app/auth/validations"
 import getDefaultCalendarByUser from "../queries/getDefaultCalendarByUser"
 interface AddCalendarProps {
@@ -175,6 +176,15 @@ const GoogleFormBody = () => {
   )
 }
 
-const OutlookFormBody = () => <p>Microsoft Outlook is currently not supported.</p>
+const OutlookFormBody = () => {
+  return (
+    <>
+      <p>Please give Kalle access to your Outlook Calendar.</p>
+      <ConnectOutlookCalendarButton id="outlook-login-button">
+        Go to Microsoft Login
+      </ConnectOutlookCalendarButton>
+    </>
+  )
+}
 
 export default AddCalendar

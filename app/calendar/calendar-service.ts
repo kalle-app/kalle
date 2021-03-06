@@ -1,6 +1,7 @@
 import { Booking, ConnectedCalendar, Meeting, User } from "db"
 import { CaldavService } from "./caldav"
 import { GoogleCalendarService } from "./googlecalendar/googlecalendar"
+import { OutlookCalendarService } from "./outlookcalendar/outlookcalendar"
 
 export type CreateEventBooking = Pick<Booking, "startDateUTC" | "inviteeEmail"> & {
   meeting: Pick<Meeting, "duration" | "location" | "name" | "description"> & {
@@ -28,6 +29,8 @@ export async function getCalendarService(
       return await CaldavService.fromConnectedCalendar(connectedCalendar)
     case "GoogleCalendar":
       return new GoogleCalendarService(connectedCalendar)
+    case "OutlookCalendar":
+      return await OutlookCalendarService.getOutlookCalendarService(connectedCalendar)
     default:
       throw new Error("Unknown Calendar Type: " + connectedCalendar.type)
   }
