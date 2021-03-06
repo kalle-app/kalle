@@ -35,7 +35,9 @@ const SignupPage: BlitzPage = () => {
     const passwordCheck = checkPassword(password)
 
     if (!usernameCheck) {
-      setMessage("Your username can only contain alphanumeric characters and underscores")
+      setMessage(
+        "Your username can only contain alphanumeric characters, hyphens, dots and underscores"
+      )
       return
     }
     if (!passwordCheck.valid) {

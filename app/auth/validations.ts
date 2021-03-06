@@ -96,7 +96,7 @@ export const BookingInput = z.object({
 export type BookingInputType = z.infer<typeof BookingInput>
 
 export const checkUsername = (username: string) => {
-  const expression = new RegExp(/^[a-zA-Z0-9_]+$/)
+  const expression = new RegExp(/^[a-zA-Z0-9-._]+$/)
   return expression.test(username)
 }
 
