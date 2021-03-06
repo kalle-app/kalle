@@ -21,7 +21,7 @@ export class GoogleCalendarService implements CalendarService {
 
   public async createEvent(booking: CreateEventBooking) {
     const startDate = booking.startDateUTC
-    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
+    const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration * 60)
 
     await this.calendar.events.insert({
       calendarId: "primary",
