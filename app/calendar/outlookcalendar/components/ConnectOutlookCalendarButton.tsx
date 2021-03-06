@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap"
 import getURL from "../queries/getURL"
 
 export const ConnectOutlookCalendarButton = (props) => {
-  const [url] = useQuery(getURL, undefined)
+  const [url] = useQuery(getURL, null)
 
   return (
     <Button id={props.id} variant="primary" href={url}>

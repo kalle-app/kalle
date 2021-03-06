@@ -1,6 +1,6 @@
 import { constants } from "../constants"
 
-export default async function getURL() {
+export default async function getURL(_ = null) {
   const url = new URL(constants.baseURL + "authorize")
 
   url.searchParams.append("client_id", constants.client_id)
