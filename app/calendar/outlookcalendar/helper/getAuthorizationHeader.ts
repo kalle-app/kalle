@@ -11,11 +11,11 @@ export async function getAuthorizationHeader(refreshToken: string): Promise<Auth
 }
 
 const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
-  const url = new URL(constants.baseURL + "token")
+  const url = constants.baseURL + "token"
 
   const options = {
     method: "POST" as const,
-    url: url.href,
+    url: url,
     formData: buildBody(refreshToken),
   }
   try {
@@ -34,5 +34,5 @@ const buildBody = (refreshToken: string) => {
     redirect_uri: constants.redirect_uri,
     grant_type: constants.grant_type_refresh,
     client_secret: constants.client_secret,
-  } as const
+  }
 }

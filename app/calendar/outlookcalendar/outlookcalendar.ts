@@ -24,7 +24,7 @@ export class OutlookCalendarService implements CalendarService {
   }
 
   public async createEvent(booking: CreateEventBooking) {
-    const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/events")
+    const url = "https://graph.microsoft.com/v1.0/me/calendar/events"
     const startDate = booking.startDateUTC
     const endDate = addSeconds(booking.startDateUTC, booking.meeting.duration)
     const body = {
@@ -54,7 +54,7 @@ export class OutlookCalendarService implements CalendarService {
 
     const options = {
       method: "POST" as const,
-      url: url.href,
+      url: url,
       body: JSON.stringify(body),
       headers: { ...this.authorizationHeader, "content-type": "application/json" },
     }
@@ -67,7 +67,7 @@ export class OutlookCalendarService implements CalendarService {
 
   public async getTakenTimeSlots(start: Date, end: Date) {
     const email = await this.getUsersEmailAddress()
-    const url = new URL("https://graph.microsoft.com/v1.0/me/calendar/getschedule")
+    const url = "https://graph.microsoft.com/v1.0/me/calendar/getschedule"
     const body = {
       Schedules: [email],
       startTime: {
@@ -82,7 +82,7 @@ export class OutlookCalendarService implements CalendarService {
 
     var options = {
       method: "POST" as const,
-      url: url.href,
+      url: url,
       body: JSON.stringify(body),
       headers: { ...this.authorizationHeader, "content-type": "application/json" },
     }
@@ -101,12 +101,12 @@ export class OutlookCalendarService implements CalendarService {
   }
 
   private async getUsersEmailAddress(): Promise<string> {
-    const url = new URL("https://graph.microsoft.com/beta/me/profile/emails")
+    const url = "https://graph.microsoft.com/beta/me/profile/emails"
     const headers = this.authorizationHeader
 
     const options = {
       headers,
-      url: url.href,
+      url: url,
       method: "GET" as const,
     }
 

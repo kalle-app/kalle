@@ -1,10 +1,10 @@
 import { constants } from "../constants"
 import makeRequestTo from "./callMicrosoftAPI"
 export const requestToken = async (code: string): Promise<string> => {
-  const url = new URL(constants.baseURL + "token")
+  const url = constants.baseURL + "token"
   var options = {
     method: "POST" as const,
-    url: url.href,
+    url: url,
     formData: buildBody(code),
   }
   try {
@@ -23,5 +23,5 @@ const buildBody = (code: string) => {
     redirect_uri: constants.redirect_uri,
     grant_type: constants.grant_type_code,
     client_secret: constants.client_secret,
-  } as const
+  }
 }
