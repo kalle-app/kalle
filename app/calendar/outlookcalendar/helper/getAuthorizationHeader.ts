@@ -13,7 +13,7 @@ export async function getAuthorizationHeader(refreshToken: string): Promise<Auth
 const callMicrosoftApiForToken = async (refreshToken): Promise<string> => {
   const url = new URL(constants.baseURL + "token")
 
-  var options = {
+  const options = {
     method: "POST" as const,
     url: url.href,
     formData: buildBody(refreshToken),
