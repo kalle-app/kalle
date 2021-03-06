@@ -19,7 +19,7 @@ describe("Account", () => {
       email,
       username,
       fullName: "Jane Doe",
-      password: "mysupersecurepassword",
+      password: "my_Supersecure1password",
     })
     cy.visit(url("/settings"))
     cy.contains("Delete your Account").click()
@@ -32,11 +32,11 @@ describe("Account", () => {
       email,
       username,
       fullName: "Jane Doe",
-      password: "mysupersecurepassword",
+      password: "my_Supersecure1password",
     })
     cy.visit(url("/settings"))
     const newMail = uuid.v4() + "@kalle.app"
-    filloutUpdateFormWith("Jane Doe", newMail, "mysupersecurepassword")
+    filloutUpdateFormWith("Jane Doe", newMail, "my_Supersecure1password")
     cy.get("#auth-dropdown").should("contain", newMail)
   })
   it("change password", () => {
@@ -46,12 +46,12 @@ describe("Account", () => {
       email,
       username,
       fullName: "Jane Doe",
-      password: "mysupersecurepassword",
+      password: "my_Supersecure1password",
     })
     cy.visit(url("/settings"))
-    filloutUpdateFormWith("Jane Doe", email, "mysecurepassword")
+    filloutUpdateFormWith("Jane Doe", email, "test_Supersecure1234pw")
     cy.get("#auth-dropdown").click()
     cy.contains("Sign out").click()
-    loginAs({ email: email, password: "mysecurepassword" })
+    loginAs({ email: email, password: "test_Supersecure1234pw" })
   })
 })
