@@ -52,7 +52,7 @@ export class OutlookCalendarService implements CalendarService {
       ],
     }
 
-    var options = {
+    const options = {
       method: "POST" as const,
       url: url.href,
       body: JSON.stringify(body),
