@@ -11,7 +11,6 @@ export default resolver.pipe(
   ),
   resolver.authorize(),
   async ({ name, refreshToken }, ctx) => {
-    //const { tokens } = await oauth2Client.getToken(oauthCode)
 
     await db.connectedCalendar.create({
       data: {
