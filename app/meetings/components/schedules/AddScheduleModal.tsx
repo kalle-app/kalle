@@ -60,8 +60,8 @@ const initialSchedule = {
   wednesday: { blocked: false, start: "09:00", end: "17:00" },
   thursday: { blocked: false, start: "09:00", end: "17:00" },
   friday: { blocked: false, start: "09:00", end: "17:00" },
-  saturday: { blocked: true, start: "09:00", end: "17:00" },
-  sunday: { blocked: true, start: "09:00", end: "17:00" },
+  saturday: { blocked: true, start: "00:00", end: "00:00" },
+  sunday: { blocked: true, start: "00:00", end: "00:00" },
 }
 
 const AddSchedule = (props: AddScheduleProps) => {
@@ -92,34 +92,6 @@ const AddSchedule = (props: AddScheduleProps) => {
   }
 
   const submit = async () => {
-    const postSchedule = {
-      name: name,
-      timezone,
-      schedule: {
-        monday: (schedule.monday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.monday.start, schedule.monday.end]) as [start: string, end: string],
-        tuesday: (schedule.tuesday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.tuesday.start, schedule.tuesday.end]) as [start: string, end: string],
-        wednesday: (schedule.wednesday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.wednesday.start, schedule.wednesday.end]) as [start: string, end: string],
-        thursday: (schedule.thursday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.thursday.start, schedule.thursday.end]) as [start: string, end: string],
-        friday: (schedule.friday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.friday.start, schedule.friday.end]) as [start: string, end: string],
-        saturday: (schedule.saturday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.saturday.start, schedule.saturday.end]) as [start: string, end: string],
-        sunday: (schedule.sunday.blocked
-          ? ["00:00", "00:00"]
-          : [schedule.sunday.start, schedule.sunday.end]) as [start: string, end: string],
-      },
-    }
-
     const parseResult = ScheduleInput.refine((data) => isScheduleWellFormed(data.schedule), {
       message: "Please check the entered times. Expected is a format of hour:minutes, e.g. 09:30",
     }).safeParse({
@@ -137,7 +109,7 @@ const AddSchedule = (props: AddScheduleProps) => {
         name: name,
         timezone,
         schedule: mapValues(schedule, ({ blocked, start, end }) =>
-          blocked ? { startTime: "", endTime: "" } : { startTime: start, endTime: end }
+          blocked ? { startTime: "00:00", endTime: "00:00" } : { startTime: start, endTime: end }
         ),
       })
       await invalidateQuery(getSchedules)
