@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { PasswordPolicy, charsets } from "password-sheriff"
 
 const messages = {
   noName: "Please enter a name",
@@ -93,3 +94,52 @@ export const BookingInput = z.object({
   notificationTime: z.number().nonnegative({ message: messages.invalidNotificationMinutes }),
 })
 export type BookingInputType = z.infer<typeof BookingInput>
+
+export const checkUsername = (username: string) => {
+  const expression = new RegExp(/^[a-zA-Z0-9_]+$/)
+  return expression.test(username)
+}
+
+export const checkPassword = (password: string) => {
+  const containsLowerCaseLetter = new PasswordPolicy({
+    contains: {
+      expressions: [charsets.lowerCase],
+    },
+  })
+  const containsUpperCaseLetter = new PasswordPolicy({
+    contains: {
+      expressions: [charsets.upperCase],
+    },
+  })
+  const containsNumber = new PasswordPolicy({
+    contains: {
+      expressions: [charsets.numbers],
+    },
+  })
+  const containsSpecialCharacter = new PasswordPolicy({
+    contains: {
+      expressions: [charsets.specialCharacters],
+    },
+  })
+  try {
+    containsLowerCaseLetter.assert(password)
+  } catch {
+    return { valid: false, message: "Your password must contain at least one lowercase letter" }
+  }
+  try {
+    containsUpperCaseLetter.assert(password)
+  } catch {
+    return { valid: false, message: "Your password must contain at least one uppercase letter" }
+  }
+  try {
+    containsNumber.assert(password)
+  } catch {
+    return { valid: false, message: "Your password must contain at least one number" }
+  }
+  try {
+    containsSpecialCharacter.assert(password)
+  } catch {
+    return { valid: false, message: "Your password must contain at least one special character" }
+  }
+  return { valid: true, message: "" }
+}

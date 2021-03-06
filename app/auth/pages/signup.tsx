@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import { SignupInput } from "app/auth/validations"
+import { SignupInput, checkPassword, checkUsername } from "app/auth/validations"
 import { Alert } from "react-bootstrap"
 
 const SignupPage: BlitzPage = () => {
@@ -31,6 +31,17 @@ const SignupPage: BlitzPage = () => {
       return
     }
 
+    const usernameCheck = checkUsername(username)
+    const passwordCheck = checkPassword(password)
+
+    if (!usernameCheck) {
+      setMessage("Your username can only contain alphanumeric characters and underscores")
+      return
+    }
+    if (!passwordCheck.valid) {
+      setMessage(passwordCheck.message)
+      return
+    }
     try {
       await signup({
         name,
