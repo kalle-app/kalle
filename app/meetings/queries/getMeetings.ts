@@ -17,7 +17,6 @@ resolver.pipe(resolver.zod(z.number()), resolver.authorize(), async (meetingId, 
 
 export default async function getMeetings(_ = null, ctx: Ctx) {
   ctx.session.$authorize()
-  console.log(new Date().getTimezoneOffset())
   const user = await db.user.findFirst({
     where: { id: ctx.session.userId },
   })
