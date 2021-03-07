@@ -59,7 +59,7 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
     </tr>
     <tr>
       <td>🔓</td>
-      <td>Hide conflicting events for invitees</td>
+      <td>Compare invitee`s calendar</td>
     </tr>
     <tr>
       <td>🔓</td>
