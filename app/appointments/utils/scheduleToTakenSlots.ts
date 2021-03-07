@@ -51,7 +51,7 @@ export function scheduleToTakenSlots(
   const result: TimeSlot[] = []
   let cursor = between.start
 
-  while (cursor <= between.end) {
+  while (cursor <= addDays(between.end, 1)) {
     const slot: TimeSlot = {
       start: endOfLastWorkDayBefore(cursor, schedule, timezone),
       end: startOfFirstWorkDayOnOrAfter(cursor, schedule, timezone),
