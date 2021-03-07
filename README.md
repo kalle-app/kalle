@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/stars/kalle-app/kalle?style=for-the-badge">
   <a href="https://kalle.app"><img src="https://img.shields.io/website?down_color=lightgrey&down_message=offline&label=Kalle.app&style=for-the-badge&up_color=green&up_message=online&url=https%3A%2F%2Fkalle.app"></a>
-  <a href="github.com/kalle-app/kalle/issues"><img src="https://img.shields.io/github/issues-closed-raw/kalle-app/kalle?style=for-the-badge"></a>
+  <a href="https://github.com/kalle-app/kalle/issues"><img src="https://img.shields.io/github/issues-closed-raw/kalle-app/kalle?style=for-the-badge"></a>
   <img src="https://img.shields.io/github/languages/top/kalle-app/kalle?style=for-the-badge">
   <img src="https://img.shields.io/github/license/kalle-app/kalle?style=for-the-badge">
 </p>
