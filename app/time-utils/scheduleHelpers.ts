@@ -3,9 +3,7 @@ import { addDays, getDay, subDays } from "date-fns"
 
 export function endOfLastWorkDayBefore(date: Date, schedule: Schedule, timezone: string): Date {
   while (true) {
-    console.log("endOfLastWorkDayBefore")
     date = subDays(date, 1)
-    console.log({ date, schedule, timezone })
 
     const weekday = getDay(date)
 
@@ -23,9 +21,7 @@ export function startOfFirstWorkDayOnOrAfter(
   timezone: string
 ): Date {
   while (true) {
-    console.log("startOfFirstWorkDayOnOrAfter")
     const weekday = getDay(date)
-    console.log({ date, schedule, weekday, timezone })
 
     if (schedule[weekday]) {
       const time = schedule[weekday]!.start
