@@ -30,6 +30,7 @@ export function computeAvailableSlots({
   const result: TimeSlot[] = []
 
   const endOfSearch = new Date(+between.end - durationInMilliseconds)
+  console.log("starting computation of free slots")
   while (cursor <= endOfSearch) {
     const potentialSlot: TimeSlot = {
       start: cursor,
@@ -45,5 +46,6 @@ export function computeAvailableSlots({
       cursor = collidingSlot.end
     }
   }
+  console.log("done", result)
   return result
 }

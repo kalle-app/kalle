@@ -32,18 +32,22 @@ async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting
 ): Promise<ExternalEvent[]> {
+  console.log("getting taken timeslots for these calendars:", calendars)
   const result = await Promise.all(
     calendars.map(async (calendar) => {
+      console.log("getting taken timeslots for calendar:", calendar)
       const calendarService = await getCalendarService(calendar)
       return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })
   )
+  console.log("got timeslots for all calendars", result)
   const takenTimeSlots: ExternalEvent[] = []
   result.forEach((values) => {
     values.forEach((slots) => {
       takenTimeSlots.push(slots)
     })
   })
+  console.log("merged timeslots from calendars", takenTimeSlots)
   return takenTimeSlots
 }
 
@@ -79,8 +83,10 @@ export default resolver.pipe(
       where: { ownerId: meetingOwner.id },
     })
     if (calendars.length === 0) return null
+    console.log("got calendars", calendars)
 
     let takenTimeSlots = await getTakenSlots(calendars, meeting)
+    console.log("got taken timeslots", takenTimeSlots)
 
     if (hideInviteeSlots) {
       ctx.session.$authorize()
