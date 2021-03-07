@@ -106,6 +106,13 @@ When mode !== development mails will be sent!
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
 It will also start up the PostgreSQL database, a Baikal server containing a calendar for experimental purposes, a Nextcloud server, the Quirrel job queue and Mailhog.
 
+### Using Google Calendar and Outlook Calendar
+
+We provide an interface to different calendar providers via oAuth 2.0. If you want to host your own kalle-instance and then use one of the calendar providers, you will have to set some environment variables:
+
+1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in envrionment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+2. Microsoft Outlook: This works similar to google calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
