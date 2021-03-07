@@ -110,5 +110,29 @@ It will also start up the PostgreSQL database, a Baikal server containing a cale
 
 We provide an interface to different calendar providers via oAuth 2.0. If you want to host your own kalle-instance and then use one of the calendar providers, you will have to set some environment variables:
 
-1. Google Calendar: You have to get a ```CLIENT_ID``` and a ```CLIENT_SECRET```. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in envrionment variables ```GOOGLE_CLIENT_ID``` and ```GOOGLE_CLIENT_SECRET```.
-2. Microsoft Outlook: This works similar to google calendar. You have to get a ```CLIENT_ID``` and a ```CLIENT_SECRET``` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the ```MICROSOFT_CLIENT_ID``` and ```MICROSOFT_CLIENT_SECRET``` environment variables.
+1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in envrionment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+2. Microsoft Outlook: This works similar to google calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/rohansaw"><img src="https://avatars.githubusercontent.com/u/49531442?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rohan Sawahn</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=rohansaw" title="Code">💻</a> <a href="#ideas-rohansaw" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Lasklu"><img src="https://avatars.githubusercontent.com/u/49564344?v=4?s=100" width="100px;" alt=""/><br /><sub><b>lasklu</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=Lasklu" title="Code">💻</a> <a href="#ideas-Lasklu" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/phlprcks"><img src="https://avatars.githubusercontent.com/u/33530575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>phlprcks</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=phlprcks" title="Code">💻</a> <a href="#ideas-phlprcks" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/sspangenberg"><img src="https://avatars.githubusercontent.com/u/49531479?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sspangenberg</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=sspangenberg" title="Code">💻</a> <a href="#ideas-sspangenberg" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Skn0tt"><img src="https://avatars.githubusercontent.com/u/14912729?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Simon Knott</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=Skn0tt" title="Code">💻</a> <a href="#ideas-Skn0tt" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
