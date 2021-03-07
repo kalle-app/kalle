@@ -14,6 +14,7 @@ import { Alert, Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import Skeleton from "react-loading-skeleton"
 import { DatePickerCalendar } from "react-nice-dates"
 import { getOrigin } from "utils/origin"
+import { zonedTimeToUtc } from "date-fns-tz"
 
 interface SchedulerProps {
   meetingSlug: string
@@ -65,7 +66,9 @@ const Scheduler: React.FunctionComponent<SchedulerProps> = ({ meetingSlug, usern
     return <h2 className="text-center m-5">This meeting was deleted or is in the past.</h2>
   }
 
-  if (meeting.endDateUTC < new Date()) {
+  let currentDate = new Date()
+  let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  if (meeting.endDateUTC < zonedTimeToUtc(currentDate, timezone)) {
     return <h2 className="text-center m-5">This meeting is in the past.</h2>
   }
 
