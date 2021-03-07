@@ -59,7 +59,17 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "patcon",
+      "name": "Patrick Connolly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/305339?v=4",
+      "profile": "http://nodescription.net",
+      "contributions": [
+        "content"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
