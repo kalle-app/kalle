@@ -13,21 +13,6 @@ import {
 } from "../utils/scheduleToTakenSlots"
 import * as z from "zod"
 
-function trimDownHostedCalendars(calendars: ConnectedCalendar[]) {
-  const caldavCalendars = calendars.filter(
-    (cal) => cal.type === "CaldavBasic" || cal.type === "CaldavDigest"
-  )
-  const googleCalendar = calendars.find((cal) => cal.type === "GoogleCalendar")
-  const outlookCalendar = calendars.find((cal) => cal.type === "OutlookCalendar")
-  if (googleCalendar) {
-    caldavCalendars.push(googleCalendar)
-  }
-  if (outlookCalendar) {
-    caldavCalendars.push(outlookCalendar)
-  }
-  return caldavCalendars
-}
-
 function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
   const specificSchedule = schedule[getDay(date)]
   if (!specificSchedule) {
@@ -48,7 +33,7 @@ async function getTakenSlots(
   meeting: Meeting
 ): Promise<ExternalEvent[]> {
   const result = await Promise.all(
-    trimDownHostedCalendars(calendars).map(async (calendar) => {
+    calendars.map(async (calendar) => {
       const calendarService = await getCalendarService(calendar)
       return await calendarService.getTakenTimeSlots(meeting.startDateUTC, meeting.endDateUTC)
     })

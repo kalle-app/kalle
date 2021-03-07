@@ -13,7 +13,9 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ name, oauthCode }, ctx) => {
     const oauth2Client = createGoogleOauth()
+    console.log(oauth2Client)
     const { tokens } = await oauth2Client.getToken(oauthCode)
+    console.log(tokens)
 
     const calendar = await db.connectedCalendar.create({
       data: {
