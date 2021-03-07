@@ -93,10 +93,10 @@ SMTP_PORT="Insert the PORT of the SMTP server, usually 587"
 SMTP_HOST="Insert the HOSTNAME of the SMTP server"
 MODE="DEVELOPMENT"
 HOME_URL="URL where kalle is deployed from: http://localhost:3000"
-GOOGLE_CLIENT_ID="For oAuth to use google calendars"
-GOOGLE_CLIENT_SECRET="For oAuth to use google calendars"
-MICROSOFT_CLIENT_SECRET="For oAuth to use outlook calendars"
-MICROSOFT_CLIENT_ID="For oAuth to use outlook calendars"
+GOOGLE_CLIENT_ID="OAuth token to use Google calendars"
+GOOGLE_CLIENT_SECRET="OAuth token to use Google calendars"
+MICROSOFT_CLIENT_SECRET="OAuth token to use Outlook calendars"
+MICROSOFT_CLIENT_ID="OAuth token to use Outlook calendars"
 ```
 
 When mode !== development mails will be sent!
@@ -108,12 +108,12 @@ It will also start up the PostgreSQL database, a Baikal server containing a cale
 
 ### Using Google Calendar and Outlook Calendar
 
-We provide an interface to different calendar providers via oAuth 2.0. If you want to host your own kalle-instance and then use one of the calendar providers, you will have to set some environment variables:
+We provide an interface to different calendar providers via OAuth 2.0. If you want to host your own Kalle instance and use one of the calendar providers, you will have to set some environment variables:
 
-1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in envrionment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-2. Microsoft Outlook: This works similar to google calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
+1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in environment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+2. Microsoft Outlook: This works similar to Google Calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
 
-Furthermore add the environment variable ```HOME_URL``` which is the base URL of your kalle-instance (e.g. ```https://kalle.app```)
+Furthermore add the environment variable ```HOME_URL``` which is the base URL of your Kalle instance (e.g. ```https://kalle.app```)
 
 ## Contributors ✨
 
