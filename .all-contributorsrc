@@ -1,0 +1,75 @@
+{
+  "projectName": "kalle",
+  "projectOwner": "kalle-app",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "rohansaw",
+      "name": "Rohan Sawahn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49531442?v=4",
+      "profile": "https://github.com/rohansaw",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Lasklu",
+      "name": "lasklu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49564344?v=4",
+      "profile": "https://github.com/Lasklu",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "phlprcks",
+      "name": "phlprcks",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33530575?v=4",
+      "profile": "https://github.com/phlprcks",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "sspangenberg",
+      "name": "sspangenberg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49531479?v=4",
+      "profile": "https://github.com/sspangenberg",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Skn0tt",
+      "name": "Simon Knott",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14912729?v=4",
+      "profile": "https://github.com/Skn0tt",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "patcon",
+      "name": "Patrick Connolly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/305339?v=4",
+      "profile": "http://nodescription.net",
+      "contributions": [
+        "content"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true
+}

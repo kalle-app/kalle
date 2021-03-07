@@ -8,7 +8,7 @@ export const ConnectGoogleCalendarButton = (
     id: string
   }>
 ) => {
-  const [url] = useQuery(getCcalOAuthUrl, undefined)
+  const [url] = useQuery(getCcalOAuthUrl, null)
 
   return (
     <Button id={props.id} variant="primary" href={url}>
