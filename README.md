@@ -12,8 +12,8 @@
 
 
 - [Overview](#overview)
-- [Testimonials](#testimonials)
 - [Features](#features)
+- [Testimonials](#testimonials)
 - [Getting started](#started)
    - [Setup](#setup)
    - [Running the Application](#running)
@@ -30,37 +30,6 @@ A hosted version can be found at [**kalle.app**](https://www.kalle.app/).
 
 _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner-Institute._
 
-<a name="testimonials"></a>
-## Testimonials
-
-<table>
-  <tr>
-    <td>
-      <a href="https://twitter.com/_laugengebaeck/status/1368519898587086850">
-        <img src="./.github/resources/testimonials/_laugengebaeck.png" alt=""/>
-      </a>
-    </td>
-    <td>
-      <a href="https://twitter.com/LoriKarikari/status/1368522759299534848">
-        <img src="./.github/resources/testimonials/lorikarikari.png" alt=""/>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="https://twitter.com/Jolg42/status/1368557953800888320">
-        <img src="./.github/resources/testimonials/jolg42.png" alt=""/>
-      </a>
-    </td>
-    <td>
-      <blockquote>
-      Kalle is a godsend tool that treated my eczema in a matter of days. Looking forward to bikini season!
-      <br>
-      <a href="https://twitter.com/NWoroniec">~ Natalia Woroniec</a>
-      </blockquote>
-    </td>
-  </tr>
-</table>
 
 <a name="features"></a>
 ## Features
@@ -122,6 +91,38 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
       <td>Select for each meeting a calendar where to book your appointments</td>
     </tr>
   </tbody>
+</table>
+
+<a name="testimonials"></a>
+## Testimonials
+
+<table>
+  <tr>
+    <td>
+      <a href="https://twitter.com/_laugengebaeck/status/1368519898587086850">
+        <img src="./.github/resources/testimonials/_laugengebaeck.png" alt=""/>
+      </a>
+    </td>
+    <td>
+      <a href="https://twitter.com/LoriKarikari/status/1368522759299534848">
+        <img src="./.github/resources/testimonials/lorikarikari.png" alt=""/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://twitter.com/Jolg42/status/1368557953800888320">
+        <img src="./.github/resources/testimonials/jolg42.png" alt=""/>
+      </a>
+    </td>
+    <td>
+      <blockquote>
+      Kalle is a godsend tool that treated my eczema in a matter of days. Looking forward to bikini season!
+      <br>
+      <a href="https://twitter.com/NWoroniec">~ Natalia Woroniec</a>
+      </blockquote>
+    </td>
+  </tr>
 </table>
 
 <a name="started"></a>
