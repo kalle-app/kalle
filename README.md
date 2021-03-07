@@ -74,6 +74,10 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
       <td>✉️</td>
       <td>Email confirmations and reminders</td>
     </tr>
+    <tr>
+      <td>👩🏻‍🎨</td>
+      <td>Select for each meeting a calendar where to book your appointments</td>
+    </tr>
   </tbody>
 </table>
 
