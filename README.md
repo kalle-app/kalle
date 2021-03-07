@@ -10,6 +10,17 @@
   <img src="https://img.shields.io/github/license/kalle-app/kalle?style=for-the-badge">
 </p>
 
+
+- [Overview](#overview)
+- [Testimonials](#testimonials)
+- [Features](#features)
+- [Getting started](#started)
+   - [Setup](#setup)
+   - [Running the Application](#running)
+   - [Using Google Calendar and Outlook Calendar](#thirdparty)
+- [Contributors](#contributors)
+
+<a name="overview"></a>
 ## Overview
 
 Kalle is an **appointment scheduling tool** that allows you to schedule an appointment with customers, colleagues or friends within seconds. We support self-hosted CalDav-based calendars and solutions such as authenticating your Google calendar or Outlook calendar.
@@ -19,6 +30,7 @@ A hosted version can be found at [**kalle.app**](https://www.kalle.app/).
 
 _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner-Institute._
 
+<a name="testimonials"></a>
 ## Testimonials
 
 <table>
@@ -50,6 +62,7 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
   </tr>
 </table>
 
+<a name="features"></a>
 ## Features
 
 <table>
@@ -111,8 +124,10 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
   </tbody>
 </table>
 
+<a name="started"></a>
 ## Getting Started
 
+<a name="setup"></a>
 ### Setup
 
 Follow these steps for a development environment:
@@ -144,11 +159,13 @@ MICROSOFT_CLIENT_ID="OAuth token to use Outlook calendars"
 
 When mode !== development mails will be sent!
 
+<a name="running"></a>
 ### Running the Application
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
 It will also start up the PostgreSQL database, a Baikal server containing a calendar for experimental purposes, a Nextcloud server, the Quirrel job queue and Mailhog.
 
+<a name="thirdparty"></a>
 ### Using Google Calendar and Outlook Calendar
 
 We provide an interface to different calendar providers via OAuth 2.0. If you want to host your own Kalle instance and use one of the calendar providers, you will have to set some environment variables:
@@ -158,6 +175,7 @@ We provide an interface to different calendar providers via OAuth 2.0. If you wa
 
 Furthermore add the environment variable `HOME_URL` which is the base URL of your Kalle instance (e.g. `https://kalle.app`)
 
+<a name="contributors"></a>
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
