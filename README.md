@@ -127,6 +127,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/phlprcks"><img src="https://avatars.githubusercontent.com/u/33530575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>phlprcks</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=phlprcks" title="Code">💻</a> <a href="#ideas-phlprcks" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/sspangenberg"><img src="https://avatars.githubusercontent.com/u/49531479?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sspangenberg</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=sspangenberg" title="Code">💻</a> <a href="#ideas-sspangenberg" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/Skn0tt"><img src="https://avatars.githubusercontent.com/u/14912729?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Simon Knott</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=Skn0tt" title="Code">💻</a> <a href="#ideas-Skn0tt" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://nodescription.net"><img src="https://avatars.githubusercontent.com/u/305339?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Patrick Connolly</b></sub></a><br /><a href="#content-patcon" title="Content">🖋</a></td>
   </tr>
 </table>
 
