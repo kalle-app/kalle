@@ -113,6 +113,8 @@ We provide an interface to different calendar providers via oAuth 2.0. If you wa
 1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in envrionment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 2. Microsoft Outlook: This works similar to google calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
 
+Furthermore add the environment variable ```HOME_URL``` which is the base URL of your kalle-instance (e.g. ```https://kalle.app```)
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
