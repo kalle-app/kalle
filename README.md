@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/github/languages/top/kalle-app/kalle?style=for-the-badge">
   <img src="https://img.shields.io/github/license/kalle-app/kalle?style=for-the-badge">
 </p>
- 
+
 
 ## Overview
 
@@ -19,6 +19,15 @@ Kalle is a modern web app that is built with [Blitz.js](https://github.com/blitz
 A hosted version can be found at [**kalle.app**](https://www.kalle.app/).
 
 _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" Project Seminar 2020/21 at the Hasso-Plattner-Institute._
+
+## Testimonials
+
+[![](./.github/resources/testimonials/_laugengebaeck.png)](https://twitter.com/_laugengebaeck/status/1368519898587086850)
+[![](./.github/resources/testimonials/lorikarikari.png)](https://twitter.com/LoriKarikari/status/1368522759299534848)
+[![](./.github/resources/testimonials/jolg42.png)](https://twitter.com/Jolg42/status/1368557953800888320)
+
+> Kalle is a godsend tool that treated my eczema in a matter of days. Looking forward to bikini season!
+> ~ [Natalia Woroniec](https://twitter.com/NWoroniec)
 
 ## Features
 
@@ -126,7 +135,7 @@ We provide an interface to different calendar providers via OAuth 2.0. If you wa
 1. Google Calendar: You have to get a `CLIENT_ID` and a `CLIENT_SECRET`. For that you can start [here](https://developers.google.com/identity/protocols/oauth2). Save these values in the in environment variables `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 2. Microsoft Outlook: This works similar to Google Calendar. You have to get a `CLIENT_ID` and a `CLIENT_SECRET` (see [here](https://docs.microsoft.com/de-de/graph/auth-v2-user)). Write these values in the `MICROSOFT_CLIENT_ID` and `MICROSOFT_CLIENT_SECRET` environment variables.
 
-Furthermore add the environment variable ```HOME_URL``` which is the base URL of your Kalle instance (e.g. ```https://kalle.app```)
+Furthermore add the environment variable `HOME_URL` which is the base URL of your Kalle instance (e.g. `https://kalle.app`)
 
 ## Contributors ✨
 
