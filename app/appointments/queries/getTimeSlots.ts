@@ -1,5 +1,5 @@
 import { ExternalEvent, getCalendarService } from "app/calendar/calendar-service"
-import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
+import { endOfLastWorkDayBefore, startOfFirstWorkDayOnOrAfter } from "app/time-utils/scheduleHelpers"
 import { Ctx, resolver } from "blitz"
 import { getDay, setHours, setMinutes } from "date-fns"
 import { utcToZonedTime } from "date-fns-tz"
@@ -19,7 +19,7 @@ function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", ti
     if (type === "end") {
       return endOfLastWorkDayBefore(date, schedule, timezone)
     } else {
-      return startOfFirstWorkDayAfter(date, schedule, timezone)
+      return startOfFirstWorkDayOnOrAfter(date, schedule, timezone)
     }
   }
 

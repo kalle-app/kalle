@@ -15,7 +15,7 @@ export function endOfLastWorkDayBefore(date: Date, schedule: Schedule, timezone:
   }
 }
 
-export function startOfFirstWorkDayAfter(date: Date, schedule: Schedule, timezone: string): Date {
+export function startOfFirstWorkDayOnOrAfter(date: Date, schedule: Schedule, timezone: string): Date {
   while (true) {
     const weekday = getDay(date)
 
