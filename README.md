@@ -105,3 +105,27 @@ When mode !== development mails will be sent!
 
 Running `npm run dev` will start up a server which can be reached over the specified URL :)
 It will also start up the PostgreSQL database, a Baikal server containing a calendar for experimental purposes, a Nextcloud server, the Quirrel job queue and Mailhog.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/rohansaw"><img src="https://avatars.githubusercontent.com/u/49531442?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Rohan Sawahn</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=rohansaw" title="Code">💻</a> <a href="#ideas-rohansaw" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Lasklu"><img src="https://avatars.githubusercontent.com/u/49564344?v=4?s=100" width="100px;" alt=""/><br /><sub><b>lasklu</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=Lasklu" title="Code">💻</a> <a href="#ideas-Lasklu" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/phlprcks"><img src="https://avatars.githubusercontent.com/u/33530575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>phlprcks</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=phlprcks" title="Code">💻</a> <a href="#ideas-phlprcks" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/sspangenberg"><img src="https://avatars.githubusercontent.com/u/49531479?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sspangenberg</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=sspangenberg" title="Code">💻</a> <a href="#ideas-sspangenberg" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Skn0tt"><img src="https://avatars.githubusercontent.com/u/14912729?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Simon Knott</b></sub></a><br /><a href="https://github.com/kalle-app/kalle/commits?author=Skn0tt" title="Code">💻</a> <a href="#ideas-Skn0tt" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
