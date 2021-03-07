@@ -5,6 +5,7 @@ export default async function getCcalOAuthUrl(_ = null) {
 
   return createGoogleOauth().generateAuthUrl({
     access_type: "offline",
+    prompt: 'consent',
     scope: scopes,
   })
 }
