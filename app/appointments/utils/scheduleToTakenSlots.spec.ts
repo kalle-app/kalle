@@ -46,6 +46,10 @@ describe("scheduleToTakenSlots", () => {
         start: new Date("2021-01-01T17:00:00.000+01:00"),
         end: new Date("2021-01-04T09:00:00.000+01:00"),
       },
+      {
+        start: new Date("2021-01-04T17:00:00.000+01:00"),
+        end: new Date("2021-01-05T09:00:00.000+01:00"),
+      },
     ])
   })
 
@@ -75,6 +79,10 @@ describe("scheduleToTakenSlots", () => {
       {
         start: new Date("2019-10-27T17:00:00.000+01:00"),
         end: new Date("2019-10-28T09:00:00.000+01:00"),
+      },
+      {
+        start: new Date("2019-10-28T17:00:00.000+01:00"),
+        end: new Date("2019-10-29T09:00:00.000+01:00"),
       },
     ])
   })
