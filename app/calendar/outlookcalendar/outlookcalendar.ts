@@ -76,7 +76,6 @@ export class OutlookCalendarService implements CalendarService {
   public async getTakenTimeSlots(start: Date, end: Date) {
     start.setHours(0, 0)
     end.setHours(23, 59)
-    console.log(start, end)
     const email = await this.getUsersEmailAddress()
     const url = "https://graph.microsoft.com/v1.0/me/calendar/getschedule"
     const body = {
