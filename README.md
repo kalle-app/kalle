@@ -22,47 +22,47 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
   </thead>
   <tbody>
     <tr>
-      <td>🔓</td>
+      <td>✅</td>
       <td>Create an account</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>📆</td>
       <td>Connect CalDav calendars</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>📆</td>
       <td>Connect Google calendars</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>📆</td>
       <td>Connect Outlook calendars</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>🤝</td>
       <td>Create a meeting</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>📲</td>
       <td>Book an appointment</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>❌</td>
       <td>Cancel an appointment</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>⏱</td>
       <td>Use schedule presets</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>🗓 📆</td>
       <td>Use multiple calendars</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>🔎</td>
       <td>Compare invitee`s calendar</td>
     </tr>
     <tr>
-      <td>🔓</td>
+      <td>✉️</td>
       <td>Email confirmations and reminders</td>
     </tr>
   </tbody>
