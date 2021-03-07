@@ -14,14 +14,18 @@ import {
 import * as z from "zod"
 
 function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", timezone: string) {
+  console.log("applySchedule#1")
   const specificSchedule = schedule[getDay(date)]
   if (!specificSchedule) {
+    console.log("applySchedule#!specificSchedule")
     if (type === "end") {
       return endOfLastWorkDayBefore(date, schedule, timezone)
     } else {
       return startOfFirstWorkDayOnOrAfter(date, schedule, timezone)
     }
   }
+
+  console.log("applySchedule#after!specificSchedule")
 
   let newDate = setHours(date, specificSchedule[type].hour)
   newDate = setMinutes(newDate, specificSchedule[type].minute)
@@ -89,6 +93,8 @@ export default resolver.pipe(
     console.log("got taken timeslots", takenTimeSlots)
 
     if (hideInviteeSlots) {
+      console.log("I don't expect to be called.")
+      console.log("inside of hideInviteeSlots")
       ctx.session.$authorize()
       const invitee = await db.user.findFirst({
         where: { id: ctx.session.userId },
@@ -101,6 +107,8 @@ export default resolver.pipe(
         takenTimeSlots.push(...(await getTakenSlots(invitee.calendars, meeting)))
       }
     }
+
+    console.log("after hideInviteeSlots")
 
     const between = {
       start: applySchedule(
@@ -116,6 +124,8 @@ export default resolver.pipe(
         meeting.schedule.timezone
       ),
     }
+
+    console.log("between done")
 
     return computeAvailableSlots({
       between,
