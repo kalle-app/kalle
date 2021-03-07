@@ -10,7 +10,6 @@
   <img src="https://img.shields.io/github/license/kalle-app/kalle?style=for-the-badge">
 </p>
 
-
 ## Overview
 
 Kalle is an **appointment scheduling tool** that allows you to schedule an appointment with customers, colleagues or friends within seconds. We support self-hosted CalDav-based calendars and solutions such as authenticating your Google calendar.
@@ -22,12 +21,34 @@ _This Project is part of the "Trends und Konzepte dynamischer Web-Anwendungen" P
 
 ## Testimonials
 
-[![](./.github/resources/testimonials/_laugengebaeck.png)](https://twitter.com/_laugengebaeck/status/1368519898587086850)
-[![](./.github/resources/testimonials/lorikarikari.png)](https://twitter.com/LoriKarikari/status/1368522759299534848)
-[![](./.github/resources/testimonials/jolg42.png)](https://twitter.com/Jolg42/status/1368557953800888320)
-
-> Kalle is a godsend tool that treated my eczema in a matter of days. Looking forward to bikini season!
-> ~ [Natalia Woroniec](https://twitter.com/NWoroniec)
+<table>
+  <tr>
+    <td>
+      <a href="https://twitter.com/_laugengebaeck/status/1368519898587086850">
+        <img src="./.github/resources/testimonials/_laugengebaeck.png" alt=""/>
+      </a>
+    </td>
+    <td>
+      <a href="https://twitter.com/LoriKarikari/status/1368522759299534848">
+        <img src="./.github/resources/testimonials/lorikarikari.png" alt=""/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://twitter.com/Jolg42/status/1368557953800888320">
+        <img src="./.github/resources/testimonials/jolg42.png" alt=""/>
+      </a>
+    </td>
+    <td>
+      <blockquote>
+      Kalle is a godsend tool that treated my eczema in a matter of days. Looking forward to bikini season!
+      <br>
+      <a href="https://twitter.com/NWoroniec">~ Natalia Woroniec</a>
+      </blockquote>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
