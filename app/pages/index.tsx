@@ -130,7 +130,7 @@ const PublicContent = () => {
             />
             <h2 className="text-center m-3">Connectivity</h2>
             <h5 className="text-center m-3">
-              You can connect many different calendars: CalDAV, Google Calendar, Oulook..
+              You can connect many different calendars: CalDAV, Google Calendar, Outlook.
             </h5>
           </Col>
           <Col
