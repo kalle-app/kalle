@@ -46,16 +46,18 @@ export function scheduleToTakenSlots(
   }
 
   const result: TimeSlot[] = []
-  let cursor = between.start
 
-  //we need to include the blocked slot between the end of the last day (between.end) and beginning of the next day (addDays(between.end, 1))
-  while (cursor <= addDays(between.end, 1)) {
+  let cursor = between.start
+  while (cursor <= between.end) {
     const slot: TimeSlot = {
       start: endOfLastWorkDayBefore(cursor, schedule, timezone),
       end: startOfFirstWorkDayOnOrAfter(cursor, schedule, timezone),
     }
+
     result.push(slot)
+
     cursor = addDays(slot.end, 1)
   }
+
   return result
 }
