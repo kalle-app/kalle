@@ -1,7 +1,10 @@
 import { TimeSlot } from "../types"
 import { addDays, startOfMinute, setMinutes, setHours, subMilliseconds } from "date-fns"
 import { getTimezoneOffset } from "date-fns-tz"
-import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
+import {
+  endOfLastWorkDayBefore,
+  startOfFirstWorkDayOnOrAfter,
+} from "app/time-utils/scheduleHelpers"
 
 export enum Days {
   "sunday",
@@ -48,11 +51,10 @@ export function scheduleToTakenSlots(
   const result: TimeSlot[] = []
   let cursor = between.start
 
-  //we need to include the blocked slot between the end of the last day (between.end) and beginning of the next day (addDays(between.end, 1))
   while (cursor <= addDays(between.end, 1)) {
     const slot: TimeSlot = {
       start: endOfLastWorkDayBefore(cursor, schedule, timezone),
-      end: startOfFirstWorkDayAfter(cursor, schedule, timezone),
+      end: startOfFirstWorkDayOnOrAfter(cursor, schedule, timezone),
     }
     result.push(slot)
     cursor = addDays(slot.end, 1)

@@ -1,5 +1,8 @@
 import { ExternalEvent, getCalendarService } from "app/calendar/calendar-service"
-import { endOfLastWorkDayBefore, startOfFirstWorkDayAfter } from "app/time-utils/scheduleHelpers"
+import {
+  endOfLastWorkDayBefore,
+  startOfFirstWorkDayOnOrAfter,
+} from "app/time-utils/scheduleHelpers"
 import { Ctx, resolver } from "blitz"
 import { getDay, setHours, setMinutes } from "date-fns"
 import { utcToZonedTime } from "date-fns-tz"
@@ -19,7 +22,7 @@ function applySchedule(date: Date, schedule: Schedule, type: "start" | "end", ti
     if (type === "end") {
       return endOfLastWorkDayBefore(date, schedule, timezone)
     } else {
-      return startOfFirstWorkDayAfter(date, schedule, timezone)
+      return startOfFirstWorkDayOnOrAfter(date, schedule, timezone)
     }
   }
 
@@ -32,10 +35,8 @@ async function getTakenSlots(
   calendars: ConnectedCalendar[],
   meeting: Meeting
 ): Promise<ExternalEvent[]> {
-  console.log("getting taken timeslots for these calendars:", calendars)
   const result = await Promise.all(
     calendars.map(async (calendar) => {
-      console.log("getting taken timeslots for calendar:", calendar)
       const calendarService = await getCalendarService(calendar)
       let calendarSlots
       try {
@@ -49,14 +50,12 @@ async function getTakenSlots(
       return calendarSlots
     })
   )
-  console.log("got timeslots for all calendars", result)
   const takenTimeSlots: ExternalEvent[] = []
   result.forEach((values) => {
     values.forEach((slots) => {
       takenTimeSlots.push(slots)
     })
   })
-  console.log("merged timeslots from calendars", takenTimeSlots)
   return takenTimeSlots
 }
 
@@ -92,10 +91,8 @@ export default resolver.pipe(
       where: { ownerId: meetingOwner.id },
     })
     if (calendars.length === 0) return null
-    console.log("got calendars", calendars)
 
     let takenTimeSlots = await getTakenSlots(calendars, meeting)
-    console.log("got taken timeslots", takenTimeSlots)
 
     if (hideInviteeSlots) {
       ctx.session.$authorize()
