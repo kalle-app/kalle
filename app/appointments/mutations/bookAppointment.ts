@@ -1,4 +1,4 @@
-import { NotFoundError, resolver } from "blitz"
+import { NotFoundError, resolver, invoke } from "blitz"
 import db, { Booking, Meeting, User } from "db"
 import { addMinutes, subMinutes } from "date-fns"
 import reminderQueue from "../api/queues/reminders"
@@ -7,6 +7,7 @@ import { getCalendarService } from "app/calendar/calendar-service"
 import { getEmailService } from "../../email"
 import { createICalendarEvent } from "../utils/createCalendarEvent"
 import * as uuid from "uuid"
+import getConnectedCalendar from "../queries/getConnectedCalendar"
 const bcrypt = require("bcrypt")
 
 async function sendConfirmationMail(
@@ -78,7 +79,7 @@ export default resolver.pipe(
       throw new NotFoundError()
     }
 
-    const [primaryCalendar] = meeting.owner.calendars
+    const primaryCalendar = await invoke(getConnectedCalendar, meeting.defaultConnectedCalendarId)
     if (!primaryCalendar) {
       throw new Error("An error occured: Owner doesn't have a connected calendar")
     }
