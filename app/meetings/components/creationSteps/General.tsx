@@ -23,8 +23,9 @@ type GeneralProps = {
 const General = (props: GeneralProps) => {
   const [message, setMessage] = useState("")
   const [meetingLink, setMeetingLink] = useState("")
-  const [defaultLink] = useQuery(getDefaultLink, null)
+  const [defaultLink] = useQuery(getDefaultLink, null, { cacheTime: 0 })
 
+  console.log(defaultLink)
   useEffect(() => {
     setMeetingLink(defaultLink)
   }, [])
