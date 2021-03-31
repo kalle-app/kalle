@@ -10,16 +10,6 @@
   <img src="https://img.shields.io/github/license/kalle-app/kalle?style=for-the-badge">
 </p>
 
-
-- [Overview](#overview)
-- [Features](#features)
-- [Testimonials](#testimonials)
-- [Getting started](#started)
-   - [Setup](#setup)
-   - [Running the Application](#running)
-   - [Using Google Calendar and Outlook Calendar](#thirdparty)
-- [Contributors](#contributors)
-
 <a name="overview"></a>
 ## Overview
 
